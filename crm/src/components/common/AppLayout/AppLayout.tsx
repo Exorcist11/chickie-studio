@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button, Card } from "../../ui";
 import { cn } from "../../../lib/cn";
 import "./AppLayout.scss";
 
@@ -29,13 +30,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
   selectedKey = "dashboard",
   onMenuClick,
-  userName = "Quản trị viên",
-  userRole = "Admin",
+  userName,
+  userRole,
   onLogout,
 }) => {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  const effectiveUserName = userName ?? t("layout.defaultUser");
+  const effectiveUserRole = userRole ?? t("layout.defaultRole");
 
   const menuItems = [
     { key: "dashboard", icon: LayoutDashboard, label: t("menu.dashboard") },
@@ -48,31 +52,37 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   ];
 
   return (
-    <div className="min-h-screen flex bg-ivory/50">
-      {/* Sidebar Dark Ink */}
+    <div className="crm-app-layout">
+      {/* Sidebar */}
       <aside
         className={cn(
-          "bg-[#302528] text-stone-200 transition-all duration-300 flex flex-col shrink-0 z-30 shadow-xl",
-          collapsed ? "w-20" : "w-60"
+          "crm-app-layout__sidebar",
+          collapsed && "crm-app-layout__sidebar--collapsed"
         )}
       >
         {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-white/10">
-          <span className="font-playfair font-bold text-white tracking-wide text-lg whitespace-nowrap overflow-hidden">
-            {collapsed ? "CS" : "CHICKIE CRM"}
+        <div className="crm-app-layout__brand">
+          <span className="crm-app-layout__brand-text">
+            {collapsed ? t("layout.brandShort") : t("layout.brand")}
           </span>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setCollapsed(!collapsed)}
-            aria-label={collapsed ? "Mở rộng menu" : "Thu gọn menu"}
-            className="text-stone-400 hover:text-white p-1 rounded-btn hover:bg-white/10 transition-colors"
+            aria-label={collapsed ? t("layout.expandSidebar") : t("layout.collapseSidebar")}
+            className="crm-app-layout__brand-toggle h-8 w-8"
           >
-            {collapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
-          </button>
+            {collapsed ? (
+              <PanelLeftOpen className="w-5 h-5" />
+            ) : (
+              <PanelLeftClose className="w-5 h-5" />
+            )}
+          </Button>
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 py-4 px-3 space-y-1">
+        <nav className="crm-app-layout__nav">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = selectedKey === item.key;
@@ -82,10 +92,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 type="button"
                 onClick={() => onMenuClick?.(item.key)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-btn text-sm font-medium transition-colors text-left",
-                  isActive
-                    ? "bg-burgundy text-white shadow-sm"
-                    : "text-stone-300 hover:bg-white/10 hover:text-white"
+                  "crm-app-layout__nav-item",
+                  isActive && "crm-app-layout__nav-item--active"
                 )}
                 title={collapsed ? item.label : undefined}
               >
@@ -98,11 +106,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       </aside>
 
       {/* Main Content Layout */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="crm-app-layout__content">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-line px-6 flex items-center justify-between shadow-sm z-20">
-          <div className="text-sm font-medium text-ink-muted">
-            Hệ Thống Quản Lý Studio
+        <header className="crm-app-layout__header">
+          <div className="crm-app-layout__title">
+            {t("layout.systemTitle")}
           </div>
 
           {/* User Profile Dropdown */}
@@ -110,47 +118,50 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
             <button
               type="button"
               onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="flex items-center gap-2.5 p-1.5 rounded-btn hover:bg-ivory transition-colors focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="crm-app-layout__user-trigger"
+              aria-expanded={userMenuOpen}
+              aria-haspopup="true"
             >
-              <div className="w-8 h-8 rounded-full bg-burgundy text-white flex items-center justify-center font-semibold text-xs">
+              <div className="crm-app-layout__user-avatar">
                 <User className="w-4 h-4" />
               </div>
-              <div className="text-left hidden sm:block">
-                <div className="text-xs font-semibold text-ink leading-tight">{userName}</div>
-                <div className="text-[10px] text-ink-muted">{userRole}</div>
+              <div className="crm-app-layout__user-info hidden sm:block">
+                <div className="crm-app-layout__user-name">{effectiveUserName}</div>
+                <div className="crm-app-layout__user-role">{effectiveUserRole}</div>
               </div>
             </button>
 
             {userMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-card border border-line shadow-raised py-1 text-sm z-50 animate-fadeIn">
-                <div className="px-4 py-2 border-b border-line/60">
-                  <p className="text-xs font-medium text-ink">{userName}</p>
-                  <p className="text-[11px] text-ink-muted">{userRole}</p>
+              <div className="crm-app-layout__dropdown">
+                <div className="crm-app-layout__dropdown-header">
+                  <p className="text-xs font-medium text-ink">{effectiveUserName}</p>
+                  <p className="text-[11px] text-ink-muted">{effectiveUserRole}</p>
                 </div>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => {
                     setUserMenuOpen(false);
                     onLogout?.();
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-xs font-medium text-danger hover:bg-red-50 text-left transition-colors"
+                  className="w-full justify-start text-xs font-medium text-danger hover:bg-red-50 hover:text-danger px-4 py-2 h-auto rounded-none"
+                  leftIcon={<LogOut className="w-4 h-4" />}
                 >
-                  <LogOut className="w-4 h-4" />
-                  Đăng xuất
-                </button>
+                  {t("layout.logout")}
+                </Button>
               </div>
             )}
           </div>
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 p-6 overflow-y-auto">
-          <div className="bg-white rounded-card border border-line p-6 shadow-card min-h-[calc(100vh-8rem)]">
+        <main className="crm-app-layout__main">
+          <Card className="p-6 min-h-[calc(100vh-8rem)]">
             {children}
-          </div>
+          </Card>
         </main>
       </div>
     </div>
   );
 };
-

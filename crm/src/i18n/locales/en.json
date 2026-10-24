@@ -106,6 +106,16 @@
     "accessDeniedTitle": "Access Denied",
     "accessDeniedMessage": "You do not have permission to access this page or feature.",
     "backHome": "Back to Home"
+  },
+  "layout": {
+    "brand": "CHICKIE CRM",
+    "brandShort": "CS",
+    "systemTitle": "Studio Management System",
+    "expandSidebar": "Expand menu",
+    "collapseSidebar": "Collapse menu",
+    "defaultUser": "Administrator",
+    "defaultRole": "Admin",
+    "logout": "Sign Out"
   }
 }
 

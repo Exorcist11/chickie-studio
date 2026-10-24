@@ -106,6 +106,16 @@
     "accessDeniedTitle": "Truy Cập Bị Từ Chối",
     "accessDeniedMessage": "Bạn không có quyền truy cập vào chức năng hoặc trang này.",
     "backHome": "Về trang chủ"
+  },
+  "layout": {
+    "brand": "CHICKIE CRM",
+    "brandShort": "CS",
+    "systemTitle": "Hệ Thống Quản Lý Studio",
+    "expandSidebar": "Mở rộng menu",
+    "collapseSidebar": "Thu gọn menu",
+    "defaultUser": "Quản trị viên",
+    "defaultRole": "Admin",
+    "logout": "Đăng xuất"
   }
 }
 
