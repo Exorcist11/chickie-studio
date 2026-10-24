@@ -28,7 +28,26 @@ import {
   CardContent,
   Badge,
 } from "../components/ui";
-import { Button as ChickieUIButton } from "@chickie/ui";
+import {
+  Button as ChickieUIButton,
+  TextField as ChickieTextField,
+  PasswordField as ChickiePasswordField,
+  SearchField as ChickieSearchField,
+  TextArea as ChickieTextArea,
+  Select as ChickieSelect,
+  Checkbox as ChickieCheckbox,
+  RadioGroup as ChickieRadioGroup,
+  Switch as ChickieSwitch,
+  Badge as ChickieBadge,
+  Card as ChickieCard,
+  CardHeader as ChickieCardHeader,
+  CardTitle as ChickieCardTitle,
+  CardDescription as ChickieCardDescription,
+  CardContent as ChickieCardContent,
+  CardFooter as ChickieCardFooter,
+  Spinner as ChickieSpinner,
+  Skeleton as ChickieSkeleton,
+} from "@chickie/ui";
 
 interface SampleOrderRecord extends Record<string, unknown> {
   id: string;
@@ -42,6 +61,11 @@ interface SampleOrderRecord extends Record<string, unknown> {
 export const DevComponentsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [uiSearch, setUiSearch] = useState("");
+  const [uiSelect, setUiSelect] = useState("AVAILABLE");
+  const [uiChecked, setUiChecked] = useState(true);
+  const [uiRadio, setUiRadio] = useState("direct");
+  const [uiSwitch, setUiSwitch] = useState(true);
 
   // Sample data for DataTable
   const sampleTableData: SampleOrderRecord[] = [
@@ -299,66 +323,215 @@ export const DevComponentsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 6. shadcn UI Primitives (Button, Input, Card, Badge) */}
-        <section className="bg-warm-white p-5 rounded-card border border-line">
-          <h3 className="font-playfair text-lg font-semibold text-ink mb-4">
-            6. UI Primitives (shadcn/ui Standard)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card hoverEffect>
-              <CardHeader>
-                <CardTitle>Thẻ Primitive (Card Component)</CardTitle>
-                <CardDescription>Thiết kế dạng thẻ card chuẩn shadcn với slot phân tách</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="default">Mặc định</Badge>
-                  <Badge variant="secondary">Thứ cấp</Badge>
-                  <Badge variant="destructive">Cảnh báo</Badge>
-                  <Badge variant="success">Thành công</Badge>
-                  <Badge variant="warning">Chờ xử lý</Badge>
-                  <Badge variant="outline">Đường viền</Badge>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="primary" size="sm">Primary</Button>
-                  <Button variant="secondary" size="sm">Secondary</Button>
-                  <Button variant="outline" size="sm">Outline</Button>
-                  <Button variant="ghost" size="sm">Ghost</Button>
-                  <Button variant="destructive" size="sm">Destructive</Button>
-                  <Button isLoading size="sm">Loading</Button>
-                </div>
-              </CardContent>
-            </Card>
+        {/* 6. @chickie/ui Base Components (Giai đoạn UI-1) */}
+        <section className="bg-warm-white p-5 rounded-card border border-line space-y-6">
+          <div>
+            <h3 className="font-playfair text-lg font-semibold text-ink">
+              6. Giai đoạn UI-1: Bộ Nhập Liệu Cơ Bản & Hiển Thị (@chickie/ui)
+            </h3>
+            <p className="text-sm text-ink-muted mt-1">
+              Component chuẩn hóa bọc shadcn primitive (Zero Inline CSS, WAI-ARIA 100%, Vitest Coverage &gt; 80%)
+            </p>
+          </div>
 
-            <Card hoverEffect>
-              <CardHeader>
-                <CardTitle>Package @chickie/ui - Base Button</CardTitle>
-                <CardDescription>
-                  Component bọc shadcn primitive từ workspace monorepo dùng chung (variant: primary | secondary | tertiary)
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex flex-wrap gap-2.5">
-                  <ChickieUIButton variant="primary" size="md">Primary MD</ChickieUIButton>
-                  <ChickieUIButton variant="secondary" size="md">Secondary MD</ChickieUIButton>
-                  <ChickieUIButton variant="tertiary" size="md">Tertiary MD</ChickieUIButton>
-                  <ChickieUIButton variant="primary" size="sm">Primary SM</ChickieUIButton>
-                  <ChickieUIButton variant="primary" loading size="sm">Đang lưu...</ChickieUIButton>
-                  <ChickieUIButton variant="secondary" disabled size="sm">Vô hiệu hóa</ChickieUIButton>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="space-y-6">
+            {/* Buttons */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <h4 className="text-xs font-semibold uppercase text-ink-muted tracking-wider">
+                1. Nút bấm (Button)
+              </h4>
+              <div className="flex flex-wrap gap-2.5">
+                <ChickieUIButton variant="primary" size="md">Primary MD (44px)</ChickieUIButton>
+                <ChickieUIButton variant="secondary" size="md">Secondary MD</ChickieUIButton>
+                <ChickieUIButton variant="tertiary" size="md">Tertiary MD</ChickieUIButton>
+                <ChickieUIButton variant="primary" size="sm">Primary SM (36px)</ChickieUIButton>
+                <ChickieUIButton variant="primary" loading size="sm">Đang lưu...</ChickieUIButton>
+                <ChickieUIButton variant="secondary" disabled size="sm">Vô hiệu hóa</ChickieUIButton>
+              </div>
+            </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Form Input Primitives</CardTitle>
-                <CardDescription>Ô nhập liệu tuân thủ chuẩn a11y với nhãn và helper</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Input label="Email công việc" placeholder="admin@chickie.vn" />
-                <Input label="Mật khẩu" type="password" placeholder="••••••••" helperText="Tối thiểu 8 ký tự" />
-              </CardContent>
-            </Card>
+            {/* TextFields */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <h4 className="text-xs font-semibold uppercase text-ink-muted tracking-wider">
+                2. Ô nhập liệu (TextField, PasswordField, SearchField)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <ChickieTextField
+                  label="Tên khách hàng"
+                  placeholder="Ví dụ: Trần Mai Anh"
+                  hint="Nhập đầy đủ tên theo CCCD"
+                  required
+                />
+                <ChickiePasswordField
+                  label="Mật khẩu nội bộ"
+                  placeholder="Nhập tối thiểu 8 ký tự"
+                  required
+                />
+                <ChickieSearchField
+                  label="Tìm kiếm sản phẩm"
+                  placeholder="Nhập mã sản phẩm hoặc tên váy..."
+                  value={uiSearch}
+                  onChange={(e) => setUiSearch(e.target.value)}
+                  onClear={() => setUiSearch("")}
+                />
+              </div>
+            </div>
+
+            {/* TextArea & Select */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <h4 className="text-xs font-semibold uppercase text-ink-muted tracking-wider">
+                3. Vùng văn bản & Hộp chọn (TextArea & Select)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ChickieTextArea
+                  label="Ghi chú đơn hàng"
+                  placeholder="Nhập tình trạng trang phục trước khi giao cho khách..."
+                  maxLength={150}
+                  showCount
+                  hint="Lưu vào nhật ký kiểm đồ xuất kho"
+                />
+                <ChickieSelect
+                  label="Trạng thái kho đồ"
+                  value={uiSelect}
+                  onChange={(e) => setUiSelect(e.target.value)}
+                  options={[
+                    { value: "AVAILABLE", label: "Có sẵn tại studio" },
+                    { value: "RENTED", label: "Đang cho khách thuê" },
+                    { value: "CLEANING", label: "Đang gửi giặt hấp cao cấp" },
+                    { value: "REPAIRING", label: "Đang sửa đường may" },
+                  ]}
+                  hint="Hệ thống tự động cập nhật lịch khả dụng"
+                />
+              </div>
+            </div>
+
+            {/* Checkbox, RadioGroup & Switch */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <h4 className="text-xs font-semibold uppercase text-ink-muted tracking-wider">
+                4. Chọn lựa & Công tắc (Checkbox, RadioGroup & Switch)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <ChickieCheckbox
+                    label="Khách đã đặt cọc CCCD"
+                    hint="Giữ giấy tờ gốc tại két sắt quầy lễ tân"
+                    checked={uiChecked}
+                    onCheckedChange={setUiChecked}
+                  />
+                </div>
+                <div>
+                  <ChickieRadioGroup
+                    label="Hình thức thanh toán"
+                    name="crm-payment-type"
+                    value={uiRadio}
+                    onValueChange={setUiRadio}
+                    options={[
+                      { value: "direct", label: "Tiền mặt / Quẹt thẻ tại quầy" },
+                      { value: "transfer", label: "Chuyển khoản VietQR" },
+                    ]}
+                  />
+                </div>
+                <div>
+                  <ChickieSwitch
+                    label="Gửi SMS thông báo nhắc trả đồ"
+                    hint="Tự động gửi trước giờ trả 3 tiếng"
+                    checked={uiSwitch}
+                    onCheckedChange={setUiSwitch}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Badges, Spinners & Skeletons */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <h4 className="text-xs font-semibold uppercase text-ink-muted tracking-wider">
+                5. Huy hiệu ngữ nghĩa & Trạng thái tải (Badge, Spinner & Skeleton)
+              </h4>
+              <div className="space-y-4">
+                <div>
+                  <span className="text-xs text-ink-muted block mb-2">Huy hiệu ngữ nghĩa (Badge):</span>
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <ChickieBadge variant="primary">Primary</ChickieBadge>
+                    <ChickieBadge variant="secondary">Secondary</ChickieBadge>
+                    <ChickieBadge variant="accent">Accent</ChickieBadge>
+                    <ChickieBadge variant="success">Hoàn thành</ChickieBadge>
+                    <ChickieBadge variant="warning">Chờ xử lý</ChickieBadge>
+                    <ChickieBadge variant="destructive">Quá hạn</ChickieBadge>
+                    <ChickieBadge variant="outline">Đường viền</ChickieBadge>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                  <div className="space-y-2">
+                    <span className="text-xs text-ink-muted block">Spinners:</span>
+                    <div className="flex items-center gap-4">
+                      <ChickieSpinner size="xs" />
+                      <ChickieSpinner size="sm" />
+                      <ChickieSpinner size="md" />
+                      <ChickieSpinner size="lg" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <span className="text-xs text-ink-muted block">Skeletons:</span>
+                    <div className="flex items-center gap-3">
+                      <ChickieSkeleton shape="circular" className="h-10 w-10 shrink-0" />
+                      <div className="space-y-1 w-full">
+                        <ChickieSkeleton shape="text" className="w-1/2" />
+                        <ChickieSkeleton shape="text" className="w-4/5" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Compound Card */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <h4 className="text-xs font-semibold uppercase text-ink-muted tracking-wider">
+                6. Thẻ ghép cấu trúc (Compound Card)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <ChickieCard variant="default">
+                  <ChickieCardHeader>
+                    <ChickieCardTitle>Đơn hàng #ORD-001</ChickieCardTitle>
+                    <ChickieCardDescription>Khách: Nguyễn Thị Hoa</ChickieCardDescription>
+                  </ChickieCardHeader>
+                  <ChickieCardContent>
+                    <p className="text-sm text-ink-muted">Tổng tiền: 2.500.000₫</p>
+                  </ChickieCardContent>
+                  <ChickieCardFooter>
+                    <ChickieBadge variant="success">Đã cọc</ChickieBadge>
+                  </ChickieCardFooter>
+                </ChickieCard>
+
+                <ChickieCard variant="elevated" interactive>
+                  <ChickieCardHeader>
+                    <ChickieCardTitle>Thẻ Nổi Bật (Interactive)</ChickieCardTitle>
+                    <ChickieCardDescription>Hiệu ứng hover tương tác</ChickieCardDescription>
+                  </ChickieCardHeader>
+                  <ChickieCardContent>
+                    <p className="text-sm text-ink-muted">Chạm vào để xem chi tiết đơn hàng.</p>
+                  </ChickieCardContent>
+                  <ChickieCardFooter>
+                    <ChickieUIButton variant="primary" size="sm">Chi tiết</ChickieUIButton>
+                  </ChickieCardFooter>
+                </ChickieCard>
+
+                <ChickieCard variant="outline">
+                  <ChickieCardHeader>
+                    <ChickieCardTitle>Báo cáo kho</ChickieCardTitle>
+                    <ChickieCardDescription>Thống kê tháng 10</ChickieCardDescription>
+                  </ChickieCardHeader>
+                  <ChickieCardContent>
+                    <p className="text-sm text-ink-muted">98% trang phục sẵn sàng sử dụng.</p>
+                  </ChickieCardContent>
+                  <ChickieCardFooter>
+                    <ChickieBadge variant="outline">Báo cáo</ChickieBadge>
+                  </ChickieCardFooter>
+                </ChickieCard>
+              </div>
+            </div>
           </div>
         </section>
       </div>

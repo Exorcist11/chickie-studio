@@ -15,6 +15,19 @@ Các component nền tảng được bọc từ shadcn/ui primitive, tuân thủ
 | Tên Component | Vị trí file | Props chính | Ví dụ sử dụng (1 dòng) | Trạng thái Test & Coverage |
 | :--- | :--- | :--- | :--- | :--- |
 | **Button** | `packages/ui/src/base/Button/Button.tsx` | `variant` (primary, secondary, tertiary), `size` (md, sm), `loading` / `isLoading`, `disabled`, `leftIcon`, `rightIcon` | `<Button variant="primary" size="md">Đặt trang phục</Button>` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **TextField** | `packages/ui/src/base/TextField/TextField.tsx` | `label`, `hint`, `error`, `startIcon`, `endIcon`, `required`, HTML input props | `<TextField label="Họ tên" placeholder="Nhập tên" required />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **PasswordField** | `packages/ui/src/base/TextField/PasswordField.tsx` | Kế thừa `TextFieldProps`, toggle ẩn/hiện mật khẩu có `aria-label` | `<PasswordField label="Mật khẩu" required />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **SearchField** | `packages/ui/src/base/TextField/SearchField.tsx` | Kế thừa `TextFieldProps`, icon kính lúp + nút xóa `onClear` | `<SearchField label="Tìm kiếm" onClear={() => {}} />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **TextArea** | `packages/ui/src/base/TextArea/TextArea.tsx` | `label`, `hint`, `error`, `rows`, `maxLength`, `showCount` | `<TextArea label="Ghi chú số đo" maxLength={200} showCount />` | ✅ Pass (100% statements, 93.3% branches, axe a11y pass) |
+| **Select** | `packages/ui/src/base/Select/Select.tsx` | `label`, `hint`, `error`, `options` (`{ value, label, disabled }[]`), `placeholder` | `<Select label="Loại đồ" options={opts} placeholder="Chọn..." />` | ✅ Pass (99.5% statements, 96.3% branches, axe a11y pass) |
+| **Checkbox** | `packages/ui/src/base/Checkbox/Checkbox.tsx` | `label`, `hint`, `error`, `checked`, `defaultChecked`, `onCheckedChange` | `<Checkbox label="Xuất VAT" onCheckedChange={setVat} />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **RadioGroup** | `packages/ui/src/base/RadioGroup/RadioGroup.tsx` | `label`, `hint`, `error`, `options` (`{ value, label, hint, disabled }[]`), `value`, `onValueChange`, `orientation` | `<RadioGroup label="Giao hàng" name="ship" options={opts} />` | ✅ Pass (100% statements, 93.5% branches, axe a11y pass) |
+| **Switch** | `packages/ui/src/base/Switch/Switch.tsx` | `label`, `hint`, `error`, `checked`, `defaultChecked`, `onCheckedChange`, `labelPosition` | `<Switch label="Gia hạn tự động" onCheckedChange={setRenew} />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **Badge** | `packages/ui/src/base/Badge/Badge.tsx` | `variant` (primary, secondary, accent, success, warning, destructive, outline), `size` (sm, md) | `<Badge variant="accent">Best Seller</Badge>` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **Card** | `packages/ui/src/base/Card/Card.tsx` | `Card`, `CardHeader`, `CardTitle` (`as`), `CardDescription`, `CardContent`, `CardFooter`, `variant` (default, elevated, outline, ghost), `interactive` | `<Card variant="elevated" interactive><CardHeader><CardTitle>Tiêu đề</CardTitle></CardHeader></Card>` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **Spinner** | `packages/ui/src/base/Spinner/Spinner.tsx` | `size` (xs, sm, md, lg, xl), `variant` (primary, secondary, current, white), `label` (sr-only a11y) | `<Spinner size="md" label="Đang tải dữ liệu..." />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+| **Skeleton** | `packages/ui/src/base/Skeleton/Skeleton.tsx` | `shape` (text, circular, rectangular, card), `label`, `aria-hidden` | `<Skeleton shape="circular" className="h-10 w-10" />` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+
 
 ---
 

@@ -30,13 +30,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | ID | Tên tính năng | Phạm vi | Người phụ trách | Trạng thái | Lý do / Ghi chú |
 |---|---|---|---|---|---|
-| - | *(Trống)* | - | - | - | Giai đoạn UI-0 (UI-000) hoàn thành xuất sắc 100%. Sẵn sàng triển khai UI-001 (Nhập liệu cơ bản) |
+| - | *(Trống)* | - | - | - | Giai đoạn UI-0 (UI-000) và UI-1 (UI-001) hoàn thành xuất sắc 100%. Sẵn sàng triển khai UI-002 (Lớp phủ: Modal, Drawer, Popover...) |
 
 ---
 
 ## 3. Bảng Thống Kê Tiến Độ Tổng Thể
 
-| **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 5 | 0 | 0 | 1 | 16.7% |
+| Phân hệ / Module | Tên Module | Tổng số | TODO | SPEC | IN_PROGRESS | DONE | % Hoàn thành |
+|---|---|---|---|---|---|---|---|
+| **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 4 | 0 | 1 | 12.5% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
@@ -45,9 +47,9 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **32** | **13** | **0** | **5** | **10.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **13** | **0** | **6** | **12.0%** |
 
-*(Lưu ý: UI-000, AUTH-001/002/003, CAT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 13 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 13 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -57,11 +59,12 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec / docs |
 |---|---|---|---|---|---|---|---|---|
 | `UI-000` | UI-0: Nền tảng Monorepo Workspace, package `@chickie/ui`, primitives & base Button, ESLint boundary rules | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect | 2026-10-24 | 2026-10-24 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [ADR 0002](adr/0002-kien-truc-component-boc-shadcn-package-ui.md) |
-| `UI-001` | UI-1: Nhập liệu cơ bản (Button, TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Badge, Card, Spinner, Skeleton) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
+| `UI-001` | UI-1: Nhập liệu cơ bản (Button, TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Badge, Card, Spinner, Skeleton) | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect | 2026-10-24 | 2026-10-24 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
 | `UI-002` | UI-2: Lớp phủ (Modal, ConfirmModal, Drawer, Menu, Popover, Tooltip, notify) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
 | `UI-003` | UI-3: Ngày và form (DatePicker, DateRangePicker, bộ Form*, CurrencyField, PhoneField, ChipGroup, SizeSelector, ColorSwatchGroup) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
 | `UI-004` | UI-4: Hiển thị dữ liệu (Tabs, Accordion, Pagination, Breadcrumbs, EmptyState, ErrorState, Gallery, DataTable) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
 | `UI-005` | UI-5: Common nghiệp vụ (StatusBadge, ProductCard, SectionHeading, Rating, FilterBar, ImageUploader, StatCard) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
+
 
 ---
 
@@ -164,6 +167,6 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | 2026-10-24 | `UI-000` | 📝 SPEC $\rightarrow$ ✅ DONE | Senior Frontend Architect | Hoàn thành toàn diện kiến trúc Monorepo Workspace, package `@chickie/ui`, primitives & base Button, ESLint rules, test coverage 100%, docs tại UI_LIBRARIES.md & ADR 0002 |
 | 2026-10-24 | `CAT-001` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện V3 migration Flyway, API REST CRUD danh mục, trang CRM CategoriesPage DataTable + Zod modal, tích hợp Client grid, test coverage $\ge 88\%$ |
 | 2026-10-24 | `AUTH-001/002/003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện kiến trúc Server Spring Boot 3 + Flyway MySQL, JWT Auth, RBAC RoleGuard, UI Login CRM, test coverage Server & CRM $\ge 85\%$ |
-| 2026-10-24 | `UI-001` | ⬜ TODO $\rightarrow$ ✅ DONE | Senior Frontend Engineer | Hoàn thành toàn diện bộ component UI dùng chung cho Client & CRM, test coverage $\ge 95\%$, docs tại COMPONENTS.md |
+| 2026-10-24 | `UI-001` | ⬜ TODO $\rightarrow$ ✅ DONE | Senior Frontend Architect | Hoàn thành toàn diện Giai đoạn UI-1: Bộ nhập liệu cơ bản (@chickie/ui: Button, TextField, PasswordField, SearchField, TextArea, Select, Checkbox, RadioGroup, Switch, Badge, Card, Spinner, Skeleton), 78 tests pass, coverage 99.94%, vitest-axe a11y pass 100%, tích hợp showcase dev cả Client và CRM |
 | 2026-10-24 | Toàn bộ 17 tính năng P0 | ⬜ TODO $\rightarrow$ 📝 SPEC | Tech Lead | Hoàn tất tài liệu đặc tả kỹ thuật chi tiết cho toàn bộ MVP P0 |
 | 2026-10-24 | Khởi tạo hệ thống | Khởi tạo | Tech Lead | Lập bảng theo dõi 44 tính năng cho toàn bộ dự án Chickie Studio |
