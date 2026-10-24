@@ -67,44 +67,27 @@ npm install -D \
   prettier-plugin-tailwindcss \
   eslint-config-prettier
 
-# 5. Cấu hình components.json cho shadcn/ui
+# 5. Liên kết gói UI dùng chung @chickie/ui
 echo ""
-echo "⚙️ [3/5] Khởi tạo cấu hình components.json cho shadcn/ui..."
-cat << 'EOF' > components.json
-{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": true,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.ts",
-    "css": "src/styles/globals.css",
-    "baseColor": "stone",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/cn",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  }
-}
-EOF
-echo "✅ Đã tạo components.json"
+echo "⚙️ [3/5] Cấu hình workspace và liên kết package @chickie/ui..."
+echo "Kiến trúc 4 lớp: shadcn primitives được quản lý tập trung tại packages/ui/src/primitives."
+echo "Client import các component base, form, common qua package '@chickie/ui'."
+echo "Cấu hình transpilePackages và Tailwind @source đã sẵn sàng."
 
 # 6. Đồng bộ Design Tokens và Áp dụng Theme
 echo ""
 echo "🎨 [4/5] Áp dụng Chickie Design Tokens (Burgundy & Gold)..."
 npm run theme:apply
 
-# 7. Danh sách Component shadcn đã thiết lập
+# 7. Danh sách Component theo Kiến trúc 4 Lớp
 echo ""
 echo "🧩 [5/5] Kiểm tra danh mục component UI dùng chung..."
-echo "Danh mục component được cấu hình theo Mục 4 của Kế hoạch UI:"
-echo "- Primitives (components/ui): button, input, label, textarea, select, checkbox, radio-group, toggle-group, badge, card, avatar, aspect-ratio, separator, skeleton, alert, tooltip, scroll-area, dialog, sheet, dropdown-menu, popover, navigation-menu, tabs, accordion, carousel, slider, calendar, breadcrumb, pagination, sonner, form."
-echo "- Composite/Common (components/common): ProductCard, ServiceCard, TestimonialCard, SectionHeading, Container, Section, Header, Footer."
+echo "Kiến trúc bọc shadcn (ADR 0002):"
+echo "- Lớp 1 (primitives): Quản lý tại packages/ui/src/primitives (không export ra ngoài)."
+echo "- Lớp 2 (base): Button, TextField, Select, Modal, ConfirmModal, Drawer, Menu, Card, Badge..."
+echo "- Lớp 2b (form): FormTextField, FormSelect, FormDatePicker..."
+echo "- Lớp 3 (common): ProductCard, ServiceCard, TestimonialCard, SectionHeading, Header, Footer..."
+echo "- Lớp 4 (features): Gắn nghiệp vụ đặt đồ, tra cứu đơn..."
 
 echo ""
 echo "================================================================="

@@ -1,0 +1,64 @@
+/**
+ * Chickie Studio - Unified shadcn/ui Theme Tokens
+ * Nguồn sự thật cho Design System (màu sắc, bo góc, bóng đổ, typography)
+ */
+:root {
+  /* shadcn/ui Standard HSL Theme Tokens */
+  --background: 40 50% 98%;          /* #FFFCF8 Warm White */
+  --foreground: 343 13% 17%;         /* #302528 Ink */
+  --card: 0 0% 100%;                 /* #FFFFFF */
+  --card-foreground: 343 13% 17%;    /* #302528 Ink */
+  --popover: 0 0% 100%;
+  --popover-foreground: 343 13% 17%;
+  --primary: 348 55% 25%;            /* #641D2B Burgundy */
+  --primary-foreground: 40 50% 98%;   /* #FFFCF8 */
+  --secondary: 33 50% 94%;           /* #F8F1E8 Ivory */
+  --secondary-foreground: 343 13% 17%;
+  --muted: 33 50% 94%;               /* #F8F1E8 Ivory */
+  --muted-foreground: 348 7% 39%;    /* #6B5D60 Ink Muted */
+  --accent: 38 43% 52%;              /* #B8914F Champagne Gold */
+  --accent-foreground: 343 13% 17%;
+  --destructive: 359 68% 54%;        /* #D9383A Red */
+  --destructive-foreground: 0 0% 100%;
+  --border: 26 29% 88%;              /* #EADFD6 Line */
+  --input: 26 29% 88%;
+  --ring: 348 55% 25%;               /* #641D2B Burgundy */
+  --radius: 0.5rem;                  /* 8px */
+
+  /* Chickie Studio Brand Design Tokens */
+  --color-burgundy: #641D2B;
+  --color-burgundy-light: #762538;
+  --color-burgundy-dark: #4C1520;
+  --color-primary: #641D2B;
+  --color-primary-hover: #4D1621;
+  --color-gold: #B8914F;
+  --color-accent: #B8914F;
+  --color-rose: #DCC8BD;
+  --color-ivory: #F8F1E8;
+  --color-warm-white: #FFFCF8;
+  --color-ink: #302528;
+  --color-ink-muted: #6B5D60;
+  --color-line: #EADFD6;
+  --color-sidebar-dark: #302528;
+
+  /* Status Colors */
+  --color-success: #1B8755;
+  --color-warning: #B8791F;
+  --color-danger: #D9383A;
+  --color-destructive: #D9383A;
+  --color-info: #4A6A8A;
+
+  /* Border Radii */
+  --radius-tag: 6px;
+  --radius-btn: 8px;
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+
+  /* Elevation Shadows */
+  --shadow-card: 0 2px 10px -2px rgba(48, 37, 40, 0.06), 0 1px 4px -1px rgba(48, 37, 40, 0.04);
+  --shadow-raised: 0 10px 25px -5px rgba(48, 37, 40, 0.12), 0 4px 12px -2px rgba(48, 37, 40, 0.08);
+
+  /* Typography */
+  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}

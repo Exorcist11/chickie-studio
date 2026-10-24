@@ -17,7 +17,9 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vite/client", "vitest/globals"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@chickie/ui": ["../packages/ui/src/index.ts"],
+      "@chickie/ui/*": ["../packages/ui/src/*"]
     }
   },
   "include": ["src", "vitest.setup.ts"],

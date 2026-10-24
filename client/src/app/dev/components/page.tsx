@@ -33,6 +33,7 @@ import {
   Footer,
   type OrderStatus,
 } from "@/components/ui";
+import { Button as ChickieUIButton } from "@chickie/ui";
 
 export default function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") {
@@ -163,6 +164,34 @@ export default function DevComponentsPage() {
             <Button variant="primary" size="sm">Primary SM (36px)</Button>
             <Button variant="primary" isLoading>Đang lưu...</Button>
             <Button variant="primary" disabled>Bị vô hiệu hóa</Button>
+          </div>
+        </section>
+
+        {/* 4b. @chickie/ui Package Button (Monorepo Standard) */}
+        <section className="space-y-4">
+          <SectionHeading
+            title="4b. Button từ Package @chickie/ui (Kiến Trúc 4 Lớp Monorepo)"
+            description="Nút bấm chuẩn từ package dùng chung @chickie/ui bọc shadcn primitive (variant: primary | secondary | tertiary, size: md | sm, a11y passed)"
+          />
+          <div className="p-6 bg-white rounded-card border border-line flex flex-wrap items-center gap-4">
+            <ChickieUIButton variant="primary" size="md">
+              Chickie UI Primary MD (44px)
+            </ChickieUIButton>
+            <ChickieUIButton variant="secondary" size="md">
+              Chickie UI Secondary MD
+            </ChickieUIButton>
+            <ChickieUIButton variant="tertiary" size="md">
+              Chickie UI Tertiary Link
+            </ChickieUIButton>
+            <ChickieUIButton variant="primary" size="sm">
+              Chickie UI Primary SM (36px)
+            </ChickieUIButton>
+            <ChickieUIButton variant="primary" loading>
+              Đang tải dữ liệu...
+            </ChickieUIButton>
+            <ChickieUIButton variant="secondary" disabled>
+              Vô hiệu hóa
+            </ChickieUIButton>
           </div>
         </section>
 

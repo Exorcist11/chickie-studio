@@ -1,0 +1,27 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["src/form/**/*", "src/common/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/primitives/**", "../primitives/**", "../../primitives/**"],
+                "message": "common và form không được import trực tiếp primitives; chỉ base được phép import."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

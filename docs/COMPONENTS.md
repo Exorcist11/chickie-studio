@@ -8,6 +8,16 @@ Toàn bộ component đều được thiết kế tuân thủ nghiêm ngặt the
 
 ---
 
+## 0. Package `@chickie/ui` (Kiến Trúc Component Dùng Chung Monorepo)
+
+Các component nền tảng được bọc từ shadcn/ui primitive, tuân thủ nghiêm ngặt [ADR 0002](adr/0002-kien-truc-component-boc-shadcn-package-ui.md) và [docs/UI_LIBRARIES.md](UI_LIBRARIES.md).
+
+| Tên Component | Vị trí file | Props chính | Ví dụ sử dụng (1 dòng) | Trạng thái Test & Coverage |
+| :--- | :--- | :--- | :--- | :--- |
+| **Button** | `packages/ui/src/base/Button/Button.tsx` | `variant` (primary, secondary, tertiary), `size` (md, sm), `loading` / `isLoading`, `disabled`, `leftIcon`, `rightIcon` | `<Button variant="primary" size="md">Đặt trang phục</Button>` | ✅ Pass (100% statements, 100% branches, axe a11y pass) |
+
+---
+
 ## 1. Client Components (`client/src/components/ui/`)
 
 Cấu trúc mỗi component: `client/src/components/ui/<ComponentName>/` gồm `<ComponentName>.tsx`, `<ComponentName>.test.tsx`, `index.ts`. Re-export tập trung qua `client/src/components/ui/index.ts`.

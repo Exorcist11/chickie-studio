@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [
+              "@radix-ui/*",
+              "radix-ui",
+              "antd",
+              "@ant-design/*",
+              "@chickie/ui/src/*"
+            ],
+            "message": "Chỉ import component từ \"@chickie/ui\". Cần component mới thì thêm vào lớp base."
+          }
+        ]
+      }
+    ]
+  }
+}

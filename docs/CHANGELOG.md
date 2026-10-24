@@ -7,6 +7,24 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Component Architecture & Monorepo Package @chickie/ui (UI-000 - ✅ DONE)**:
+  - **Khởi tạo kiến trúc 4 lớp (4-Tier Layered Architecture)**:
+    - Lập [ADR 0002](adr/0002-kien-truc-component-boc-shadcn-package-ui.md) và tài liệu đặc tả [docs/UI_LIBRARIES.md](UI_LIBRARIES.md) chuẩn hóa kiến trúc bọc shadcn/ui thay vì gọi trực tiếp.
+    - Tạo cấu trúc Monorepo Workspace: root `package.json` kích hoạt `workspaces: ["packages/*", "client", "crm"]`.
+    - Thiết lập package `packages/ui` (`@chickie/ui`) với `exports` đóng chặt: chỉ mở `"."` và theme tokens, hoàn toàn cô lập `src/primitives` để cưỡng chế kỷ luật bằng cấu trúc.
+    - Cấu hình Design Tokens `packages/ui/src/styles/shadcn-theme.css`, `components.json` trỏ alias ui vào primitives.
+  - **Lớp Primitive & Base Button**:
+    - Triển khai primitive button (`packages/ui/src/primitives/button.tsx`) chuẩn cva/shadcn.
+    - Triển khai Chickie Base `Button` (`packages/ui/src/base/Button/Button.tsx`) bọc primitive: variant hẹp theo design system (`primary | secondary | tertiary`), size (`md | sm`), touch target chuẩn 44px, hỗ trợ icon (`leftIcon`, `rightIcon`), trạng thái `loading` kèm spinner SVG và WAI-ARIA `aria-busy`.
+    - Bộ kiểm thử tự động `Button.test.tsx`: 9 tests pass 100%, kiểm thử accessibility WAI-ARIA với `vitest-axe` không có vi phạm, độ phủ coverage đạt **100%** statements, branches, functions và lines.
+  - **Cưỡng chế quy tắc (ESLint) & Tích hợp Client/CRM**:
+    - Cấu hình ESLint `no-restricted-imports` ở cả Client và CRM cấm import trực tiếp từ primitives bên ngoài (`@radix-ui/*`, `antd`, `@chickie/ui/src/*`).
+    - Cấu hình Next.js `transpilePackages: ['@chickie/ui']` và Tailwind content quét `packages/ui/src`.
+    - Cấu hình CRM Vite resolve alias và Tailwind content quét `packages/ui/src`.
+    - Cập nhật trang xem trước `/dev/components` ở cả Client và CRM demo Base Button từ `@chickie/ui`.
+    - Đồng bộ scripts `setup-client-ui.sh`, `setup-crm-ui.sh`, danh mục `COMPONENTS.md` và lộ trình `FEATURES.md`.
+    - Toàn bộ test suites pass 100% (Client 91 tests, CRM 76 tests, packages/ui 9 tests), build production cả Next.js và Vite hoàn thành tối ưu.
+
 - **Category Management Module (CAT-001 - ✅ DONE)**:
   - **Server Spring Boot 3**:
     - Tạo Flyway migration `V3__create_categories_table.sql` gồm bảng `categories` và seed 5 danh mục ban đầu.

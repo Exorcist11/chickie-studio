@@ -28,6 +28,7 @@ import {
   CardContent,
   Badge,
 } from "../components/ui";
+import { Button as ChickieUIButton } from "@chickie/ui";
 
 interface SampleOrderRecord extends Record<string, unknown> {
   id: string;
@@ -325,6 +326,25 @@ export const DevComponentsPage: React.FC = () => {
                   <Button variant="ghost" size="sm">Ghost</Button>
                   <Button variant="destructive" size="sm">Destructive</Button>
                   <Button isLoading size="sm">Loading</Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card hoverEffect>
+              <CardHeader>
+                <CardTitle>Package @chickie/ui - Base Button</CardTitle>
+                <CardDescription>
+                  Component bọc shadcn primitive từ workspace monorepo dùng chung (variant: primary | secondary | tertiary)
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2.5">
+                  <ChickieUIButton variant="primary" size="md">Primary MD</ChickieUIButton>
+                  <ChickieUIButton variant="secondary" size="md">Secondary MD</ChickieUIButton>
+                  <ChickieUIButton variant="tertiary" size="md">Tertiary MD</ChickieUIButton>
+                  <ChickieUIButton variant="primary" size="sm">Primary SM</ChickieUIButton>
+                  <ChickieUIButton variant="primary" loading size="sm">Đang lưu...</ChickieUIButton>
+                  <ChickieUIButton variant="secondary" disabled size="sm">Vô hiệu hóa</ChickieUIButton>
                 </div>
               </CardContent>
             </Card>
