@@ -1,0 +1,34 @@
+// CategoryViewModal Scoped Detail Styles with @apply
+@use "../../../../styles/tokens" as *;
+
+.infoGrid {
+  @apply grid grid-cols-2 gap-4 bg-warm-white p-4 rounded-lg border border-line;
+}
+
+.fieldLabel {
+  @apply text-xs text-ink-muted block font-medium mb-1;
+}
+
+.fieldValue {
+  @apply text-sm font-semibold text-ink block;
+}
+
+.fieldCode {
+  @apply text-xs font-mono bg-white text-stone-700 px-2 py-0.5 rounded border border-line;
+}
+
+.fieldOrder {
+  @apply text-sm font-mono font-medium text-stone-700;
+}
+
+.fieldIcon {
+  @apply text-sm text-stone-700 flex items-center gap-1.5 font-mono;
+}
+
+.fieldTime {
+  @apply text-xs text-stone-600 font-mono;
+}
+
+.descBox {
+  @apply text-sm text-stone-700 bg-white p-3 rounded-lg border border-line min-h-[64px] leading-relaxed;
+}

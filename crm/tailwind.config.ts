@@ -24,7 +24,14 @@ const config: Config = {
         line: "var(--color-line)",
         success: "var(--color-success)",
         warning: "var(--color-warning)",
-        danger: "var(--color-danger)",
+        danger: {
+          DEFAULT: "#D9383A",
+          foreground: "#FFFFFF",
+        },
+        destructive: {
+          DEFAULT: "#D9383A",
+          foreground: "#FFFFFF",
+        },
         info: "var(--color-info)",
       },
       fontFamily: {
@@ -37,6 +44,7 @@ const config: Config = {
         card: "var(--radius-card)",
       },
       boxShadow: {
+        xs: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
         card: "var(--shadow-card)",
         raised: "var(--shadow-raised)",
       },

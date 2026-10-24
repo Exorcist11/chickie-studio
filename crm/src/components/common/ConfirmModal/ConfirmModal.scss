@@ -1,19 +1,8 @@
-// CRM ConfirmModal Scoped Styles
+// CRM ConfirmModal Scoped Styles with @apply
 @use "../../../styles/tokens" as *;
 
 .crm-confirm-modal {
-  &__backdrop {
-    background-color: rgba(48, 37, 40, 0.45);
-    backdrop-filter: blur(2px);
-    transition: opacity 200ms ease;
-  }
-
-  &__dialog {
-    background-color: #ffffff;
-    border-radius: var(--radius-card, 16px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border: 1px solid var(--color-line, #EADFD6);
-    max-width: 480px;
-    width: 100%;
+  &__content {
+    @apply text-sm text-ink-muted leading-relaxed py-1;
   }
 }

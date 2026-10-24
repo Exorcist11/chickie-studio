@@ -1,0 +1,85 @@
+// CRM Common Modal Scoped Styles with BEM & @apply
+@use "../../../styles/tokens" as *;
+
+.crm-modal {
+  @apply fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm;
+  background-color: rgba(48, 37, 40, 0.6);
+
+  &__card {
+    @apply bg-white rounded-xl border border-line w-full overflow-hidden shadow-2xl relative flex flex-col;
+    animation: crmModalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &--sm {
+      max-width: 30rem; // 480px
+    }
+
+    &--md {
+      max-width: 36rem; // 576px
+    }
+
+    &--lg {
+      max-width: 48rem; // 768px
+    }
+
+    &--xl {
+      max-width: 64rem; // 1024px
+    }
+
+    &--full {
+      max-width: calc(100vw - 2rem);
+    }
+  }
+
+  &__header {
+    @apply flex items-center justify-between px-6 py-4 border-b border-line bg-warm-white shrink-0;
+  }
+
+  &__header-content {
+    @apply flex items-center gap-3 min-w-0 pr-4;
+  }
+
+  &__header-icon {
+    @apply w-9 h-9 rounded-lg flex items-center justify-center shrink-0;
+    background-color: rgba(100, 29, 43, 0.08);
+  }
+
+  &__title-group {
+    @apply min-w-0;
+  }
+
+  &__title {
+    @apply font-serif text-lg font-bold text-ink truncate;
+  }
+
+  &__subtitle {
+    @apply text-xs text-ink-muted truncate mt-0.5;
+  }
+
+  &__close-btn {
+    @apply text-stone-400 hover:text-stone-700 transition-colors p-1.5 rounded-md shrink-0 cursor-pointer;
+
+    &:focus-visible {
+      outline: 2px solid $burgundy;
+      outline-offset: 1px;
+    }
+  }
+
+  &__body {
+    @apply px-6 py-5 flex flex-col gap-4 max-h-[75vh] overflow-y-auto;
+  }
+
+  &__footer {
+    @apply flex items-center justify-end gap-3 px-6 py-3.5 border-t border-line bg-warm-white shrink-0;
+  }
+}
+
+@keyframes crmModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

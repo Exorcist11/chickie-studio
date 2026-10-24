@@ -1,0 +1,18 @@
+// CategoryModal Form Styles with @apply
+@use "../../../../styles/tokens" as *;
+
+.modalFormContent {
+  @apply flex flex-col gap-4;
+}
+
+.errorBanner {
+  @apply bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded-lg text-sm flex items-center gap-2 font-medium;
+}
+
+.formGrid {
+  @apply grid grid-cols-2 gap-4;
+}
+
+.switchWrapper {
+  @apply pt-1 pb-1;
+}

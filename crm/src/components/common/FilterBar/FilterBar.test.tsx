@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FilterBar } from "./FilterBar";
@@ -62,6 +62,31 @@ describe("FilterBar component (CRM)", () => {
 
     expect(handleReset).toHaveBeenCalledTimes(1);
     expect(handleFilter).toHaveBeenCalledWith({});
+  });
+
+  it("handles search button click and supports showDateRange=false", async () => {
+    const user = userEvent.setup();
+    const handleFilter = vi.fn();
+
+    render(
+      <FilterBar
+        showDateRange={false}
+        searchPlaceholder="Tìm kiếm..."
+        onFilterChange={handleFilter}
+      />
+    );
+
+    expect(screen.queryByLabelText("Từ ngày")).not.toBeInTheDocument();
+
+    const searchInput = screen.getByPlaceholderText("Tìm kiếm...");
+    await user.type(searchInput, "Áo dài");
+
+    const searchBtn = screen.getByRole("button", { name: /tìm kiếm/i });
+    await user.click(searchBtn);
+
+    expect(handleFilter).toHaveBeenCalledWith(
+      expect.objectContaining({ search: "Áo dài" })
+    );
   });
 });
 

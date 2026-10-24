@@ -11,3 +11,4 @@ export * from "./RevenueChart";
 export * from "./EmptyState";
 export * from "./ErrorState";
 export * from "./PageLoading";
+export * from "./Modal";

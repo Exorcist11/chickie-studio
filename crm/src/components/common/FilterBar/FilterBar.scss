@@ -1,13 +1,93 @@
-// CRM FilterBar Scoped Styles
+// CRM FilterBar Scoped Styles with BEM & @apply
 @use "../../../styles/tokens" as *;
 
 .crm-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3, 0.75rem);
-  padding: var(--space-4, 1rem);
-  background-color: #ffffff;
-  border-radius: var(--radius-card, 16px);
-  border: 1px solid var(--color-line, #EADFD6);
+  @apply bg-white p-3.5 rounded-card border border-line mb-4 flex flex-wrap items-center justify-between gap-3 shadow-sm;
+
+  &__content {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  &__search-wrapper {
+    @apply relative h-10 flex items-center min-w-[240px] sm:min-w-[280px] md:min-w-[320px];
+  }
+
+  &__search-icon {
+    @apply w-4 h-4 text-ink-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none;
+  }
+
+  &__search-input {
+    @apply w-full h-10 pl-10 pr-3.5 text-sm bg-warm-white border border-line rounded-btn text-ink transition-all;
+
+    &::placeholder {
+      color: rgba(107, 93, 96, 0.7);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $burgundy;
+      box-shadow: 0 0 0 2px rgba(100, 29, 43, 0.2);
+    }
+  }
+
+  &__search-btn {
+    @apply h-10 px-4 inline-flex items-center gap-2 text-sm font-medium bg-burgundy text-white rounded-btn transition-colors shadow-sm cursor-pointer shrink-0;
+
+    &:hover {
+      background-color: var(--color-burgundy-light, #762538);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $burgundy;
+      outline-offset: 1px;
+    }
+  }
+
+  &__select-wrapper {
+    @apply relative h-10 flex items-center min-w-[150px];
+  }
+
+  &__select {
+    @apply w-full h-10 px-3.5 pr-8 text-sm bg-warm-white border border-line rounded-btn text-ink transition-all cursor-pointer appearance-none;
+
+    &:focus {
+      outline: none;
+      border-color: $burgundy;
+      box-shadow: 0 0 0 2px rgba(100, 29, 43, 0.2);
+    }
+  }
+
+  &__select-icon {
+    @apply w-4 h-4 text-ink-muted absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none;
+  }
+
+  &__date-range {
+    @apply h-10 flex items-center gap-1.5 bg-warm-white border border-line rounded-btn px-3 text-xs text-ink-muted;
+  }
+
+  &__date-input {
+    @apply bg-transparent border-0 text-ink text-xs h-full;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__reset-btn {
+    @apply h-10 inline-flex items-center gap-1.5 px-3.5 text-xs font-medium text-ink-muted bg-warm-white border border-line rounded-btn transition-colors shrink-0 cursor-pointer;
+
+    &:hover {
+      background-color: var(--color-ivory, #F8F1E8);
+      color: $ink;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(100, 29, 43, 0.2);
+    }
+  }
+
+  &__extra-actions {
+    @apply flex items-center gap-2;
+  }
 }

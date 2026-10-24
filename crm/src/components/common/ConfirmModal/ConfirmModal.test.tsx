@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ConfirmModal } from "./ConfirmModal";
 import "../../../i18n";
@@ -45,6 +45,35 @@ describe("ConfirmModal component (CRM)", () => {
 
     fireEvent.keyDown(window, { key: "Escape" });
     expect(handleCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders confirm button with primary burgundy variant by default", () => {
+    render(
+      <ConfirmModal
+        open={true}
+        content="Xác nhận"
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />
+    );
+
+    const confirmBtn = screen.getByRole("button", { name: "Xác nhận" });
+    expect(confirmBtn).toHaveClass("bg-burgundy");
+  });
+
+  it("supports custom confirmVariant such as destructive", () => {
+    render(
+      <ConfirmModal
+        open={true}
+        content="Xác nhận"
+        confirmVariant="destructive"
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />
+    );
+
+    const confirmBtn = screen.getByRole("button", { name: "Xác nhận" });
+    expect(confirmBtn).toHaveClass("bg-destructive");
   });
 
   it("renders nothing when open is false", () => {

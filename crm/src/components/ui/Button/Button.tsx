@@ -16,7 +16,7 @@ export const buttonVariants = cva(
         ghost:
           "text-ink bg-transparent hover:bg-ivory active:bg-line/40",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 active:bg-destructive/80 shadow-xs",
+          "bg-destructive text-white hover:bg-destructive/90 active:bg-destructive/80 shadow-xs focus-visible:ring-destructive",
         tertiary:
           "text-burgundy bg-transparent hover:underline underline-offset-4 p-0 h-auto",
       },
@@ -92,13 +92,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </svg>
         )}
         {!isLoading && leftIcon && (
-          <span className="mr-2 inline-flex" aria-hidden="true">
+          <span className="mr-2 inline-flex shrink-0" aria-hidden="true">
             {leftIcon}
           </span>
         )}
-        <span>{children}</span>
+        <span className="inline-flex items-center gap-1.5 whitespace-nowrap">{children}</span>
         {!isLoading && rightIcon && (
-          <span className="ml-2 inline-flex" aria-hidden="true">
+          <span className="ml-2 inline-flex shrink-0" aria-hidden="true">
             {rightIcon}
           </span>
         )}

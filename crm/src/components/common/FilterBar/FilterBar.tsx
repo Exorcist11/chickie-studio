@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Search, RotateCcw, Calendar } from "lucide-react";
+import { Search, RotateCcw, Calendar, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../ui/Button/Button";
 import { cn } from "../../../lib/cn";
 import "./FilterBar.scss";
 
@@ -20,6 +21,7 @@ export interface FilterBarProps {
   searchPlaceholder?: string;
   selectPlaceholder?: string;
   selectOptions?: FilterSelectOption[];
+  showDateRange?: boolean;
   onFilterChange: (filters: FilterValues) => void;
   onReset?: () => void;
   extraActions?: React.ReactNode;
@@ -30,6 +32,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   searchPlaceholder,
   selectPlaceholder,
   selectOptions,
+  showDateRange = true,
   onFilterChange,
   onReset,
   extraActions,
@@ -65,16 +68,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   };
 
   return (
-    <div
-      className={cn(
-        "bg-white p-4 rounded-card border border-line mb-4 flex flex-wrap items-center justify-between gap-3 shadow-card",
-        className
-      )}
-    >
-      <div className="flex flex-wrap items-center gap-3">
+    <div className={cn("crm-filter-bar", className)}>
+      <div className="crm-filter-bar__content">
         {/* Search Input */}
-        <div className="relative min-w-[220px]">
-          <Search className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="crm-filter-bar__search-wrapper">
+          <Search className="crm-filter-bar__search-icon" />
           <input
             type="text"
             value={search}
@@ -83,70 +81,92 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               setSearch(e.target.value);
               handleApplyFilter(e.target.value, selectValue, startDate, endDate);
             }}
-            className="w-full pl-9 pr-3 py-2 text-xs md:text-sm bg-warm-white border border-line rounded-btn text-ink placeholder:text-ink-muted/70 focus:outline-none focus:ring-2 focus:ring-burgundy transition-all"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleApplyFilter(search, selectValue, startDate, endDate);
+              }
+            }}
+            className="crm-filter-bar__search-input"
           />
         </div>
 
         {/* Select Dropdown */}
         {selectOptions && selectOptions.length > 0 && (
-          <select
-            value={selectValue}
-            onChange={(e) => {
-              const val = e.target.value;
-              setSelectValue(val);
-              handleApplyFilter(search, val, startDate, endDate);
-            }}
-            aria-label={selectPlaceholder || t("common.status")}
-            className="px-3 py-2 text-xs md:text-sm bg-warm-white border border-line rounded-btn text-ink focus:outline-none focus:ring-2 focus:ring-burgundy transition-all cursor-pointer"
-          >
-            <option value="">{selectPlaceholder || t("common.all")}</option>
-            {selectOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div className="crm-filter-bar__select-wrapper">
+            <select
+              value={selectValue}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectValue(val);
+                handleApplyFilter(search, val, startDate, endDate);
+              }}
+              aria-label={selectPlaceholder || t("common.status")}
+              className="crm-filter-bar__select"
+            >
+              <option value="">{selectPlaceholder || t("common.all")}</option>
+              {selectOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="crm-filter-bar__select-icon" />
+          </div>
         )}
 
         {/* Date Range Inputs */}
-        <div className="flex items-center gap-1.5 bg-warm-white border border-line rounded-btn px-2.5 py-1 text-xs text-ink-muted">
-          <Calendar className="w-3.5 h-3.5 text-ink-muted shrink-0" />
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => {
-              setStartDate(e.target.value);
-              handleApplyFilter(search, selectValue, e.target.value, endDate);
-            }}
-            aria-label="Từ ngày"
-            className="bg-transparent border-0 text-ink focus:outline-none text-xs"
-          />
-          <span>-</span>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => {
-              setEndDate(e.target.value);
-              handleApplyFilter(search, selectValue, startDate, e.target.value);
-            }}
-            aria-label="Đến ngày"
-            className="bg-transparent border-0 text-ink focus:outline-none text-xs"
-          />
-        </div>
+        {showDateRange && (
+          <div className="crm-filter-bar__date-range">
+            <Calendar className="w-3.5 h-3.5 text-ink-muted shrink-0" />
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                handleApplyFilter(search, selectValue, e.target.value, endDate);
+              }}
+              aria-label="Từ ngày"
+              className="crm-filter-bar__date-input"
+            />
+            <span>-</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                setEndDate(e.target.value);
+                handleApplyFilter(search, selectValue, startDate, e.target.value);
+              }}
+              aria-label="Đến ngày"
+              className="crm-filter-bar__date-input"
+            />
+          </div>
+        )}
+
+        {/* Search Action Button */}
+        <Button
+          type="button"
+          variant="primary"
+          onClick={() => handleApplyFilter(search, selectValue, startDate, endDate)}
+          aria-label={t("common.searchButton", "Tìm kiếm")}
+          className="h-10 px-4 text-sm font-medium gap-2 shrink-0"
+        >
+          <Search className="w-4 h-4" />
+          <span className="hidden sm:inline">{t("common.searchButton", "Tìm kiếm")}</span>
+        </Button>
 
         {/* Reset Button */}
-        <button
+        <Button
           type="button"
+          variant="secondary"
           onClick={handleReset}
-          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-ink-muted hover:text-ink bg-warm-white hover:bg-ivory border border-line rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-burgundy"
+          className="h-10 px-3.5 text-sm font-medium gap-1.5 shrink-0 text-ink-muted hover:text-ink"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          {t("common.reset")}
-        </button>
+          <span>{t("common.reset")}</span>
+        </Button>
       </div>
 
-      {extraActions && <div className="flex items-center gap-2">{extraActions}</div>}
+      {extraActions && <div className="crm-filter-bar__extra-actions">{extraActions}</div>}
     </div>
   );
 };
-

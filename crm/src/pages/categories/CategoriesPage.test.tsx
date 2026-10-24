@@ -196,4 +196,25 @@ describe("CategoriesPage", () => {
       expect(categoryService.deleteCategory).toHaveBeenCalledWith(1);
     });
   });
+
+  it("opens view detail modal when clicking view button", async () => {
+    const user = userEvent.setup();
+
+    render(<CategoriesPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Váy Thiết Kế")).toBeInTheDocument();
+    });
+
+    // Click view on first item
+    await user.click(screen.getByLabelText("view-vay-thiet-ke"));
+
+    expect(screen.getByRole("heading", { name: "Chi tiết danh mục" })).toBeInTheDocument();
+    expect(screen.getAllByText("Váy thiết kế chụp ảnh").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("#1")).toBeInTheDocument();
+
+    // Close modal
+    await user.click(screen.getByLabelText("close-view-modal"));
+    expect(screen.queryByRole("heading", { name: "Chi tiết danh mục" })).not.toBeInTheDocument();
+  });
 });
