@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { fontPlayfair, fontInter } from "@/lib/fonts";
+import { fontLora, fontBeVietnamPro } from "@/lib/fonts";
 import "@/styles/main.scss";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${fontPlayfair.variable} ${fontInter.variable} antialiased`}
+      className={`${fontLora.variable} ${fontBeVietnamPro.variable} antialiased`}
     >
       <body className="min-h-screen bg-warm-white text-ink font-sans selection:bg-burgundy selection:text-white">
         {children}

@@ -29,6 +29,10 @@ const config: Config = {
         info: "var(--color-info)",
       },
       fontFamily: {
+        serif: ["var(--font-serif)"],
+        sans: ["var(--font-sans)"],
+        lora: ["var(--font-serif)"],
+        "be-vietnam": ["var(--font-sans)"],
         playfair: ["var(--font-serif)"],
         inter: ["var(--font-sans)"],
       },
