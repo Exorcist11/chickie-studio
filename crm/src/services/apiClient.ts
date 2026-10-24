@@ -1,15 +1,26 @@
 import { ApiEnvelope, TokenResponseData } from "../types/auth";
 
 class ApiClient {
-  private token: string | null = null;
+  private token: string | null =
+    typeof window !== "undefined" ? localStorage.getItem("chickie_crm_token") : null;
   private isRefreshing = false;
   private refreshSubscribers: Array<(token: string) => void> = [];
 
   public setToken(token: string | null): void {
     this.token = token;
+    if (typeof window !== "undefined") {
+      if (token) {
+        localStorage.setItem("chickie_crm_token", token);
+      } else {
+        localStorage.removeItem("chickie_crm_token");
+      }
+    }
   }
 
   public getToken(): string | null {
+    if (!this.token && typeof window !== "undefined") {
+      this.token = localStorage.getItem("chickie_crm_token");
+    }
     return this.token;
   }
 
@@ -31,8 +42,9 @@ class ApiClient {
       headers.set("Content-Type", "application/json");
     }
 
-    if (this.token && !headers.has("Authorization")) {
-      headers.set("Authorization", `Bearer ${this.token}`);
+    const currentToken = this.getToken();
+    if (currentToken && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${currentToken}`);
     }
 
     const config: RequestInit = {

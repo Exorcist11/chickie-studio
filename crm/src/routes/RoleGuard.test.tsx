@@ -7,6 +7,8 @@ import * as AuthContextModule from "../context/AuthContext";
 import "../i18n";
 
 describe("RoleGuard", () => {
+  const routerFuture = { v7_startTransition: true, v7_relativeSplatPath: true };
+
   it("renders loading indicator when auth is loading", () => {
     vi.spyOn(AuthContextModule, "useAuth").mockReturnValue({
       user: null,
@@ -18,7 +20,7 @@ describe("RoleGuard", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={routerFuture}>
         <RoleGuard>
           <div>Protected Content</div>
         </RoleGuard>
@@ -39,7 +41,7 @@ describe("RoleGuard", () => {
     });
 
     render(
-      <MemoryRouter initialEntries={["/dashboard"]}>
+      <MemoryRouter future={routerFuture} initialEntries={["/dashboard"]}>
         <Routes>
           <Route
             path="/dashboard"
@@ -75,7 +77,7 @@ describe("RoleGuard", () => {
     });
 
     render(
-      <MemoryRouter initialEntries={["/settings"]}>
+      <MemoryRouter future={routerFuture} initialEntries={["/settings"]}>
         <Routes>
           <Route
             path="/settings"
@@ -111,7 +113,7 @@ describe("RoleGuard", () => {
     });
 
     render(
-      <MemoryRouter initialEntries={["/settings"]}>
+      <MemoryRouter future={routerFuture} initialEntries={["/settings"]}>
         <Routes>
           <Route
             path="/settings"

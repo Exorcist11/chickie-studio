@@ -14,7 +14,17 @@
   "rules": {
     "react-refresh/only-export-components": [
       "warn",
-      { "allowConstantExport": true }
+      {
+        "allowConstantExport": true,
+        "allowExportNames": [
+          "useAuth",
+          "badgeVariants",
+          "buttonVariants",
+          "createZodValidator",
+          "dotColors",
+          "defaultStatusLabels"
+        ]
+      }
     ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "off",

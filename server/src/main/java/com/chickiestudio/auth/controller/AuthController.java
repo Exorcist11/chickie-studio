@@ -5,6 +5,7 @@ import com.chickiestudio.auth.dto.LoginResponse;
 import com.chickiestudio.auth.dto.TokenResponse;
 import com.chickiestudio.auth.service.AuthService;
 import com.chickiestudio.common.dto.ApiResponse;
+import com.chickiestudio.user.dto.UserResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -74,9 +75,11 @@ public class AuthController {
 
     @GetMapping("/admin/profile")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getProfile(Authentication authentication) {
+        UserResponse user = authService.getProfile(authentication.getName());
         return ResponseEntity.ok(ApiResponse.success(Map.of(
                 "username", authentication.getName(),
-                "authorities", authentication.getAuthorities()
+                "authorities", authentication.getAuthorities(),
+                "user", user
         )));
     }
 

@@ -14,10 +14,26 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("chickie_crm_user");
+        return stored ? JSON.parse(stored) : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("chickie_crm_user");
+      if (stored) return false;
+    }
+    return true;
+  });
 
-  // Thử khôi phục phiên ngầm khi tải trang
+  // Thử khôi phục hoặc làm mới phiên ngầm khi tải trang
   useEffect(() => {
     let isMounted = true;
 
@@ -25,12 +41,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         await authService.refreshToken();
         const profile = await authService.getProfile();
-        if (isMounted) {
+        if (isMounted && profile.user) {
           setUser(profile.user);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("chickie_crm_user", JSON.stringify(profile.user));
+          }
         }
-      } catch {
-        if (isMounted) {
+      } catch (err: unknown) {
+        const status = (err as { status?: number })?.status;
+        const isSessionExpired = status === 401 || (err as Error)?.message === "SESSION_EXPIRED";
+        if (isMounted && isSessionExpired) {
           setUser(null);
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("chickie_crm_user");
+          }
         }
       } finally {
         if (isMounted) {
@@ -51,6 +75,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const data = await authService.login(credentials);
       setUser(data.user);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("chickie_crm_user", JSON.stringify(data.user));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -62,6 +89,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await authService.logout();
     } finally {
       setUser(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("chickie_crm_user");
+      }
       setIsLoading(false);
     }
   };

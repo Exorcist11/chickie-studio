@@ -1,155 +1,182 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { Sparkles, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Sparkles, AlertCircle } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { Button } from "../../components/ui/Button";
-import { Input } from "../../components/ui/Input";
-import { FormField } from "../../components/common/FormField";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
+import { useLoginMutation } from "../../hooks/queries/useLoginMutation";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  TextField,
+  PasswordField,
+} from "../../components/ui";
 import "./LoginPage.scss";
 
-const loginSchema = z.object({
-  username: z.string().min(1, "Vui lòng nhập tên đăng nhập hoặc email"),
-  password: z.string().min(1, "Vui lòng nhập mật khẩu"),
-});
+const usernameSchema = z.string().min(1, "Vui lòng nhập tên đăng nhập hoặc email");
+const passwordSchema = z.string().min(1, "Vui lòng nhập mật khẩu");
 
-type LoginFormData = z.infer<typeof loginSchema>;
+const getErrorMessage = (error: unknown): string | undefined => {
+  if (!error) return undefined;
+  if (typeof error === "string") return error;
+  if (typeof error === "object" && "message" in (error as Record<string, unknown>)) {
+    return String((error as { message: unknown }).message);
+  }
+  return String(error);
+};
 
 export const LoginPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const loginMutation = useLoginMutation();
 
-  const [formData, setFormData] = useState<LoginFormData>({
-    username: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
   const [serverError, setServerError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const handleChange = (field: keyof LoginFormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+  // Xác định trang đích nếu trước đó bị Route Guard chuyển hướng đến login
+  const fromLocation = (location.state as { from?: { pathname?: string; search?: string } })?.from;
+  const destination = fromLocation
+    ? `${fromLocation.pathname || ""}${fromLocation.search || ""}` || "/"
+    : "/";
+
+  // Nếu người dùng đã đăng nhập từ trước, tự động chuyển hướng về trang đích
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(destination, { replace: true });
     }
-    if (serverError) {
+  }, [isAuthenticated, navigate, destination]);
+
+  const form = useForm({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    onSubmit: async ({ value }) => {
       setServerError(null);
-    }
-  };
+      try {
+        await loginMutation.mutateAsync(value);
+        navigate(destination, { replace: true });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : t("auth.invalidCredentials");
+        setServerError(message);
+      }
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setServerError(null);
-
-    const result = loginSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: Partial<Record<keyof LoginFormData, string>> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as keyof LoginFormData] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      await login(result.data);
-      navigate("/", { replace: true });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : t("auth.invalidCredentials");
-      setServerError(message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const isSubmitting = loginMutation.isPending || form.state.isSubmitting;
 
   return (
     <div className="login-page" data-testid="login-page">
       <div className="login-page__container">
         <div className="login-page__brand">
           <div className="login-page__logo">
-            <Sparkles className="w-6 h-6" />
+            <Sparkles className="login-page__logo-icon" />
           </div>
-          <h1 className="font-serif text-2xl font-bold text-burgundy">Chickie Studio</h1>
-          <p className="text-xs uppercase tracking-wider text-champagne-gold font-medium mt-1">
-            Rental Management System
-          </p>
+          <h1 className="login-page__title">Chickie Studio</h1>
+          <p className="login-page__subtitle">Rental Management System</p>
         </div>
 
         <Card className="login-page__card">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="font-serif text-xl font-semibold text-ink">
+          <CardHeader className="login-page__header">
+            <CardTitle className="login-page__card-title">
               {t("auth.loginTitle")}
             </CardTitle>
-            <p className="text-sm text-ink-muted mt-1">{t("auth.loginSubtitle")}</p>
+            <CardDescription className="login-page__card-desc">
+              {t("auth.loginSubtitle")}
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
             {serverError && (
               <div className="login-page__alert" data-testid="login-error-alert">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <AlertCircle className="login-page__alert-icon" />
                 <span>{serverError}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} noValidate className="space-y-4">
-              <FormField
-                label={t("auth.usernameLabel")}
-                error={errors.username}
-                required
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                form.handleSubmit();
+              }}
+              noValidate
+              className="login-page__form"
+            >
+              <form.Field
+                name="username"
+                validators={{
+                  onChange: usernameSchema,
+                  onSubmit: usernameSchema,
+                }}
               >
-                <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  autoComplete="username"
-                  placeholder={t("auth.usernamePlaceholder")}
-                  value={formData.username}
-                  onChange={(e) => handleChange("username", e.target.value)}
-                  disabled={isSubmitting}
-                />
-              </FormField>
+                {(field) => {
+                  const errorMessage = getErrorMessage(field.state.meta.errors[0]);
 
-              <FormField
-                label={t("auth.passwordLabel")}
-                error={errors.password}
-                required
+                  return (
+                    <TextField
+                      id="username"
+                      name={field.name}
+                      type="text"
+                      autoComplete="username"
+                      label={t("auth.usernameLabel")}
+                      placeholder={t("auth.usernamePlaceholder")}
+                      value={field.state.value}
+                      onChange={(e) => {
+                        field.handleChange(e.target.value);
+                        if (serverError) setServerError(null);
+                      }}
+                      onBlur={field.handleBlur}
+                      error={errorMessage}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  );
+                }}
+              </form.Field>
+
+              <form.Field
+                name="password"
+                validators={{
+                  onChange: passwordSchema,
+                  onSubmit: passwordSchema,
+                }}
               >
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    placeholder={t("auth.passwordPlaceholder")}
-                    value={formData.password}
-                    onChange={(e) => handleChange("password", e.target.value)}
-                    disabled={isSubmitting}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    className="login-page__toggle-pw"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </FormField>
+                {(field) => {
+                  const errorMessage = getErrorMessage(field.state.meta.errors[0]);
+
+                  return (
+                    <PasswordField
+                      id="password"
+                      name={field.name}
+                      autoComplete="current-password"
+                      label={t("auth.passwordLabel")}
+                      placeholder={t("auth.passwordPlaceholder")}
+                      value={field.state.value}
+                      onChange={(e) => {
+                        field.handleChange(e.target.value);
+                        if (serverError) setServerError(null);
+                      }}
+                      onBlur={field.handleBlur}
+                      error={errorMessage}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  );
+                }}
+              </form.Field>
 
               <Button
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full justify-center mt-6"
+                className="login-page__submit-btn"
                 disabled={isSubmitting}
                 isLoading={isSubmitting}
               >

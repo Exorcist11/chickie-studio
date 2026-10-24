@@ -7,6 +7,45 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Bộ TanStack (TanStack Query + TanStack Form) Cho Dự Án CRM (TAN-001 - ✅ DONE)**:
+  - **Cấu hình TanStack Query tập trung**:
+    - Khởi tạo `QueryClient` chuẩn hóa tại [src/lib/queryClient.ts](file:///e:/chickie-studio/crm/src/lib/queryClient.ts) với `staleTime: 5 phút`, `retry: 1`, `mutations.retry: 0`.
+    - Bao bọc toàn bộ ứng dụng bằng `<QueryClientProvider client={queryClient}>` trong [src/App.tsx](file:///e:/chickie-studio/crm/src/App.tsx).
+    - Xây dựng Query Keys Factory tập trung [src/hooks/queries/authKeys.ts](file:///e:/chickie-studio/crm/src/hooks/queries/authKeys.ts) tuân thủ quy chuẩn `crm/.agent/03-react-vite.md`.
+    - Triển khai custom mutation hook [src/hooks/queries/useLoginMutation.ts](file:///e:/chickie-studio/crm/src/hooks/queries/useLoginMutation.ts) gọi `login` từ `AuthContext` và tự động invalidate `authKeys.all` sau khi đăng nhập thành công.
+  - **Tích hợp TanStack Form cho `LoginPage.tsx`**:
+    - Sử dụng `useForm` và `<form.Field>` từ `@tanstack/react-form` quản lý form state độc lập.
+    - Validate schema Zod chuẩn Standard Schema cho cả `onChange` và `onSubmit`.
+    - Gọi mutation API đăng nhập qua `useLoginMutation.mutateAsync` và tự động điều hướng về trang đích được ghi nhớ.
+  - **Kiểm thử tự động & Coverage**:
+    - Viết unit test cho [src/hooks/queries/useLoginMutation.test.tsx](file:///e:/chickie-studio/crm/src/hooks/queries/useLoginMutation.test.tsx) (đạt 100% coverage), [src/hooks/queries/authKeys.test.ts](file:///e:/chickie-studio/crm/src/hooks/queries/authKeys.test.ts) (đạt 100% coverage), [src/lib/queryClient.test.ts](file:///e:/chickie-studio/crm/src/lib/queryClient.test.ts) (đạt 100% coverage).
+    - Cập nhật bộ test [src/pages/auth/LoginPage.test.tsx](file:///e:/chickie-studio/crm/src/pages/auth/LoginPage.test.tsx) với `renderWithProviders`: 7/7 tests pass.
+    - Toàn bộ CRM đạt **36 test files, 144 tests pass 100%**, lint và typecheck pass với **0 errors, 0 warnings**.
+
+- **Chuẩn Hóa Component Trang Đăng Nhập & Khắc Phục Lỗi Mất Phiên Khi F5 (AUTH-001, AUTH-003 - Fix Bug)**:
+  - **Áp dụng bộ component UI chuẩn hệ thống cho `LoginPage.tsx`**:
+    - Thay thế toàn bộ primitive `Input` và wrapper `FormField` thô bằng Chickie Base `TextField` và `PasswordField` từ `@/components/ui`.
+    - Sử dụng chuẩn `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `Button` của hệ thống.
+    - Loại bỏ mã CSS dead code (`&__toggle-pw`) và quản lý toggle password ẩn/hiện tự động ngay trong `PasswordField`.
+  - **Tách class dài vào SCSS & Chuẩn hóa BEM (`LoginPage.scss`)**:
+    - Chuyển toàn bộ chuỗi class Tailwind dài trong JSX sang file SCSS với tiền tố BEM (`.login-page__*`) sử dụng `@apply` và design tokens (`--color-burgundy`, `--color-gold`, `--color-warm-white`, `--color-line`).
+    - Khắc phục class token không tồn tại (`text-champagne-gold` -> `text-gold`, `var(--color-champagne-gold)` -> `var(--color-gold)`).
+  - **Khắc phục triệt để lỗi reload F5 quay về trang đăng nhập mà không giữ trang hiện tại**:
+    - **Lưu trữ & Khôi phục phiên bền vững (`localStorage`)**: Persist `user` và `accessToken` vào `localStorage` (`chickie_crm_user`, `chickie_crm_token`). Khởi tạo `user` đồng bộ ngay khi mount giúp `RoleGuard` không bị reset về `false` và không đá người dùng về `/login`.
+    - **Cập nhật Backend Profile API**: Mở rộng `AuthService.getProfile(username)` và `AuthController.getProfile()` trả về thông tin `UserResponse` đầy đủ thay vì chỉ authorities.
+    - **Cơ chế Fallback Resilient trên CRM**: `authService.getProfile()` hỗ trợ phân giải từ `res.data.user`, cache `localStorage`, và authorities fallback.
+    - **Ghi nhớ URL Đích (Target Navigation Preservation)**: `RoleGuard` lưu `location` vào `state={{ from: location }}` khi redirect về login; `LoginPage` tự động điều hướng chính xác về trang đích người dùng đang thao tác sau khi đăng nhập hoặc nếu đã có phiên hoạt động.
+  - **Khắc Phục Toàn Diện Warnings (ESLint, Sass, React Router, Tests & Build)**:
+    - **ESLint**: Cấu hình `allowExportNames` trong `.eslintrc.json` cho rule `react-refresh/only-export-components`, giảm từ 8 warnings xuống **0 warnings**.
+    - **Dart Sass Deprecation**: Cấu hình `api: "modern-compiler"` trong `vite.config.ts` và `vitest.config.ts`, loại bỏ hoàn toàn 17 cảnh báo `legacy-js-api` của Dart Sass khi build và test.
+    - **React Router Future Flags**: Khai báo `v7_startTransition: true` và `v7_relativeSplatPath: true` trên `<BrowserRouter>` (`App.tsx`) và `<MemoryRouter>` (`LoginPage.test.tsx`, `RoleGuard.test.tsx`, `ForbiddenPage.test.tsx`), triệt tiêu warning v7.
+    - **TypeScript & Node Config**: Cài đặt `@types/node` trong `crm`, khai báo `"types": ["node"]` tại `tsconfig.node.json`, chuyển đổi alias `path.resolve(__dirname, ...)` sang chuẩn ESM `fileURLToPath(new URL(..., import.meta.url))` trong `vite.config.ts` và `vitest.config.ts`.
+    - **IDE Editor Warnings**: Cấu hình `.vscode/settings.json` (`scss.lint.unknownAtRules: "ignore"`) loại bỏ toàn bộ 15 cảnh báo `@apply` của Tailwind trong file SCSS.
+    - **Vitest & React Warnings**: Mock `HTMLCanvasElement.prototype.getContext` trong `vitest.setup.ts` cho `axe-core`, thêm `onChange` handler cho test `SearchField`, bọc `waitFor` cho async state update trong `AuthContext.test.tsx`.
+  - **Kiểm thử tự động & Coverage**:
+    - Server: 73 unit/integration tests pass 100%.
+    - CRM: 34 test files, 141 tests pass 100%, coverage `AuthContext` đạt **99.01%** lines, **87.5%** branches. Typecheck, Lint, Test và Production Build đều pass 100% với **0 errors, 0 warnings**.
+
 - **Chuyển Toàn Bộ UI Package Trực Tiếp Vào Client và CRM (UI-001 - ✅ DONE)**:
   - **Tích hợp bộ component UI và primitives trực tiếp vào `client/src/components/ui/` và `crm/src/components/ui/`**:
     - Primitives: `input.tsx`, `label.tsx`, `textarea.tsx`, `select.tsx`, `checkbox.tsx`, `radio-group.tsx`, `switch.tsx`, `badge.tsx`, `card.tsx`, `skeleton.tsx`, `button.tsx`.

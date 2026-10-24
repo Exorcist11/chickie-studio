@@ -90,6 +90,7 @@ describe("Chickie Base TextField & Variants", () => {
       <SearchField
         label="Tìm kiếm trang phục"
         value=""
+        onChange={vi.fn()}
         onClear={handleClear}
       />
     );
@@ -100,6 +101,7 @@ describe("Chickie Base TextField & Variants", () => {
       <SearchField
         label="Tìm kiếm trang phục"
         value="Váy dạ hội"
+        onChange={vi.fn()}
         onClear={handleClear}
       />
     );

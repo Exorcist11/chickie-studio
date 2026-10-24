@@ -78,4 +78,71 @@ describe("authService", () => {
     expect(postSpy).toHaveBeenCalledWith("/api/admin/auth/logout");
     expect(apiClient.getToken()).toBeNull();
   });
+
+  it("getProfile_whenUserInResponse_shouldReturnUser", async () => {
+    const mockUser = {
+      id: 1,
+      username: "admin",
+      email: "admin@chickie.vn",
+      fullName: "Admin Chickie",
+      role: "ROLE_ADMIN" as const,
+      status: "ACTIVE" as const,
+    };
+
+    vi.spyOn(apiClient, "get").mockResolvedValue({
+      code: 200,
+      message: "SUCCESS",
+      timestamp: "2026-10-24T10:00:00",
+      data: {
+        username: "admin",
+        user: mockUser,
+      },
+    });
+
+    const result = await authService.getProfile();
+    expect(result.username).toBe("admin");
+    expect(result.user).toEqual(mockUser);
+  });
+
+  it("getProfile_whenNoUserInResponse_shouldFallbackFromAuthorities", async () => {
+    localStorage.clear();
+    vi.spyOn(apiClient, "get").mockResolvedValue({
+      code: 200,
+      message: "SUCCESS",
+      timestamp: "2026-10-24T10:00:00",
+      data: {
+        username: "adminuser",
+        authorities: [{ authority: "ROLE_ADMIN" }],
+      },
+    });
+
+    const result = await authService.getProfile();
+    expect(result.username).toBe("adminuser");
+    expect(result.user.role).toBe("ROLE_ADMIN");
+  });
+
+  it("getProfile_whenStoredInLocalStorage_shouldReturnStoredUser", async () => {
+    const cachedUser = {
+      id: 5,
+      username: "cached_staff",
+      email: "cached_staff@chickie.vn",
+      fullName: "Cached Staff",
+      role: "ROLE_STAFF" as const,
+      status: "ACTIVE" as const,
+    };
+    localStorage.setItem("chickie_crm_user", JSON.stringify(cachedUser));
+
+    vi.spyOn(apiClient, "get").mockResolvedValue({
+      code: 200,
+      message: "SUCCESS",
+      timestamp: "2026-10-24T10:00:00",
+      data: {
+        username: "cached_staff",
+      },
+    });
+
+    const result = await authService.getProfile();
+    expect(result.username).toBe("cached_staff");
+    expect(result.user).toEqual(cachedUser);
+  });
 });

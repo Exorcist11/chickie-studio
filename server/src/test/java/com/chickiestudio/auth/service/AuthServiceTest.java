@@ -270,4 +270,26 @@ class AuthServiceTest {
 
         verify(refreshTokenRepository, never()).revokeByTokenHash(anyString());
     }
+
+    @Test
+    @DisplayName("getProfile_whenUserExists_shouldReturnUserResponse")
+    void getProfile_whenUserExists_shouldReturnUserResponse() {
+        when(userRepository.findByUsernameOrEmail("admin")).thenReturn(Optional.of(sampleUser));
+        UserResponse expected = new UserResponse(1L, "admin", "admin@chickie.vn", "Admin Chickie", null, Role.ROLE_ADMIN, UserStatus.ACTIVE);
+        when(userMapper.toResponse(sampleUser)).thenReturn(expected);
+
+        UserResponse actual = authService.getProfile("admin");
+
+        assertNotNull(actual);
+        assertEquals("admin", actual.username());
+        assertEquals("Admin Chickie", actual.fullName());
+    }
+
+    @Test
+    @DisplayName("getProfile_whenUserNotFound_shouldThrowUnauthorizedException")
+    void getProfile_whenUserNotFound_shouldThrowUnauthorizedException() {
+        when(userRepository.findByUsernameOrEmail("unknown")).thenReturn(Optional.empty());
+
+        assertThrows(UnauthorizedException.class, () -> authService.getProfile("unknown"));
+    }
 }

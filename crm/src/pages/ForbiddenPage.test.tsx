@@ -8,7 +8,7 @@ import "../i18n";
 describe("ForbiddenPage", () => {
   it("renders access denied details and home button", () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ForbiddenPage />
       </MemoryRouter>
     );

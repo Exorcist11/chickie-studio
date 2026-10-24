@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { UserRole } from "../types/auth";
 import { PageLoading } from "../components/common/PageLoading";
@@ -11,13 +11,14 @@ interface RoleGuardProps {
 
 export const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles, children }) => {
   const { isAuthenticated, isLoading, hasRole } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return <PageLoading />;
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && !hasRole(allowedRoles)) {

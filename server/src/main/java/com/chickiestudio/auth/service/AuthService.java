@@ -3,6 +3,7 @@ package com.chickiestudio.auth.service;
 import com.chickiestudio.auth.dto.LoginRequest;
 import com.chickiestudio.auth.dto.LoginResponse;
 import com.chickiestudio.auth.dto.TokenResponse;
+import com.chickiestudio.user.dto.UserResponse;
 
 public interface AuthService {
 
@@ -11,4 +12,6 @@ public interface AuthService {
     TokenResponse refreshToken(String refreshToken);
 
     void logout(String refreshToken);
+
+    UserResponse getProfile(String username);
 }

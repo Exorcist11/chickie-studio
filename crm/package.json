@@ -15,6 +15,9 @@
     "theme:apply": "node ../scripts/apply-theme.mjs"
   },
   "dependencies": {
+    "@tanstack/react-form": "^1.33.5",
+    "@tanstack/react-query": "^5.104.5",
+    "@tanstack/zod-form-adapter": "^0.42.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -31,6 +34,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^26.6.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "^8.15.0",

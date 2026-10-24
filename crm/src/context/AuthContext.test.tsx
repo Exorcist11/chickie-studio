@@ -7,10 +7,49 @@ import { authService } from "../services/auth.service";
 describe("AuthContext", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    localStorage.clear();
   });
 
   it("throws error when useAuth is called outside AuthProvider", () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(() => renderHook(() => useAuth())).toThrow("useAuth must be used within an AuthProvider");
+    consoleError.mockRestore();
+  });
+
+  it("initializes user immediately from localStorage on reload", async () => {
+    const cachedUser = {
+      id: 3,
+      username: "cached_admin",
+      email: "cached@chickie.vn",
+      fullName: "Cached Admin",
+      role: "ROLE_ADMIN" as const,
+      status: "ACTIVE" as const,
+    };
+    localStorage.setItem("chickie_crm_user", JSON.stringify(cachedUser));
+
+    vi.spyOn(authService, "refreshToken").mockResolvedValue({
+      accessToken: "new-token",
+      tokenType: "Bearer",
+      expiresIn: 900,
+    });
+    vi.spyOn(authService, "getProfile").mockResolvedValue({
+      username: "cached_admin",
+      user: cachedUser,
+    });
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AuthProvider>{children}</AuthProvider>
+    );
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    expect(result.current.user).toEqual(cachedUser);
+    expect(result.current.isAuthenticated).toBe(true);
+    expect(result.current.isLoading).toBe(false);
+
+    await waitFor(() => {
+      expect(result.current.user).toEqual(cachedUser);
+    });
   });
 
   it("restores session successfully on mount", async () => {
@@ -97,5 +136,36 @@ describe("AuthContext", () => {
     expect(logoutSpy).toHaveBeenCalled();
     expect(result.current.isAuthenticated).toBe(false);
     expect(result.current.user).toBeNull();
+  });
+
+  it("handles corrupted JSON in localStorage gracefully", () => {
+    localStorage.setItem("chickie_crm_user", "invalid-json{");
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AuthProvider>{children}</AuthProvider>
+    );
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    expect(result.current.user).toBeNull();
+  });
+
+  it("clears user and localStorage when session is expired on restore", async () => {
+    localStorage.setItem(
+      "chickie_crm_user",
+      JSON.stringify({ id: 1, username: "admin", role: "ROLE_ADMIN", status: "ACTIVE" })
+    );
+
+    vi.spyOn(authService, "refreshToken").mockRejectedValue(new Error("SESSION_EXPIRED"));
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AuthProvider>{children}</AuthProvider>
+    );
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.user).toBeNull();
+      expect(localStorage.getItem("chickie_crm_user")).toBeNull();
+    });
   });
 });

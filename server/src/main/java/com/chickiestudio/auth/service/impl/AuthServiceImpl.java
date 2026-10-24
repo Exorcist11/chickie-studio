@@ -126,6 +126,13 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public UserResponse getProfile(String username) {
+        User user = userRepository.findByUsernameOrEmail(username)
+                .orElseThrow(() -> new UnauthorizedException("Không tìm thấy thông tin tài khoản"));
+        return userMapper.toResponse(user);
+    }
+
     private void saveRefreshToken(User user, String tokenString) {
         long expirationMs = jwtTokenProvider.getRefreshTokenExpirationMs();
         LocalDateTime expiresAt = LocalDateTime.now().plusSeconds(expirationMs / 1000);

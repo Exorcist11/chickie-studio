@@ -1,75 +1,68 @@
 .login-page {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+  @apply flex min-h-screen w-full items-center justify-center p-6;
   background: radial-gradient(circle at 10% 20%, rgba(184, 145, 79, 0.08) 0%, transparent 40%),
               radial-gradient(circle at 90% 80%, rgba(100, 29, 43, 0.06) 0%, transparent 40%),
               var(--color-warm-white, #fffcf8);
 
   &__container {
-    width: 100%;
-    max-width: 26rem;
-  }
-
-  &__card {
-    background-color: #ffffff;
-    border: 1px solid var(--color-line, #eadfd6);
-    box-shadow: 0 20px 40px -15px rgba(48, 37, 40, 0.08);
-    border-radius: 1rem;
-    overflow: hidden;
+    @apply w-full max-w-md;
   }
 
   &__brand {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    @apply text-center mb-6;
   }
 
   &__logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 9999px;
+    @apply inline-flex items-center justify-center w-14 h-14 rounded-full mb-3;
     background: linear-gradient(135deg, var(--color-burgundy, #641d2b) 0%, #85263a 100%);
-    color: var(--color-champagne-gold, #b8914f);
-    margin-bottom: 0.75rem;
+    color: var(--color-gold, #b8914f);
     box-shadow: 0 8px 16px -4px rgba(100, 29, 43, 0.25);
   }
 
-  &__toggle-pw {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: var(--color-ink-muted, #7c6f68);
-    cursor: pointer;
-    padding: 0.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.15s ease;
+  &__logo-icon {
+    @apply w-6 h-6;
+  }
 
-    &:hover {
-      color: var(--color-ink, #302528);
-    }
+  &__title {
+    @apply font-serif text-2xl font-bold text-burgundy;
+  }
+
+  &__subtitle {
+    @apply text-xs uppercase tracking-wider text-gold font-medium mt-1;
+  }
+
+  &__card {
+    @apply bg-white rounded-2xl overflow-hidden;
+    border: 1px solid var(--color-line, #eadfd6);
+    box-shadow: 0 20px 40px -15px rgba(48, 37, 40, 0.08);
+  }
+
+  &__header {
+    @apply text-center pb-4;
+  }
+
+  &__card-title {
+    @apply font-serif text-xl font-semibold text-ink;
+  }
+
+  &__card-desc {
+    @apply text-sm text-ink-muted mt-1;
   }
 
   &__alert {
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #b91c1c;
-    font-size: 0.875rem;
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    @apply flex items-center gap-2 p-3 rounded-lg text-sm mb-5 text-red-700 bg-red-50 border border-red-200;
+  }
+
+  &__alert-icon {
+    @apply w-4 h-4 shrink-0;
+  }
+
+  &__form {
+    @apply space-y-4;
+  }
+
+  &__submit-btn {
+    @apply w-full justify-center mt-6;
   }
 }
+

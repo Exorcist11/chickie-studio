@@ -109,9 +109,13 @@ class AuthControllerTest {
     @WithMockUser(username = "staffuser", roles = {"STAFF"})
     @DisplayName("getProfile_whenAuthenticatedAsStaff_shouldReturn200")
     void getProfile_whenAuthenticatedAsStaff_shouldReturn200() throws Exception {
+        UserResponse user = new UserResponse(2L, "staffuser", "staff@chickie.vn", "Staff", null, Role.ROLE_STAFF, UserStatus.ACTIVE);
+        when(authService.getProfile("staffuser")).thenReturn(user);
+
         mockMvc.perform(get("/api/admin/profile"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.username").value("staffuser"));
+                .andExpect(jsonPath("$.data.username").value("staffuser"))
+                .andExpect(jsonPath("$.data.user.username").value("staffuser"));
     }
 
     @Test
