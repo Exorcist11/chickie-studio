@@ -71,6 +71,26 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("handleNoResourceFound_shouldReturn404")
+    void handleNoResourceFound_shouldReturn404() {
+        org.springframework.web.servlet.resource.NoResourceFoundException ex =
+                new org.springframework.web.servlet.resource.NoResourceFoundException(org.springframework.http.HttpMethod.GET, "api/admin/unknown");
+        ResponseEntity<ApiResponse<Void>> response = handler.handleNoResourceFound(ex);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(404, response.getBody().code());
+    }
+
+    @Test
+    @DisplayName("handleHttpMessageNotReadable_shouldReturn400")
+    void handleHttpMessageNotReadable_shouldReturn400() {
+        org.springframework.http.converter.HttpMessageNotReadableException ex =
+                new org.springframework.http.converter.HttpMessageNotReadableException("Malformed JSON");
+        ResponseEntity<ApiResponse<Void>> response = handler.handleHttpMessageNotReadable(ex);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(400, response.getBody().code());
+    }
+
+    @Test
     @DisplayName("handleGenericException_shouldReturn500")
     void handleGenericException_shouldReturn500() {
         ResponseEntity<ApiResponse<Void>> response = handler.handleGenericException(new RuntimeException("Crash"));
