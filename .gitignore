@@ -11,4 +11,8 @@ node_modules/
 dist/
 # Java
 target/
+# Build & Coverage
+coverage/
+*.tsbuildinfo
+.turbo/
 *.log
