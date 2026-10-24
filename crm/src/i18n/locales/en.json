@@ -81,6 +81,15 @@
     "status": "Status",
     "active": "Active",
     "inactive": "Inactive",
+    "type": "Business Pillar",
+    "typePlaceholder": "Select business pillar",
+    "typeRequired": "Please select a business pillar",
+    "types": {
+      "all": "All Pillars",
+      "costume": "Costume Rental",
+      "camera": "Camera Rental",
+      "photography": "Photography Services"
+    },
     "actions": "Actions",
     "delete": "Delete",
     "edit": "Edit",

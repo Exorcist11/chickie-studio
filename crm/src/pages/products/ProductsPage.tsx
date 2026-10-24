@@ -300,6 +300,7 @@ export const ProductsPage: React.FC = () => {
         isOpen={Boolean(viewingProduct)}
         onClose={() => setViewingProduct(null)}
         product={viewingProduct}
+        categories={categories}
       />
 
       {/* Modal Xác Nhận Xóa */}

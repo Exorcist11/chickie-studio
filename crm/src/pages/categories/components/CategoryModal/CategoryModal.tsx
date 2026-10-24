@@ -3,7 +3,7 @@ import { Layers, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { Category, CreateCategoryInput, UpdateCategoryInput } from "../../../../types/category";
+import { Category, CategoryType, CreateCategoryInput, UpdateCategoryInput } from "../../../../types/category";
 import { categoryService } from "../../../../services/category.service";
 import { FormField } from "../../../../components/common/FormField";
 import { Modal } from "../../../../components/common/Modal";
@@ -11,10 +11,13 @@ import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
 import { TextArea } from "../../../../components/ui/TextArea";
 import { Switch } from "../../../../components/ui/Switch";
+import { Select } from "../../../../components/ui/Select";
 import { slugify, getErrorMessage } from "../../constants";
 import styles from "./CategoryModal.module.scss";
 
 // Form Validation Schemas using Zod
+const typeSchema = z.enum(["COSTUME", "CAMERA", "PHOTOGRAPHY"]);
+
 const nameSchema = z
   .string()
   .min(1, "Tên danh mục không được để trống")
@@ -57,6 +60,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
 
   const form = useForm({
     defaultValues: {
+      type: (category?.type ?? "COSTUME") as CategoryType,
       name: category?.name ?? "",
       slug: category?.slug ?? "",
       description: category?.description ?? "",
@@ -70,6 +74,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         setSubmitting(true);
         if (category) {
           const updatePayload: UpdateCategoryInput = {
+            type: value.type,
             name: value.name.trim(),
             slug: value.slug.trim().toLowerCase(),
             description: value.description?.trim() || undefined,
@@ -80,6 +85,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
           await categoryService.updateCategory(category.id, updatePayload);
         } else {
           const createPayload: CreateCategoryInput = {
+            type: value.type,
             name: value.name.trim(),
             slug: value.slug.trim().toLowerCase(),
             description: value.description?.trim() || undefined,
@@ -151,6 +157,41 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               <span>{serverError}</span>
             </div>
           )}
+
+          {/* Business Pillar (Type) */}
+          <form.Field
+            name="type"
+            validators={{
+              onChange: typeSchema,
+              onSubmit: typeSchema,
+            }}
+          >
+            {(field) => {
+              const errorMessage = getErrorMessage(field.state.meta.errors[0]);
+              return (
+                <FormField
+                  name="type"
+                  label={t("category.type")}
+                  required
+                  error={errorMessage}
+                >
+                  <Select
+                    id="type"
+                    name={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value as CategoryType)}
+                    onValueChange={(val) => field.handleChange(val as CategoryType)}
+                    options={[
+                      { label: "Thuê trang phục (COSTUME)", value: "COSTUME" },
+                      { label: "Thuê máy ảnh (CAMERA)", value: "CAMERA" },
+                      { label: "Dịch vụ chụp ảnh (PHOTOGRAPHY)", value: "PHOTOGRAPHY" },
+                    ]}
+                    disabled={submitting}
+                  />
+                </FormField>
+              );
+            }}
+          </form.Field>
 
           {/* Name Field */}
           <form.Field

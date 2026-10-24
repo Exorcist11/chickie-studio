@@ -52,7 +52,28 @@ describe("ProductsPage", () => {
       id: 1,
       name: "Váy Dạ Hội",
       slug: "vay-da-hoi",
+      type: "COSTUME",
       displayOrder: 1,
+      isActive: true,
+      createdAt: "2026-10-24T10:00:00Z",
+      updatedAt: "2026-10-24T10:00:00Z",
+    },
+    {
+      id: 2,
+      name: "Máy Ảnh Du Lịch",
+      slug: "may-anh-du-lich",
+      type: "CAMERA",
+      displayOrder: 2,
+      isActive: true,
+      createdAt: "2026-10-24T10:00:00Z",
+      updatedAt: "2026-10-24T10:00:00Z",
+    },
+    {
+      id: 3,
+      name: "Gói Chụp Ngoại Cảnh",
+      slug: "chup-anh-ngoai-canh",
+      type: "PHOTOGRAPHY",
+      displayOrder: 3,
       isActive: true,
       createdAt: "2026-10-24T10:00:00Z",
       updatedAt: "2026-10-24T10:00:00Z",
@@ -232,6 +253,48 @@ describe("ProductsPage", () => {
 
     await waitFor(() => {
       expect(productService.deleteProduct).toHaveBeenCalledWith(1);
+    });
+  });
+
+  it("adapts form interface dynamically when switching category across business pillars", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<ProductsPage />);
+
+    await user.click(screen.getByText("Thêm sản phẩm"));
+
+    // 1. Initial pillar is COSTUME (Thuê trang phục)
+    await waitFor(() => {
+      expect(screen.getByText("LOOKBOOK TRANG PHỤC")).toBeInTheDocument();
+      expect(screen.getByText(/Biến thể trang phục/i)).toBeInTheDocument();
+      expect(screen.getByText("+ Thêm nhanh Size:")).toBeInTheDocument();
+      expect(screen.getByText("Chất liệu vải")).toBeInTheDocument();
+    });
+
+    // 2. Select category 2: "Máy Ảnh Du Lịch" (CAMERA)
+    const categorySelect = screen.getByLabelText(/Danh mục/i);
+    await user.selectOptions(categorySelect, "2");
+
+    await waitFor(() => {
+      expect(screen.getByText("THIẾT BỊ MÁY ẢNH")).toBeInTheDocument();
+      expect(screen.getByText(/Phiên bản thiết bị/i)).toBeInTheDocument();
+      expect(screen.getByText("+ Thêm nhanh Bộ Kit:")).toBeInTheDocument();
+      expect(screen.getByText("Phụ kiện kèm theo & Tình trạng máy")).toBeInTheDocument();
+      expect(screen.getByText("Mục đích sử dụng & Tính năng nổi bật")).toBeInTheDocument();
+      expect(screen.getByText("Giá thuê thiết bị / ngày")).toBeInTheDocument();
+      expect(screen.getByText("Tiền cọc thiết bị / máy ảnh")).toBeInTheDocument();
+    });
+
+    // 3. Select category 3: "Gói Chụp Ngoại Cảnh" (PHOTOGRAPHY)
+    await user.selectOptions(categorySelect, "3");
+
+    await waitFor(() => {
+      expect(screen.getByText("GÓI DỊCH VỤ CHỤP")).toBeInTheDocument();
+      expect(screen.getByText(/Phân loại gói chụp/i)).toBeInTheDocument();
+      expect(screen.getByText("+ Thêm nhanh Quy mô:")).toBeInTheDocument();
+      expect(screen.getByText("Quyền lợi gói chụp (File ảnh & Hậu kỳ)")).toBeInTheDocument();
+      expect(screen.getByText("Thời lượng chụp & Địa điểm / Makeup")).toBeInTheDocument();
+      expect(screen.getByText("Giá trọn gói dịch vụ chụp")).toBeInTheDocument();
+      expect(screen.getByText("Tiền cọc giữ lịch chụp")).toBeInTheDocument();
     });
   });
 });

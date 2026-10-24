@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CategoriesPage } from "./CategoriesPage";
 import { categoryService } from "../../services/category.service";
@@ -22,6 +22,7 @@ describe("CategoriesPage", () => {
       id: 1,
       name: "Váy Thiết Kế",
       slug: "vay-thiet-ke",
+      type: "COSTUME",
       description: "Váy thiết kế chụp ảnh",
       iconUrl: "Sparkles",
       displayOrder: 1,
@@ -31,11 +32,24 @@ describe("CategoriesPage", () => {
     },
     {
       id: 2,
-      name: "Áo Dài",
-      slug: "ao-dai",
-      description: "Áo dài truyền thống",
-      iconUrl: "Flower2",
+      name: "Máy Ảnh Du Lịch",
+      slug: "may-anh-du-lich",
+      type: "CAMERA",
+      description: "Máy ảnh Sony, Canon",
+      iconUrl: "Camera",
       displayOrder: 2,
+      isActive: true,
+      createdAt: "2026-10-24T10:00:00",
+      updatedAt: "2026-10-24T10:00:00",
+    },
+    {
+      id: 3,
+      name: "Gói Chụp Ngoại Cảnh",
+      slug: "chup-anh-ngoai-canh",
+      type: "PHOTOGRAPHY",
+      description: "Chụp ảnh kỷ yếu, ngoại cảnh",
+      iconUrl: "Sparkles",
+      displayOrder: 3,
       isActive: false,
       createdAt: "2026-10-24T10:00:00",
       updatedAt: "2026-10-24T10:00:00",
@@ -47,29 +61,55 @@ describe("CategoriesPage", () => {
     vi.mocked(categoryService.getAllCategories).mockResolvedValue(mockCategories);
   });
 
-  it("renders page header, table, and categories list", async () => {
+  it("renders page header, table, pillar tabs, and categories list", async () => {
     render(<CategoriesPage />);
 
     expect(screen.getByRole("heading", { name: "Quản Lý Danh Mục" })).toBeInTheDocument();
     expect(screen.getByText("Thêm danh mục")).toBeInTheDocument();
 
+    // Check 3 business pillar tabs
+    expect(screen.getByRole("tab", { name: /Tất cả mảng/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Thuê trang phục/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Thuê máy ảnh/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Dịch vụ chụp ảnh/i })).toBeInTheDocument();
+
     await waitFor(() => {
       expect(screen.getByText("Váy Thiết Kế")).toBeInTheDocument();
-      expect(screen.getByText("Áo Dài")).toBeInTheDocument();
+      expect(screen.getByText("Máy Ảnh Du Lịch")).toBeInTheDocument();
+      expect(screen.getByText("Gói Chụp Ngoại Cảnh")).toBeInTheDocument();
     });
 
     expect(screen.getByText("/vay-thiet-ke")).toBeInTheDocument();
-    expect(screen.getAllByText("Đang hoạt động").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText("Tạm ẩn").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("/may-anh-du-lich")).toBeInTheDocument();
   });
 
-  it("opens add modal and creates new category successfully with auto slug", async () => {
+  it("filters categories when switching pillar tabs", async () => {
+    const user = userEvent.setup();
+    render(<CategoriesPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Váy Thiết Kế")).toBeInTheDocument();
+      expect(screen.getByText("Máy Ảnh Du Lịch")).toBeInTheDocument();
+    });
+
+    // Switch to 'Thuê máy ảnh' tab
+    const cameraTab = screen.getByRole("tab", { name: /Thuê máy ảnh/i });
+    await user.click(cameraTab);
+
+    // Only camera categories remain visible
+    expect(screen.getByText("Máy Ảnh Du Lịch")).toBeInTheDocument();
+    expect(screen.queryByText("Váy Thiết Kế")).not.toBeInTheDocument();
+    expect(screen.queryByText("Gói Chụp Ngoại Cảnh")).not.toBeInTheDocument();
+  });
+
+  it("opens add modal and creates new category with selected business pillar", async () => {
     const user = userEvent.setup();
     const newCategory: Category = {
-      id: 3,
-      name: "Đầm Dạ Hội",
-      slug: "dam-da-hoi",
-      displayOrder: 3,
+      id: 4,
+      name: "Sony Alpha Series",
+      slug: "sony-alpha-series",
+      type: "CAMERA",
+      displayOrder: 4,
       isActive: true,
       createdAt: "2026-10-24T10:00:00",
       updatedAt: "2026-10-24T10:00:00",
@@ -86,15 +126,20 @@ describe("CategoriesPage", () => {
     await user.click(screen.getByRole("button", { name: /Thêm danh mục/i }));
 
     // Modal opens
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toBeInTheDocument();
+
+    // Select pillar type
+    const typeSelect = within(dialog).getByLabelText(/Mảng kinh doanh/i);
+    await user.selectOptions(typeSelect, "CAMERA");
 
     const nameInput = screen.getByPlaceholderText("Ví dụ: Váy Thiết Kế");
     const slugInput = screen.getByPlaceholderText("vay-thiet-ke");
 
-    await user.type(nameInput, "Đầm Dạ Hội");
+    await user.type(nameInput, "Sony Alpha Series");
 
     // Check slug auto-generation
-    expect(slugInput).toHaveValue("dam-da-hoi");
+    expect(slugInput).toHaveValue("sony-alpha-series");
 
     // Submit form
     await user.click(screen.getByRole("button", { name: "Lưu thay đổi" }));
@@ -102,8 +147,9 @@ describe("CategoriesPage", () => {
     await waitFor(() => {
       expect(categoryService.createCategory).toHaveBeenCalledWith(
         expect.objectContaining({
-          name: "Đầm Dạ Hội",
-          slug: "dam-da-hoi",
+          type: "CAMERA",
+          name: "Sony Alpha Series",
+          slug: "sony-alpha-series",
           isActive: true,
         })
       );

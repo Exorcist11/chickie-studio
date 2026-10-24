@@ -32,3 +32,26 @@
 .descBox {
   @apply text-sm text-stone-700 bg-white p-3 rounded-lg border border-line min-h-[64px] leading-relaxed;
 }
+
+.typeBadge {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium border whitespace-nowrap;
+  border-radius: var(--radius-tag, 6px);
+
+  &--costume {
+    background-color: rgba(100, 29, 43, 0.08);
+    color: $burgundy;
+    border-color: rgba(100, 29, 43, 0.25);
+  }
+
+  &--camera {
+    background-color: rgba(184, 145, 79, 0.12);
+    color: #8C682A;
+    border-color: rgba(184, 145, 79, 0.35);
+  }
+
+  &--photography {
+    background-color: rgba(74, 106, 138, 0.1);
+    color: #2F4D6D;
+    border-color: rgba(74, 106, 138, 0.3);
+  }
+}

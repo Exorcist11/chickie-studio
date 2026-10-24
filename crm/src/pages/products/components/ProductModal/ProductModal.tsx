@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import {
   Plus,
   Trash2,
@@ -21,7 +21,7 @@ import { TextField } from "../../../../components/ui/TextField";
 import { TextArea } from "../../../../components/ui/TextArea";
 import { Select } from "../../../../components/ui/Select";
 import { Button } from "../../../../components/ui/Button";
-import { Category } from "../../../../types/category";
+import { Category, CategoryType } from "../../../../types/category";
 import {
   CreateProductInput,
   ProductDetailResponse,
@@ -32,6 +32,7 @@ import {
   useCreateProductMutation,
   useUpdateProductMutation,
 } from "../../../../hooks/queries/productKeys";
+import { PILLAR_PRODUCT_CONFIG } from "../../constants";
 import styles from "./ProductModal.module.scss";
 
 interface ProductModalProps {
@@ -105,8 +106,16 @@ const getInitialValues = (
     };
   }
 
+  const firstCat = categories[0];
+  const firstPillar = firstCat?.type || "COSTUME";
+  const defaultVar = PILLAR_PRODUCT_CONFIG[firstPillar]?.defaultVariant || {
+    size: "Freesize",
+    color: "Trắng",
+    sku: "",
+  };
+
   return {
-    categoryId: categories[0]?.id || 0,
+    categoryId: firstCat?.id || 0,
     productCode: "",
     name: "",
     slug: "",
@@ -116,7 +125,7 @@ const getInitialValues = (
     rentalPrice: 0,
     depositPrice: 0,
     status: "ACTIVE",
-    variants: [{ size: "Freesize", color: "Trắng", sku: "" }],
+    variants: [{ ...defaultVar }],
     images: [],
   };
 };
@@ -293,10 +302,22 @@ export const ProductModal: React.FC<ProductModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, form]);
 
-  const categoryOptions = categories.map((cat) => ({
-    value: String(cat.id),
-    label: cat.name,
-  }));
+  // Resolve current business pillar reactively based on selected categoryId
+  const selectedCategoryId = useStore(form.store, (state) => state.values.categoryId);
+  const selectedCategory = categories.find((c) => c.id === selectedCategoryId);
+  const currentPillar: CategoryType = selectedCategory?.type || "COSTUME";
+  const pillarConfig = PILLAR_PRODUCT_CONFIG[currentPillar];
+  const PillarIcon = pillarConfig.icon;
+
+  const categoryOptions = categories.map((cat) => {
+    const pillar = cat.type || "COSTUME";
+    const CategoryPillarIcon = PILLAR_PRODUCT_CONFIG[pillar].icon;
+    return {
+      value: String(cat.id),
+      label: cat.name,
+      icon: CategoryPillarIcon,
+    };
+  });
 
   const statusOptions = [
     { value: "ACTIVE", label: t("product.active") },
@@ -312,8 +333,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({
     { value: "Freesize", label: "Freesize" },
   ];
 
-  const quickSizes = ["Freesize", "S", "M", "L", "XL"];
-
   return (
     <Modal
       open={isOpen}
@@ -323,12 +342,18 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       title={isEdit ? t("product.editProduct") : t("product.addProduct")}
       subtitle={
         isEdit
-          ? `Mã: ${product?.productCode || `#${product?.id}`} • ${product?.name}`
-          : "Thêm mẫu trang phục hoặc combo ảnh mới vào kho Chickie Studio"
+          ? `Mã: ${product?.productCode || `#${product?.id}`} • ${product?.name} (${pillarConfig.name})`
+          : pillarConfig.modalSubtitle
       }
       headerExtra={
-        <div className={styles.productModal__headerBadge}>
-          {isEdit ? "CẬP NHẬT" : "LOOKBOOK STUDIO"}
+        <div
+          className={cn(
+            styles.productModal__headerBadge,
+            styles[`productModal__headerBadge--${currentPillar.toLowerCase()}`]
+          )}
+        >
+          <PillarIcon size={12} />
+          {isEdit ? "CẬP NHẬT" : pillarConfig.badgeLabel}
         </div>
       }
     >
@@ -373,7 +398,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             >
               <span className={styles.productModal__navStep}>03</span>
               <ImageIcon size={16} className={styles.productModal__navIcon} />
-              <span className={styles.productModal__navLabel}>Lookbook ({imagesCount})</span>
+              <span className={styles.productModal__navLabel}>
+                {currentPillar === "COSTUME" ? "Lookbook" : "Hình ảnh"} ({imagesCount})
+              </span>
             </button>
           )}
         />
@@ -387,8 +414,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           onClick={() => scrollToSection("sec-specs", "specs")}
         >
           <span className={styles.productModal__navStep}>04</span>
-          <Shirt size={16} className={styles.productModal__navIcon} />
-          <span className={styles.productModal__navLabel}>Đặc tính</span>
+          <PillarIcon size={16} className={styles.productModal__navIcon} />
+          <span className={styles.productModal__navLabel}>{pillarConfig.specsTabLabel}</span>
         </button>
       </div>
 
@@ -406,12 +433,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             <div className={styles.productModal__cardHeader}>
               <div className={styles.productModal__cardTitleGroup}>
                 <div className={styles.productModal__cardIcon}>
-                  <Sparkles size={16} />
+                  <PillarIcon size={16} />
                 </div>
                 <div>
-                  <h4 className={styles.productModal__cardTitle}>1. Thông tin sản phẩm</h4>
+                  <h4 className={styles.productModal__cardTitle}>
+                    1. Thông tin {pillarConfig.name.toLowerCase()}
+                  </h4>
                   <span className={styles.productModal__cardSubtitle}>
-                    Tên hiển thị, danh mục và mã định danh Lookbook
+                    {pillarConfig.generalCardSubtitle}
                   </span>
                 </div>
               </div>
@@ -422,7 +451,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 {(field) => (
                   <TextField
                     label={t("product.name")}
-                    placeholder={t("product.namePlaceholder")}
+                    placeholder={pillarConfig.namePlaceholder}
                     value={field.state.value}
                     onChange={(e) => {
                       field.handleChange(e.target.value);
@@ -440,15 +469,31 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
               <form.Field name="categoryId">
                 {(field) => (
-                  <Select
-                    label={t("product.category")}
-                    placeholder={t("product.selectCategory")}
-                    options={categoryOptions}
-                    value={String(field.state.value || "")}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
-                    onBlur={field.handleBlur}
-                    required
-                  />
+                  <div className={styles.productModal__categoryWrapper}>
+                    <Select
+                      label={t("product.category")}
+                      placeholder={t("product.selectCategory")}
+                      options={categoryOptions}
+                      value={String(field.state.value || "")}
+                      onChange={(e) => field.handleChange(Number(e.target.value))}
+                      onBlur={field.handleBlur}
+                      required
+                    />
+                    <div className={styles.productModal__categoryMeta}>
+                      <span className={styles.productModal__pillarHint}>
+                        Mảng kinh doanh:
+                      </span>
+                      <span
+                        className={cn(
+                          styles.productModal__pillarBadge,
+                          styles[`productModal__pillarBadge--${currentPillar.toLowerCase()}`]
+                        )}
+                      >
+                        <PillarIcon size={12} />
+                        {pillarConfig.name}
+                      </span>
+                    </div>
+                  </div>
                 )}
               </form.Field>
             </div>
@@ -458,7 +503,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 {(field) => (
                   <TextField
                     label={t("product.productCode")}
-                    placeholder={t("product.productCodePlaceholder")}
+                    placeholder={pillarConfig.codePlaceholder}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
@@ -503,9 +548,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   <CircleDollarSign size={16} />
                 </div>
                 <div>
-                  <h4 className={styles.productModal__cardTitle}>2. Bảng giá & Biến thể</h4>
+                  <h4 className={styles.productModal__cardTitle}>
+                    2. Bảng giá & Biến thể ({pillarConfig.name})
+                  </h4>
                   <span className={styles.productModal__cardSubtitle}>
-                    Chính sách giá thuê theo ngày, tiền cọc bảo hiểm và biến thể kích cỡ
+                    {pillarConfig.variantsSubtitle}
                   </span>
                 </div>
               </div>
@@ -517,7 +564,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 {(field) => (
                   <div>
                     <TextField
-                      label={t("product.rentalPrice")}
+                      label={pillarConfig.rentalPriceLabel}
                       type="number"
                       placeholder={t("product.rentalPricePlaceholder")}
                       value={field.state.value ? String(field.state.value) : ""}
@@ -528,7 +575,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     />
                     {Boolean(field.state.value && field.state.value > 0) && (
                       <div className={styles.productModal__pricePreview}>
-                        ≈ {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(field.state.value)} / ngày
+                        ≈ {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(field.state.value)}
+                        {currentPillar !== "PHOTOGRAPHY" ? " / ngày" : " (trọn gói)"}
                       </div>
                     )}
                   </div>
@@ -536,62 +584,40 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               </form.Field>
 
               <form.Field name="depositPrice">
-                {(field) => {
-                  const setQuickDeposit = (factor: number) => {
-                    const rPrice = form.getFieldValue("rentalPrice") || 0;
-                    field.handleChange(Math.round(rPrice * factor));
-                  };
-
-                  return (
-                    <div>
-                      <TextField
-                        label={t("product.depositPrice")}
-                        type="number"
-                        placeholder={t("product.depositPricePlaceholder")}
-                        value={field.state.value ? String(field.state.value) : ""}
-                        onChange={(e) => field.handleChange(Number(e.target.value))}
-                        onBlur={field.handleBlur}
-                        error={field.state.meta.errors[0] ? String(field.state.meta.errors[0]) : undefined}
-                        required
-                      />
-                      {Boolean(field.state.value && field.state.value > 0) && (
-                        <div className={styles.productModal__pricePreview}>
-                          ≈ {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(field.state.value)}
-                        </div>
-                      )}
-                      <div className={styles.productModal__quickPriceBtns}>
-                        <button
-                          type="button"
-                          className={styles.productModal__pricePresetBtn}
-                          onClick={() => setQuickDeposit(1)}
-                        >
-                          100% giá thuê
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.productModal__pricePresetBtn}
-                          onClick={() => setQuickDeposit(2)}
-                        >
-                          200% giá thuê
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.productModal__pricePresetBtn}
-                          onClick={() => field.handleChange(500000)}
-                        >
-                          500k
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.productModal__pricePresetBtn}
-                          onClick={() => field.handleChange(1000000)}
-                        >
-                          1 Triệu
-                        </button>
+                {(field) => (
+                  <div>
+                    <TextField
+                      label={pillarConfig.depositPriceLabel}
+                      type="number"
+                      placeholder={t("product.depositPricePlaceholder")}
+                      value={field.state.value ? String(field.state.value) : ""}
+                      onChange={(e) => field.handleChange(Number(e.target.value))}
+                      onBlur={field.handleBlur}
+                      error={field.state.meta.errors[0] ? String(field.state.meta.errors[0]) : undefined}
+                      required
+                    />
+                    {Boolean(field.state.value && field.state.value > 0) && (
+                      <div className={styles.productModal__pricePreview}>
+                        ≈ {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(field.state.value)}
                       </div>
+                    )}
+                    <div className={styles.productModal__quickPriceBtns}>
+                      {pillarConfig.depositPresets.map((preset, pIdx) => (
+                        <button
+                          key={pIdx}
+                          type="button"
+                          className={styles.productModal__pricePresetBtn}
+                          onClick={() => {
+                            const rPrice = form.getFieldValue("rentalPrice") || 0;
+                            field.handleChange(preset.calculate(rPrice));
+                          }}
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
                     </div>
-                  );
-                }}
+                  </div>
+                )}
               </form.Field>
             </div>
 
@@ -609,16 +635,20 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               )}
             </form.Field>
 
-            {/* Biến thể Size & Màu */}
+            {/* Biến thể */}
             <form.Field name="variants">
               {(field) => {
                 const variants = field.state.value;
 
-                const handleAddVariant = (size = "S", color = "Trắng") => {
+                const handleAddVariant = (
+                  size = pillarConfig.quickChips[0] || "Freesize",
+                  color = pillarConfig.defaultVariant.color
+                ) => {
                   const rawCode = form.getFieldValue("productCode") || "PROD";
                   const cleanCode = toSlug(rawCode).replace(/-/g, "").toUpperCase() || "PROD";
                   const cleanColor = toSlug(color).replace(/-/g, "").toUpperCase() || "COLOR";
-                  const sku = `${cleanCode}-${size.toUpperCase()}-${cleanColor}`;
+                  const cleanSize = toSlug(size).replace(/-/g, "").toUpperCase() || "VAR";
+                  const sku = `${cleanCode}-${cleanSize}-${cleanColor}`;
                   field.handleChange([...variants, { size, color, sku }]);
                 };
 
@@ -641,16 +671,21 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Layers size={16} className="text-burgundy" />
+                        <PillarIcon size={16} className="text-burgundy" />
                         <span className="text-sm font-semibold text-ink">
-                          Biến thể trang phục ({variants.length})
+                          {pillarConfig.variantsTitle} ({variants.length})
                         </span>
                       </div>
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => handleAddVariant("S", "Trắng")}
+                        onClick={() =>
+                          handleAddVariant(
+                            pillarConfig.quickChips[0] || "Freesize",
+                            pillarConfig.defaultVariant.color
+                          )
+                        }
                       >
                         <Plus size={14} className="mr-1" />
                         {t("product.addVariant")}
@@ -658,13 +693,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     </div>
 
                     <div className={styles.productModal__quickChips}>
-                      <span className={styles.productModal__quickChipsLabel}>+ Thêm nhanh Size:</span>
-                      {quickSizes.map((s) => (
+                      <span className={styles.productModal__quickChipsLabel}>
+                        {pillarConfig.quickChipsLabel}
+                      </span>
+                      {pillarConfig.quickChips.map((s) => (
                         <button
                           key={s}
                           type="button"
                           className={styles.productModal__chipBtn}
-                          onClick={() => handleAddVariant(s, "Trắng")}
+                          onClick={() => handleAddVariant(s, pillarConfig.defaultVariant.color)}
                         >
                           +{s}
                         </button>
@@ -674,15 +711,23 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     <div className={styles.productModal__variantsList}>
                       {variants.map((v, idx) => (
                         <div key={idx} className={styles.productModal__variantItem}>
-                          <Select
-                            placeholder="Chọn Size"
-                            options={sizeOptions}
-                            value={v.size}
-                            onChange={(e) => handleVariantChange(idx, "size", e.target.value)}
-                          />
+                          {currentPillar === "COSTUME" ? (
+                            <Select
+                              placeholder={pillarConfig.sizePlaceholder}
+                              options={sizeOptions}
+                              value={v.size}
+                              onChange={(e) => handleVariantChange(idx, "size", e.target.value)}
+                            />
+                          ) : (
+                            <TextField
+                              placeholder={pillarConfig.sizePlaceholder}
+                              value={v.size}
+                              onChange={(e) => handleVariantChange(idx, "size", e.target.value)}
+                            />
+                          )}
 
                           <TextField
-                            placeholder="Màu sắc (ví dụ: Trắng ngà, Đỏ rượu)"
+                            placeholder={pillarConfig.colorPlaceholder}
                             value={v.color}
                             onChange={(e) => handleVariantChange(idx, "color", e.target.value)}
                           />
@@ -745,10 +790,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                         </div>
                         <div>
                           <h4 className={styles.productModal__cardTitle}>
-                            3. Thư viện hình ảnh Lookbook ({images.length})
+                            {pillarConfig.mediaTitle} ({images.length})
                           </h4>
                           <span className={styles.productModal__cardSubtitle}>
-                            Chọn ảnh chụp mẫu từ máy tính để tải lên máy chủ studio
+                            {pillarConfig.mediaSubtitle}
                           </span>
                         </div>
                       </div>
@@ -798,7 +843,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                               img.isThumbnail && styles["productModal__imageCard--thumbnail"]
                             )}
                           >
-                            <img src={img.imageUrl} alt={`Mẫu Lookbook ${idx + 1}`} />
+                            <img src={img.imageUrl} alt={`Ảnh ${idx + 1}`} />
                             {img.isThumbnail && (
                               <span className={styles.productModal__thumbBadge}>Ảnh bìa</span>
                             )}
@@ -814,7 +859,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                                   e.stopPropagation();
                                   handleSetThumbnail(idx);
                                 }}
-                                title={img.isThumbnail ? "Đang là ảnh bìa" : "Đặt làm ảnh bìa Lookbook"}
+                                title={img.isThumbnail ? "Đang là ảnh bìa" : "Đặt làm ảnh bìa chính"}
                               >
                                 <Star size={12} fill={img.isThumbnail ? "currentColor" : "none"} />
                               </button>
@@ -839,7 +884,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     ) : (
                       <div className={styles.productModal__emptyImage}>
                         <ImageIcon size={28} />
-                        <span>Chưa có hình ảnh nào được tải lên cho mẫu Lookbook này</span>
+                        <span>{pillarConfig.mediaEmptyNotice}</span>
                       </div>
                     )}
                   </>
@@ -849,18 +894,20 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           </div>
         </div>
 
-        {/* Section 4: Đặc tính trang phục */}
+        {/* Section 4: Đặc tính chuyên biệt */}
         <div id="sec-specs" className={styles.productModal__section}>
           <div className={styles.productModal__card}>
             <div className={styles.productModal__cardHeader}>
               <div className={styles.productModal__cardTitleGroup}>
                 <div className={styles.productModal__cardIcon}>
-                  <Shirt size={16} />
+                  <PillarIcon size={16} />
                 </div>
                 <div>
-                  <h4 className={styles.productModal__cardTitle}>4. Đặc tính trang phục</h4>
+                  <h4 className={styles.productModal__cardTitle}>
+                    {pillarConfig.specsTitle}
+                  </h4>
                   <span className={styles.productModal__cardSubtitle}>
-                    Chất liệu may mặc và các dịp sự kiện chụp ảnh phù hợp
+                    {pillarConfig.specsSubtitle}
                   </span>
                 </div>
               </div>
@@ -870,8 +917,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <form.Field name="material">
                 {(field) => (
                   <TextField
-                    label={t("product.material")}
-                    placeholder={t("product.materialPlaceholder")}
+                    label={pillarConfig.materialLabel}
+                    placeholder={pillarConfig.materialPlaceholder}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
@@ -882,8 +929,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <form.Field name="occasion">
                 {(field) => (
                   <TextField
-                    label={t("product.occasion")}
-                    placeholder={t("product.occasionPlaceholder")}
+                    label={pillarConfig.occasionLabel}
+                    placeholder={pillarConfig.occasionPlaceholder}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}

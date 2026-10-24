@@ -9,6 +9,7 @@ export interface SelectOption {
   label: string;
   value: string | number;
   disabled?: boolean;
+  icon?: React.ComponentType<{ className?: string; size?: number | string }>;
 }
 
 export interface SelectProps
@@ -123,6 +124,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
     // Find label for current value
     const selectedOption = options?.find((opt) => String(opt.value) === String(internalValue));
+    const SelectedIcon = selectedOption?.icon;
     const displayLabel = selectedOption
       ? selectedOption.label
       : internalValue || (placeholder ? "" : "");
@@ -157,9 +159,12 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             )}
             onClick={() => !disabled && setIsOpen((prev) => !prev)}
           >
-            <span className={cn(!displayLabel && styles.select__placeholder)}>
-              {displayLabel || placeholder || "Chọn một mục..."}
-            </span>
+            <div className="flex items-center gap-2 truncate flex-1 text-left">
+              {SelectedIcon && <SelectedIcon size={15} className="shrink-0 text-burgundy" />}
+              <span className={cn(!displayLabel && styles.select__placeholder)}>
+                {displayLabel || placeholder || "Chọn một mục..."}
+              </span>
+            </div>
             <ChevronDown
               className={cn(styles.select__icon, isOpen && styles["select__icon--open"])}
               size={16}
@@ -185,6 +190,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               )}
               {options.map((opt) => {
                 const isSelected = String(opt.value) === String(internalValue);
+                const OptionIcon = opt.icon;
                 return (
                   <div
                     key={String(opt.value)}
@@ -198,7 +204,18 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                     )}
                     onClick={() => !opt.disabled && handleSelectOption(opt.value)}
                   >
-                    <span>{opt.label}</span>
+                    <div className="flex items-center gap-2 flex-1 truncate">
+                      {OptionIcon && (
+                        <OptionIcon
+                          size={14}
+                          className={cn(
+                            "shrink-0",
+                            isSelected ? "text-burgundy" : "text-stone-400"
+                          )}
+                        />
+                      )}
+                      <span className="truncate">{opt.label}</span>
+                    </div>
                     {isSelected && <Check size={14} className={styles.select__checkIcon} />}
                   </div>
                 );
@@ -240,7 +257,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                     value={opt.value}
                     disabled={opt.disabled}
                   >
-                    {opt.label}
+                    {typeof opt.label === "string" ? opt.label : String(opt.value)}
                   </option>
                 ))
               : children}

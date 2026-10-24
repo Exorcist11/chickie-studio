@@ -6,7 +6,7 @@ import { Badge } from "../../../../components/ui/Badge";
 import { Button } from "../../../../components/ui/Button";
 import { Modal } from "../../../../components/common/Modal";
 import { cn } from "../../../../lib/cn";
-import { ICON_MAP } from "../../constants";
+import { ICON_MAP, CATEGORY_TYPE_CONFIG } from "../../constants";
 import styles from "./CategoryViewModal.module.scss";
 
 export interface CategoryViewModalProps {
@@ -27,6 +27,8 @@ export const CategoryViewModal: React.FC<CategoryViewModalProps> = ({
   if (!open || !category) return null;
 
   const IconComponent = (category.iconUrl && ICON_MAP[category.iconUrl]) || Layers;
+  const pillarConfig = CATEGORY_TYPE_CONFIG[category.type || "COSTUME"];
+  const PillarIcon = pillarConfig.icon;
 
   return (
     <Modal
@@ -59,6 +61,16 @@ export const CategoryViewModal: React.FC<CategoryViewModalProps> = ({
         <div>
           <span className={styles.fieldLabel}>{t("category.name")}</span>
           <span className={styles.fieldValue}>{category.name}</span>
+        </div>
+
+        <div>
+          <span className={styles.fieldLabel}>{t("category.type")}</span>
+          <span className={styles.fieldValue}>
+            <span className={cn(styles.typeBadge, styles[pillarConfig.badgeStyleClass])}>
+              <PillarIcon className="w-3.5 h-3.5 shrink-0" />
+              <span>{t(pillarConfig.labelKey, pillarConfig.defaultLabel)}</span>
+            </span>
+          </span>
         </div>
 
         <div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Plus, Edit2, Trash2, Layers, Eye } from "lucide-react";
+import { Plus, Edit2, Trash2, Layers, Eye, Shirt, Camera, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Category } from "../../types/category";
+import { Category, CategoryType } from "../../types/category";
 import { categoryService } from "../../services/category.service";
 import { PageHeader } from "../../components/common/PageHeader";
 import { DataTable, ColumnType } from "../../components/common/DataTable";
@@ -11,7 +11,7 @@ import { Button } from "../../components/ui/Button";
 import { Badge } from "../../components/ui/Badge";
 import { cn } from "../../lib/cn";
 import { CategoryModal, CategoryViewModal } from "./components";
-import { ICON_MAP } from "./constants";
+import { ICON_MAP, CATEGORY_TYPE_CONFIG } from "./constants";
 import styles from "./CategoriesPage.module.scss";
 
 export const CategoriesPage: React.FC = () => {
@@ -20,6 +20,7 @@ export const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [filterValues, setFilterValues] = useState<FilterValues>({});
+  const [selectedType, setSelectedType] = useState<string>("ALL");
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,9 +76,24 @@ export const CategoriesPage: React.FC = () => {
     }
   };
 
+  // Category counts per pillar
+  const typeCounts = useMemo(() => {
+    return {
+      ALL: categories.length,
+      COSTUME: categories.filter((c) => (c.type || "COSTUME") === "COSTUME").length,
+      CAMERA: categories.filter((c) => c.type === "CAMERA").length,
+      PHOTOGRAPHY: categories.filter((c) => c.type === "PHOTOGRAPHY").length,
+    };
+  }, [categories]);
+
   // Filtered List
   const filteredCategories = useMemo(() => {
     return categories.filter((cat) => {
+      // Filter by Pillar (Type)
+      if (selectedType !== "ALL") {
+        const catType = cat.type || "COSTUME";
+        if (catType !== selectedType) return false;
+      }
       // Search term
       if (filterValues.search) {
         const query = filterValues.search.toLowerCase();
@@ -92,7 +108,7 @@ export const CategoriesPage: React.FC = () => {
       }
       return true;
     });
-  }, [categories, filterValues]);
+  }, [categories, filterValues, selectedType]);
 
   // Columns definition
   const columns: ColumnType<Category>[] = [
@@ -137,6 +153,23 @@ export const CategoriesPage: React.FC = () => {
           /{value}
         </code>
       ),
+    },
+    {
+      title: t("category.type"),
+      dataIndex: "type",
+      key: "type",
+      width: 170,
+      render: (type?: CategoryType) => {
+        const resolvedType = type || "COSTUME";
+        const config = CATEGORY_TYPE_CONFIG[resolvedType];
+        const Icon = config.icon;
+        return (
+          <span className={cn(styles.typeBadge, styles[config.badgeStyleClass])}>
+            <Icon className="w-3.5 h-3.5 shrink-0" />
+            <span>{t(config.labelKey, config.defaultLabel)}</span>
+          </span>
+        );
+      },
     },
     {
       title: t("category.description"),
@@ -231,6 +264,33 @@ export const CategoriesPage: React.FC = () => {
           </Button>
         }
       />
+
+      {/* 3 Business Pillars Tab Switcher */}
+      <div className={styles.pillarTabs} role="tablist" aria-label="Lọc theo mảng kinh doanh">
+        {[
+          { key: "ALL", label: t("category.types.all", "Tất cả mảng"), icon: Layers, count: typeCounts.ALL },
+          { key: "COSTUME", label: t("category.types.costume", "Thuê trang phục"), icon: Shirt, count: typeCounts.COSTUME },
+          { key: "CAMERA", label: t("category.types.camera", "Thuê máy ảnh"), icon: Camera, count: typeCounts.CAMERA },
+          { key: "PHOTOGRAPHY", label: t("category.types.photography", "Dịch vụ chụp ảnh"), icon: Sparkles, count: typeCounts.PHOTOGRAPHY },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = selectedType === tab.key;
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setSelectedType(tab.key)}
+              className={cn(styles.pillarTab, isActive && styles["pillarTab--active"])}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+              <span className={styles.pillarTabCount}>{tab.count}</span>
+            </button>
+          );
+        })}
+      </div>
 
       <FilterBar
         searchPlaceholder={t("common.search")}

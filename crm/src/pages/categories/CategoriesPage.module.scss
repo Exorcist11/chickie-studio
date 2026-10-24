@@ -5,6 +5,59 @@
   @apply flex flex-col gap-5 w-full;
 }
 
+.pillarTabs {
+  @apply flex items-center gap-2 overflow-x-auto pb-1 text-sm;
+}
+
+.pillarTab {
+  @apply inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all cursor-pointer border border-stone-200/80 bg-white text-stone-700 select-none;
+
+  &:hover {
+    @apply bg-stone-50 border-stone-300;
+  }
+
+  &--active {
+    @apply bg-burgundy text-white border-burgundy shadow-xs font-semibold;
+
+    &:hover {
+      @apply bg-burgundy;
+    }
+  }
+}
+
+.pillarTabCount {
+  @apply text-[11px] px-1.5 py-0.5 rounded-full font-mono font-medium;
+  background-color: rgba(0, 0, 0, 0.06);
+
+  .pillarTab--active & {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+  }
+}
+
+.typeBadge {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium border whitespace-nowrap;
+  border-radius: var(--radius-tag, 6px);
+
+  &--costume {
+    background-color: rgba(100, 29, 43, 0.08);
+    color: $burgundy;
+    border-color: rgba(100, 29, 43, 0.25);
+  }
+
+  &--camera {
+    background-color: rgba(184, 145, 79, 0.12);
+    color: #8C682A;
+    border-color: rgba(184, 145, 79, 0.35);
+  }
+
+  &--photography {
+    background-color: rgba(74, 106, 138, 0.1);
+    color: #2F4D6D;
+    border-color: rgba(74, 106, 138, 0.3);
+  }
+}
+
 .orderBadge {
   @apply font-semibold text-stone-500 text-xs px-2 py-0.5 bg-stone-100 rounded font-mono border border-stone-200/50;
 }

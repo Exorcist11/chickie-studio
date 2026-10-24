@@ -81,6 +81,15 @@
     "status": "Trạng thái",
     "active": "Đang hoạt động",
     "inactive": "Tạm ẩn",
+    "type": "Mảng kinh doanh",
+    "typePlaceholder": "Chọn mảng kinh doanh",
+    "typeRequired": "Vui lòng chọn mảng kinh doanh",
+    "types": {
+      "all": "Tất cả mảng",
+      "costume": "Thuê trang phục",
+      "camera": "Thuê máy ảnh",
+      "photography": "Dịch vụ chụp ảnh"
+    },
     "actions": "Thao tác",
     "delete": "Xóa",
     "edit": "Sửa",

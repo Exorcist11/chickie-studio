@@ -1,5 +1,6 @@
 import React from "react";
-import { Sparkles, Flower2, Camera, Layers, Tag } from "lucide-react";
+import { Sparkles, Flower2, Camera, Layers, Tag, Shirt } from "lucide-react";
+import { CategoryType } from "../../types/category";
 
 // Icon mapping for rich visual indicators across categories
 export const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -8,6 +9,39 @@ export const ICON_MAP: Record<string, React.ComponentType<{ className?: string }
   Camera,
   Layers,
   Tag,
+  Shirt,
+};
+
+export interface CategoryTypeConfig {
+  value: CategoryType;
+  labelKey: string;
+  defaultLabel: string;
+  badgeStyleClass: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+export const CATEGORY_TYPE_CONFIG: Record<CategoryType, CategoryTypeConfig> = {
+  COSTUME: {
+    value: "COSTUME",
+    labelKey: "category.types.costume",
+    defaultLabel: "Thuê trang phục",
+    badgeStyleClass: "typeBadge--costume",
+    icon: Shirt,
+  },
+  CAMERA: {
+    value: "CAMERA",
+    labelKey: "category.types.camera",
+    defaultLabel: "Thuê máy ảnh",
+    badgeStyleClass: "typeBadge--camera",
+    icon: Camera,
+  },
+  PHOTOGRAPHY: {
+    value: "PHOTOGRAPHY",
+    labelKey: "category.types.photography",
+    defaultLabel: "Dịch vụ chụp ảnh",
+    badgeStyleClass: "typeBadge--photography",
+    icon: Sparkles,
+  },
 };
 
 // Generates URL-friendly slugs from Vietnamese text

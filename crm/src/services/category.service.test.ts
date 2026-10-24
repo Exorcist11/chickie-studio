@@ -12,6 +12,7 @@ describe("categoryService", () => {
     id: 1,
     name: "Váy Thiết Kế",
     slug: "vay-thiet-ke",
+    type: "COSTUME",
     description: "Váy cao cấp chụp ảnh",
     iconUrl: "Sparkles",
     displayOrder: 1,

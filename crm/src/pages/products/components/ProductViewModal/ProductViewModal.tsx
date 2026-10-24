@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image as ImageIcon } from "lucide-react";
+import { cn } from "../../../../lib/cn";
 import { Modal } from "../../../../components/common/Modal";
 import { Button } from "../../../../components/ui/Button";
 import { Badge } from "../../../../components/ui/Badge";
 import { ProductDetailResponse } from "../../../../types/product";
+import { Category, CategoryType } from "../../../../types/category";
+import { PILLAR_PRODUCT_CONFIG } from "../../constants";
 import styles from "./ProductViewModal.module.scss";
 
 interface ProductViewModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: ProductDetailResponse | null;
+  categories?: Category[];
 }
 
 export const ProductViewModal: React.FC<ProductViewModalProps> = ({
   isOpen,
   onClose,
   product,
+  categories = [],
 }) => {
   const { t } = useTranslation();
   const [selectedImgIndex, setSelectedImgIndex] = useState(0);
@@ -25,6 +30,12 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
 
   const images = product.images || [];
   const currentImg = images[selectedImgIndex]?.imageUrl || images[0]?.imageUrl;
+
+  // Resolve business pillar for the product
+  const matchedCategory = categories.find((c) => c.id === product.categoryId);
+  const pillarType: CategoryType = matchedCategory?.type || "COSTUME";
+  const pillarConfig = PILLAR_PRODUCT_CONFIG[pillarType];
+  const PillarIcon = pillarConfig.icon;
 
   return (
     <Modal
@@ -37,8 +48,19 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
         {/* Header Section */}
         <div className={styles.productViewModal__header}>
           <div className={styles.productViewModal__headerMeta}>
+            <div className={styles.productViewModal__headerBadges}>
+              <span className={styles.productViewModal__codeBadge}>{product.productCode}</span>
+              <span
+                className={cn(
+                  styles.productViewModal__headerPillar,
+                  styles[`productViewModal__headerPillar--${pillarType.toLowerCase()}`]
+                )}
+              >
+                <PillarIcon size={13} />
+                {pillarConfig.name}
+              </span>
+            </div>
             <h3 className={styles.productViewModal__title}>{product.name}</h3>
-            <span className={styles.productViewModal__codeBadge}>{product.productCode}</span>
           </div>
           <Badge
             variant={
@@ -96,7 +118,7 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
             {/* Price Box */}
             <div className={styles.productViewModal__priceCard}>
               <div className={styles.productViewModal__priceBlock}>
-                <span className={styles.productViewModal__priceLabel}>{t("product.rentalPrice")}</span>
+                <span className={styles.productViewModal__priceLabel}>{pillarConfig.rentalPriceLabel}</span>
                 <span className={styles.productViewModal__rentalPriceVal}>
                   {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
                     product.rentalPrice
@@ -104,7 +126,7 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
                 </span>
               </div>
               <div className={styles.productViewModal__priceBlock}>
-                <span className={styles.productViewModal__priceLabel}>{t("product.depositPrice")}</span>
+                <span className={styles.productViewModal__priceLabel}>{pillarConfig.depositPriceLabel}</span>
                 <span className={styles.productViewModal__depositPriceVal}>
                   {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
                     product.depositPrice
@@ -124,11 +146,11 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
                 <span className={styles.productViewModal__attrVal}>{product.slug}</span>
               </div>
               <div className={styles.productViewModal__attrItem}>
-                <span className={styles.productViewModal__attrLabel}>{t("product.material")}</span>
+                <span className={styles.productViewModal__attrLabel}>{pillarConfig.materialLabel}</span>
                 <span className={styles.productViewModal__attrVal}>{product.material || "—"}</span>
               </div>
               <div className={styles.productViewModal__attrItem}>
-                <span className={styles.productViewModal__attrLabel}>{t("product.occasion")}</span>
+                <span className={styles.productViewModal__attrLabel}>{pillarConfig.occasionLabel}</span>
                 <span className={styles.productViewModal__attrVal}>{product.occasion || "—"}</span>
               </div>
             </div>
@@ -144,13 +166,13 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
             {/* Variants Table */}
             <div className={styles.productViewModal__variantsSection}>
               <span className={styles.productViewModal__attrLabel}>
-                {t("product.variants")} ({product.variants?.length || 0})
+                {pillarConfig.variantsTitle} ({product.variants?.length || 0})
               </span>
               <table className={styles.productViewModal__variantsTable}>
                 <thead>
                   <tr>
-                    <th>{t("product.size")}</th>
-                    <th>{t("product.color")}</th>
+                    <th>{pillarConfig.sizeFieldLabel}</th>
+                    <th>{pillarConfig.colorFieldLabel}</th>
                     <th>{t("product.sku")}</th>
                   </tr>
                 </thead>
