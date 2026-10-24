@@ -1,0 +1,12 @@
+// CRM PageHeader Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-page-header {
+  margin-bottom: var(--space-6, 1.5rem);
+
+  &__title {
+    font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+    color: var(--color-ink, #302528);
+    font-weight: 600;
+  }
+}

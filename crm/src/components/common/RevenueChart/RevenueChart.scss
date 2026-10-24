@@ -1,0 +1,18 @@
+// CRM RevenueChart Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-revenue-chart {
+  background-color: #ffffff;
+  border-radius: var(--radius-card, 16px);
+  border: 1px solid var(--color-line, #EADFD6);
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(48, 37, 40, 0.05));
+  padding: var(--space-6, 1.5rem);
+
+  &__bar {
+    transition: height 300ms ease, fill 150ms ease;
+
+    &:hover {
+      fill: var(--color-primary-hover, #4D1621);
+    }
+  }
+}

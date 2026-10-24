@@ -1,0 +1,16 @@
+// CRM StatCard Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-stat-card {
+  background-color: #ffffff;
+  border-radius: var(--radius-card, 16px);
+  border: 1px solid var(--color-line, #EADFD6);
+  padding: var(--space-6, 1.5rem);
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(48, 37, 40, 0.05));
+  transition: transform 200ms ease, box-shadow 200ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised, 0 10px 15px -3px rgba(48, 37, 40, 0.08));
+  }
+}

@@ -1,0 +1,10 @@
+// CRM StatusBadge Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  border-radius: 9999px;
+  line-height: 1;
+}

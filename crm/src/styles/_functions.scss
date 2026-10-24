@@ -1,0 +1,10 @@
+// ==========================================
+// SCSS FUNCTIONS
+// ==========================================
+
+@use "sass:math";
+
+// Chuyển đổi px sang rem chuẩn
+@function rem($px, $base: 16px) {
+  @return math.div($px, $base) * 1rem;
+}

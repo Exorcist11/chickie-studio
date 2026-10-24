@@ -1,0 +1,37 @@
+// CRM DataTable Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  &__wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &__th {
+    white-space: nowrap;
+    background-color: var(--color-ivory, #F8F1E8);
+    color: var(--color-ink, #302528);
+    border-bottom: 1px solid var(--color-line, #EADFD6);
+  }
+
+  &__tr {
+    transition: background-color 150ms ease-in-out;
+
+    &:hover {
+      background-color: rgba(248, 241, 232, 0.4);
+    }
+
+    &--selected {
+      background-color: rgba(100, 29, 43, 0.05);
+    }
+  }
+
+  &__td {
+    border-bottom: 1px solid rgba(234, 223, 214, 0.6);
+  }
+}

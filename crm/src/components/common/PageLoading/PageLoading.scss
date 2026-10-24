@@ -1,0 +1,10 @@
+// CRM PageLoading Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12, 3rem);
+}

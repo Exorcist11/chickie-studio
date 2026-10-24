@@ -1,0 +1,11 @@
+// CRM EmptyState Scoped Styles
+@use "../../../styles/tokens" as *;
+
+.crm-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8, 2rem);
+  text-align: center;
+}

@@ -1,0 +1,59 @@
+// ==========================================
+// CHICKIE STUDIO - DESIGN TOKENS (SCSS)
+// ==========================================
+
+:root {
+  // Brand Colors
+  --color-burgundy: #641D2B;
+  --color-burgundy-light: #762538;
+  --color-burgundy-dark: #4C1520;
+  --color-gold: #B8914F;
+  --color-rose: #DCC8BD;
+  --color-ivory: #F8F1E8;
+  --color-warm-white: #FFFCF8;
+  --color-ink: #302528;
+  --color-ink-muted: #6B5D60;
+  --color-line: #EADFD6;
+
+  // Semantic Feedback Colors
+  --color-success: #1B8755;
+  --color-warning: #B8791F;
+  --color-danger: #D9383A;
+  --color-info: #4A6A8A;
+
+  // Border Radii
+  --radius-tag: 6px;
+  --radius-btn: 8px;
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+
+  // Elevation Shadows
+  --shadow-card: 0 2px 10px -2px rgba(48, 37, 40, 0.06), 0 1px 4px -1px rgba(48, 37, 40, 0.04);
+  --shadow-raised: 0 10px 25px -5px rgba(48, 37, 40, 0.12), 0 4px 12px -2px rgba(48, 37, 40, 0.08);
+
+  // Typography
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  // Spacing Scale
+  --space-1: 0.25rem;  // 4px
+  --space-2: 0.5rem;   // 8px
+  --space-3: 0.75rem;  // 12px
+  --space-4: 1rem;     // 16px
+  --space-5: 1.25rem;  // 20px
+  --space-6: 1.5rem;   // 24px
+  --space-8: 2rem;     // 32px
+  --space-12: 3rem;    // 48px
+  --space-16: 4rem;    // 64px
+}
+
+// SCSS Variables for compile-time usage
+$burgundy: #641D2B;
+$gold: #B8914F;
+$ink: #302528;
+$ink-muted: #6B5D60;
+$warm-white: #FFFCF8;
+$ivory: #F8F1E8;
+$line: #EADFD6;
+$danger: #D9383A;
+$success: #1B8755;

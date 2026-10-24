@@ -1,0 +1,14 @@
+// ==========================================
+// CRM MAIN SCSS ENTRYPOINT
+// ==========================================
+
+@import "./shadcn-theme.css";
+@use "./tokens" as *;
+@use "./functions" as *;
+@use "./mixins" as *;
+@use "./global" as *;
+@use "./utilities" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
