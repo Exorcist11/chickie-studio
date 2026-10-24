@@ -5,8 +5,8 @@
 ```mermaid
 flowchart LR
     A[1. Đọc Specs & API DTO] --> B[2. Code Service & Common UI]
-    B --> C[3. Viết Test RTL/MSW]
-    C --> D[4. Lint & Coverage >=80%]
+    B --> C[3. Viết Test RTL/MSW & E2E]
+    C --> D[4. Lint, Coverage & UI Test Pass]
     D --> E[5. Cập nhật Docs]
     E --> F[6. Git Commit]
 ```
@@ -14,8 +14,8 @@ flowchart LR
 1. **Phân tích**: Đọc tài liệu `docs/` để nắm rõ DTO API và yêu cầu quyền hạn (roles).
 2. **Triển khai**: Tạo API service, TanStack Query hook, ghép nối các component từ `components/common`.
 3. **Đa ngôn ngữ**: Bổ sung toàn bộ text vào cả 2 file `vi.json` và `en.json`.
-4. **Viết test tự động**: Tạo file test, mock response với MSW, đảm bảo test cả trường hợp lỗi.
-5. **Kiểm tra chất lượng**: Chạy lệnh kiểm tra nghiêm ngặt trước khi commit.
+4. **Viết test tự động**: Tạo file unit test `*.test.tsx`, mock response với MSW; viết e2e test trong `e2e/` cho luồng phân quyền và quản trị chính.
+5. **Kiểm tra chất lượng**: Chạy lệnh kiểm tra nghiêm ngặt trước khi commit (lint, typecheck, vitest coverage >= 80%, playwright e2e).
 6. **Commit**: Tạo commit theo Conventional Commits.
 
 ---
@@ -25,8 +25,9 @@ flowchart LR
 ```bash
 npm run lint          # Kiểm tra code style và quy tắc lint
 npm run typecheck     # Kiểm tra TypeScript type safety
-npm run test          # Chạy toàn bộ test suite
+npm run test          # Chạy toàn bộ unit & integration test suite
 npm run test:coverage # Kiểm tra độ phủ (bắt buộc Line & Branch >= 80%)
+npm run test:e2e      # Chạy kiểm thử giao diện người dùng Playwright E2E
 ```
 
 ---

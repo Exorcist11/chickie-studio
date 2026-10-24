@@ -9,6 +9,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     testTimeout: 15000,
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
@@ -19,6 +20,8 @@ export default defineConfig({
         statements: 80,
       },
       exclude: [
+        "e2e/**",
+        "playwright.config.ts",
         "node_modules/**",
         ".next/**",
         "**/*.d.ts",

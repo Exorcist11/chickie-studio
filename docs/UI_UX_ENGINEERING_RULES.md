@@ -147,7 +147,7 @@ Trước khi bắt đầu viết code cho bất kỳ trang hoặc component nào
 flowchart LR
     A["1. Khảo Sát & Audit"] --> B["2. Thiết Kế (UI/UX Pro Max)"]
     B --> C["3. Triển Khai (shadcn + SCSS)"]
-    C --> D["4. Kiểm Thử (Unit + a11y)"]
+    C --> D["4. Kiểm Thử (Unit, a11y & E2E)"]
     D --> E["5. Báo Cáo & Cập Nhật Docs"]
 ```
 
@@ -158,6 +158,7 @@ flowchart LR
    - Chạy test unit và accessibility với `vitest-axe` (không có lỗi vi phạm WCAG).
    - Kiểm tra trạng thái Loading, Empty, Error, Success.
    - Đo lường coverage đạt $\ge 80\%$.
+   - Viết và chạy kiểm thử giao diện E2E với Playwright (`npm run test:e2e`) cho các luồng tương tác người dùng quan trọng trên trình duyệt thật.
    - Chạy `npm run typecheck` và `npm run lint`.
 5. **Bước 5 - Báo cáo & Cập nhật Docs**: Ghi nhận component mới vào [docs/COMPONENTS.md](COMPONENTS.md) và cập nhật tiến độ vào [docs/FEATURES.md](FEATURES.md).
 

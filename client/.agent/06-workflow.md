@@ -5,16 +5,16 @@
 ```mermaid
 flowchart LR
     A[1. Phân tích UI/API] --> B[2. Code Component/Hook]
-    B --> C[3. Viết Test RTL]
-    C --> D[4. Lint & Coverage >=80%]
+    B --> C[3. Viết Test RTL & E2E]
+    C --> D[4. Lint, Coverage & UI Test Pass]
     D --> E[5. Cập nhật Docs]
     E --> F[6. Git Commit]
 ```
 
 1. **Phân tích**: Kiểm tra `docs/`, tìm component sẵn có trong `components/ui`.
 2. **Triển khai**: Code UI + logic hook + đa ngôn ngữ trong `vi.json` & `en.json`.
-3. **Viết test**: Tạo file `*.test.tsx`, mock API bằng MSW nếu cần.
-4. **Kiểm tra chất lượng**: Chạy đầy đủ các lệnh kiểm tra trước khi commit.
+3. **Viết test**: Tạo file unit test `*.test.tsx`, mock API bằng MSW nếu cần; viết e2e test trong `e2e/` cho luồng người dùng chính.
+4. **Kiểm tra chất lượng**: Chạy đầy đủ các lệnh kiểm tra trước khi commit (lint, typecheck, vitest coverage >= 80%, playwright e2e).
 5. **Cập nhật docs**: Cập nhật `docs/` nếu thay đổi luồng hoặc thêm màn hình.
 6. **Commit**: Tạo commit theo Conventional Commits.
 
@@ -27,6 +27,7 @@ npm run lint          # Kiểm tra lỗi cú pháp và convention
 npm run typecheck     # Kiểm tra kiểu dữ liệu TypeScript strict
 npm run test          # Chạy toàn bộ unit & integration tests
 npm run test:coverage # Đảm bảo Line Coverage & Branch Coverage >= 80%
+npm run test:e2e      # Chạy kiểm thử giao diện người dùng Playwright E2E
 ```
 
 ---
