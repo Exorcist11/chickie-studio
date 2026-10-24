@@ -28,29 +28,36 @@ chickie-studio/
 │       ├── README.md                   # Hướng dẫn ghi nhận quyết định kiến trúc
 │       └── 0001-chon-kien-truc-monorepo.md
 │
-├── client/                             # Next.js: website khách hàng (Mobile-First, SEO)
-│   ├── .agent/                         # Quy tắc Clean Code, next-intl, RTL test, App Router
+├── scripts/                            # Scripts tự động hóa cài đặt & vận hành UI
+│   ├── setup-client-ui.sh              # Cài đặt nền tảng shadcn/ui cho Client (Next.js)
+│   ├── setup-crm-ui.sh                 # Cài đặt nền tảng shadcn/ui cho CRM (React Vite)
+│   └── apply-theme.mjs                 # Đồng bộ theme tokens (npm run theme:apply)
+│
+├── client/                             # Next.js: website khách hàng (Mobile-First, SEO, shadcn/ui)
+│   ├── .agent/                         # Quy tắc Clean Code, next-intl, RTL test, App Router, UI library
 │   ├── public/                         # Ảnh, favicon, file tĩnh
 │   └── src/
-│       ├── app/                        # App Router: [locale], layout, page
-│       ├── components/                 # ui/ (dùng chung), layout/, features/
-│       ├── lib/                        # api client (src/lib/api), formatters
+│       ├── app/                        # App Router: layout, dev preview, page
+│       ├── components/                 # ui/ (shadcn primitives), common/ (composite), features/
+│       ├── lib/                        # api client (src/lib/api), formatters, cn helper
 │       ├── hooks/                      # Custom React hooks
 │       ├── types/                      # TypeScript definitions
+│       ├── styles/                     # SCSS phân tầng & shadcn-theme.css
 │       └── i18n/                       # messages/ (vi.json, en.json), cấu hình next-intl
 │
-├── crm/                                # ReactJS (Vite): hệ thống quản trị cửa hàng
-│   ├── .agent/                         # Quy tắc Clean Code, Zod, TanStack Query, test
+├── crm/                                # ReactJS (Vite + shadcn/ui + Tailwind - Không Ant Design)
+│   ├── .agent/                         # Quy tắc Clean Code, Zod, TanStack Query, test, UI library
 │   ├── public/
 │   └── src/
-│       ├── pages/                      # Màn hình quản trị (Bookings, Products, Customers)
-│       ├── components/                 # common/ (DataTable, ConfirmModal, FormField), features/
-│       ├── layouts/                    # MainLayout (Sidebar, Header, Breadcrumb)
+│       ├── pages/                      # Màn hình quản trị (DevComponents, Bookings, Products)
+│       ├── components/                 # ui/ (shadcn primitives), common/ (DataTable, FormField, ConfirmModal), features/
+│       ├── layouts/                    # AppLayout (Sidebar Dark, Header, User Menu)
 │       ├── routes/                     # Router, Route Guards, phân quyền RBAC
 │       ├── services/                   # Axios client & API functions theo feature
 │       ├── hooks/                      # Custom hooks & TanStack Query hooks
 │       ├── types/                      # TypeScript types & Enums
 │       ├── utils/                      # Hàm tiện ích dùng chung
+│       ├── styles/                     # SCSS phân tầng & shadcn-theme.css
 │       └── i18n/                       # locales/ (vi.json, en.json), react-i18next
 │
 └── server/                             # Java 21 + Spring Boot 3 + MySQL: REST API

@@ -19,6 +19,8 @@
 | [04-i18n.md](file:///e:/chickie-studio/client/.agent/04-i18n.md) | Chuẩn đa ngôn ngữ `next-intl`, cấu trúc namespace, đồng bộ key `vi.json`/`en.json`. |
 | [05-testing.md](file:///e:/chickie-studio/client/.agent/05-testing.md) | Quy chuẩn Vitest + RTL + MSW, test các trạng thái UI, ngưỡng coverage 80%. |
 | [06-workflow.md](file:///e:/chickie-studio/client/.agent/06-workflow.md) | Quy trình triển khai tính năng, lệnh kiểm tra (lint/typecheck/test), commit chuẩn. |
+| [07-ui-ux-shadcn.md](file:///e:/chickie-studio/client/.agent/07-ui-ux-shadcn.md) | Quy chuẩn shadcn/ui, CẤM inline CSS, quản lý CSS bằng SCSS/Tailwind tokens. |
+| [07-ui-library.md](file:///e:/chickie-studio/client/.agent/07-ui-library.md) | Phân tầng 3 cấp component (ui/common/features), quy định coverage, đổi theme. |
 | [i18n-checklist.md](file:///e:/chickie-studio/client/.agent/i18n-checklist.md) | Checklist từng bước khi thêm mới hoặc sửa đổi nội dung đa ngôn ngữ. |
 
 ---
@@ -27,6 +29,7 @@
 
 Mỗi tính năng hoặc bugfix chỉ được coi là hoàn thành khi:
 - [ ] Code clean, tuân thủ TypeScript strict, không chứa kiểu `any`, không warning lint.
+- [ ] Tuân thủ thư viện chuẩn `shadcn/ui`; CẤM tuyệt đối viết inline CSS (`style={{ ... }}`).
 - [ ] Đã tái sử dụng component từ `src/components/ui`; không trùng lặp logic.
 - [ ] Toàn bộ text hiển thị đã khai báo qua `next-intl` trong cả `vi.json` và `en.json`.
 - [ ] Đã viết unit/integration test bên cạnh component (`*.test.tsx`).

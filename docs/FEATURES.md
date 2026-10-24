@@ -36,8 +36,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 ## 3. Bảng Thống Kê Tiến Độ Tổng Thể
 
-| Module | Tên Module | Tổng số | ⬜ TODO | 📝 SPEC | 🚧 IN_PROGRESS | ✅ DONE | % Hoàn thành |
-|---|---|---|---|---|---|---|---|
+| **UI** | Design System & Bộ Component | 1 | 0 | 0 | 0 | 1 | 100% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 3 | 0 | 0 | 0% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 5 | 0 | 0 | 0% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
@@ -46,13 +45,20 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **44** | **27** | **17** | **0** | **0** | **0%** |
+| **TỔNG CỘNG** | | **45** | **27** | **17** | **0** | **1** | **2.2%** |
 
-*(Lưu ý: 17 tính năng cốt lõi P0 đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC, sẵn sàng code).*
+*(Lưu ý: UI-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 95%, docs đầy đủ; 17 tính năng cốt lõi P0 đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC, sẵn sàng code).*
 
 ---
 
 ## 4. Chi Tiết Tính Năng Theo Module
+
+### 4.0. Module UI (Design System & Bộ Component Dùng Chung)
+| ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec / docs |
+|---|---|---|---|---|---|---|---|---|
+| `UI-001` | Bộ component UI dùng chung cho Client (Next.js) & CRM (React) theo Design System | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Engineer | 2026-10-24 | 2026-10-24 | [COMPONENTS.md](COMPONENTS.md) / [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) |
+
+---
 
 ### 4.1. Module AUTH (Xác Thực & Phân Quyền)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
@@ -150,5 +156,6 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-24 | `UI-001` | ⬜ TODO $\rightarrow$ ✅ DONE | Senior Frontend Engineer | Hoàn thành toàn diện bộ component UI dùng chung cho Client & CRM, test coverage $\ge 95\%$, docs tại COMPONENTS.md |
 | 2026-10-24 | Toàn bộ 17 tính năng P0 | ⬜ TODO $\rightarrow$ 📝 SPEC | Tech Lead | Hoàn tất tài liệu đặc tả kỹ thuật chi tiết cho toàn bộ MVP P0 |
 | 2026-10-24 | Khởi tạo hệ thống | Khởi tạo | Tech Lead | Lập bảng theo dõi 44 tính năng cho toàn bộ dự án Chickie Studio |

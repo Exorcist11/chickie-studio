@@ -4,14 +4,16 @@ Nguồn: bảng moodboard "Chickie Studio sang trọng". Phong cách: thanh lị
 
 > Mã màu được đọc từ ảnh moodboard nên có thể lệch nhẹ so với file thiết kế gốc. Nếu có file Figma/brand guideline, đối chiếu và sửa tại `client/src/styles/tokens.css` và `crm/src/theme/antdTheme.ts`.
 
-File liên quan: `client/src/styles/tokens.css`, `client/tailwind.config.ts`, `client/src/lib/fonts.ts`, `crm/src/theme/antdTheme.ts`.
+File liên quan: `client/src/styles/tokens.css`, `client/tailwind.config.ts`, `docs/UI_UX_ENGINEERING_RULES.md`, `design-system/chickie-studio/MASTER.md`.
 
-## 1. Nguyên tắc
-1. Ảnh là nhân vật chính: ảnh lớn, nền sạch, chữ ít.
-2. Burgundy là màu hành động duy nhất: nút chính, liên kết đang chọn, giá. Không dùng thêm màu nhấn khác.
-3. Vàng champagne chỉ để điểm xuyến (sao đánh giá, đường kẻ mảnh, icon). Không dùng làm màu chữ nhỏ.
-4. Nhiều khoảng trắng, bo góc mềm, bóng đổ nhẹ tông nâu ấm.
-5. Một component, một nơi định nghĩa. Dùng token, không hardcode màu hay kích thước.
+## 1. Nguyên tắc Cốt Lõi
+1. **Ảnh là nhân vật chính**: ảnh lớn, nền sạch, chữ tinh gọn, tỉ lệ 3:4 cho trang phục.
+2. **Burgundy là màu hành động duy nhất**: `#641D2B` cho nút chính, liên kết đang chọn, giá. Không dùng thêm màu nhấn khác.
+3. **Vàng champagne chỉ để điểm xuyến**: `#B8914F` cho sao đánh giá, đường kẻ mảnh, icon. Không dùng làm màu chữ nhỏ dưới 14px.
+4. **Nhiều khoảng trắng, bo góc mềm, bóng đổ nhẹ tông nâu ấm**: Nền Warm White `#FFFCF8` và Ivory `#F8F1E8` chia nhịp đọc.
+5. **Thư viện UI chuẩn thống nhất: `shadcn/ui`**: Toàn hệ thống ưu tiên sử dụng `shadcn/ui` (Radix primitives + Tailwind CSS + CVA).
+6. **TUYỆT ĐỐI CẤM INLINE CSS**: Cấm dùng `style={{ ... }}` trong JSX/HTML. Toàn bộ CSS tùy chỉnh phải viết trong file SCSS/CSS hoặc utility classes.
+7. **Một component, một nơi định nghĩa**: Dùng design token semantic, không hardcode mã màu hay kích thước pixel tùy tiện.
 
 ## 2. Màu sắc
 | Token | Tailwind | Hex | Dùng cho |

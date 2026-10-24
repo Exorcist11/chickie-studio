@@ -1,4 +1,4 @@
-# CRM Rules - Chickie Studio (React + Vite + Ant Design)
+# CRM Rules - Chickie Studio (React + Vite + shadcn/ui)
 
 ## ĐỌC TRƯỚC KHI LÀM (5 DÒNG TÓM TẮT)
 1. **PHẢI** đọc toàn bộ tài liệu trong thư mục này trước khi phát triển bất kỳ tính năng quản trị nào.
@@ -19,6 +19,8 @@
 | [04-i18n.md](file:///e:/chickie-studio/crm/.agent/04-i18n.md) | Quản lý đa ngôn ngữ với `react-i18next`, dịch cột bảng, validate message và alert. |
 | [05-testing.md](file:///e:/chickie-studio/crm/.agent/05-testing.md) | Test Vitest + RTL cho page, common component, hooks và mock API với MSW (>=80% coverage). |
 | [06-workflow.md](file:///e:/chickie-studio/crm/.agent/06-workflow.md) | Quy trình thêm màn hình quản trị, kiểm tra chất lượng trước commit và DoD. |
+| [07-ui-ux-shadcn.md](file:///e:/chickie-studio/crm/.agent/07-ui-ux-shadcn.md) | Định hướng shadcn/ui, TUYỆT ĐỐI CẤM inline CSS, quản lý CSS bằng SCSS. |
+| [07-ui-library.md](file:///e:/chickie-studio/crm/.agent/07-ui-library.md) | Phân tầng 3 cấp component (ui/common/features), tích hợp TanStack Table & Zod. |
 
 ---
 
@@ -26,6 +28,7 @@
 
 Mỗi màn hình, component hay service mới chỉ hoàn thành khi:
 - [ ] Tuân thủ TypeScript strict, tuyệt đối không có `any`, form dùng Zod schema.
+- [ ] TUYỆT ĐỐI CẤM inline CSS (`style={{ ... }}`); mọi style phải nằm trong file SCSS/CSS.
 - [ ] Đã tái sử dụng `DataTable`, `ConfirmModal`, `FormField` từ `src/components/common`.
 - [ ] Mọi API call qua `src/services`, quản lý cache bằng TanStack Query với hook riêng.
 - [ ] Phân quyền bảo vệ bằng Route Guard hoặc component kiểm tra quyền tập trung.
