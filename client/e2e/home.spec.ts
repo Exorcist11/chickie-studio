@@ -15,12 +15,12 @@ test.describe("Client Home Page UI Test", () => {
     await expect(page.locator("footer")).toBeVisible();
   });
 
-  test("điều hướng đến trang Showcase UI Components khi bấm nút Xem Design System UI", async ({ page }) => {
+  test("điều hướng đến trang danh sách sản phẩm khi bấm nút Khám phá bộ sưu tập", async ({ page }) => {
     await page.goto("/");
-    const showcaseBtn = page.getByRole("link", { name: "Xem Design System UI" });
-    await expect(showcaseBtn).toBeVisible();
-    await showcaseBtn.click();
-    await expect(page).toHaveURL(/\/dev\/components/);
+    const exploreBtn = page.getByRole("link", { name: /Khám phá bộ sưu tập/i });
+    await expect(exploreBtn).toBeVisible();
+    await exploreBtn.click();
+    await expect(page).toHaveURL(/\/products/);
   });
 
   test("áp dụng đúng bộ font tiếng Việt (Lora cho Serif và Be Vietnam Pro cho Sans)", async ({ page }) => {
