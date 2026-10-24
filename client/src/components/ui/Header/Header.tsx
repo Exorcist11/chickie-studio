@@ -15,6 +15,8 @@ export interface NavItem {
 
 export interface HeaderProps {
   navItems?: NavItem[];
+  activeHref?: string;
+  currentType?: string;
   onSearchClick?: () => void;
   onFavoriteClick?: () => void;
   onAccountClick?: () => void;
@@ -25,12 +27,14 @@ export interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   navItems = [
     { label: "Trang chủ", href: "/" },
-    { label: "Thuê trang phục", href: "/products" },
-    { label: "Thuê máy ảnh", href: "/cameras" },
-    { label: "Dịch vụ chụp", href: "/services" },
-    { label: "Lookbook", href: "/lookbook" },
-    { label: "Liên hệ", href: "/contact" },
+    { label: "Thuê trang phục", href: "/products?type=costume" },
+    { label: "Thuê máy ảnh", href: "/products?type=camera" },
+    { label: "Dịch vụ chụp", href: "/products?type=photography" },
+    { label: "Lookbook", href: "/products" },
+    { label: "Liên hệ", href: "#footer-contact" },
   ],
+  activeHref,
+  currentType,
   onSearchClick,
   onFavoriteClick,
   onAccountClick,
@@ -38,6 +42,26 @@ export const Header: React.FC<HeaderProps> = ({
   className,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  const items = React.useMemo(() => {
+    return navItems.map((item) => {
+      let isActive = item.active;
+      if (activeHref !== undefined) {
+        isActive = item.href === activeHref;
+      } else if (currentType !== undefined) {
+        const type = currentType.toLowerCase();
+        if (type === "costume" && item.href.includes("type=costume")) isActive = true;
+        else if (type === "camera" && item.href.includes("type=camera")) isActive = true;
+        else if (type === "photography" && item.href.includes("type=photography")) isActive = true;
+        else if (!type && item.href === "/products") isActive = true;
+        else isActive = false;
+      }
+      return {
+        ...item,
+        active: isActive,
+      };
+    });
+  }, [navItems, activeHref, currentType]);
 
   // Close mobile drawer on Esc
   React.useEffect(() => {
@@ -78,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
           className="hidden md:flex items-center gap-6 lg:gap-8"
           aria-label="Menu chính"
         >
-          {navItems.map((item) => (
+          {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -159,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
 
               <nav className="flex flex-col gap-3">
-                {navItems.map((item) => (
+                {items.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}

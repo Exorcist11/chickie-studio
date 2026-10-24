@@ -71,6 +71,48 @@ describe("ProductCatalogView component", () => {
     expect(screen.getAllByRole("link", { name: /Đầm maxi/i }).length).toBeGreaterThan(0);
   });
 
+  it("filters products when initialType is photography", () => {
+    render(
+      <ProductCatalogView
+        products={DEFAULT_FEATURED_PRODUCTS}
+        categories={DEFAULT_CATEGORIES}
+        initialType="photography"
+      />
+    );
+
+    expect(screen.getAllByRole("link", { name: /Gói Chụp/i }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("link", { name: /Đầm maxi/i })).not.toBeInTheDocument();
+  });
+
+  it("filters products by category using sidebar radio options", async () => {
+    const user = userEvent.setup();
+    render(
+      <ProductCatalogView
+        products={DEFAULT_FEATURED_PRODUCTS}
+        categories={DEFAULT_CATEGORIES}
+      />
+    );
+
+    const categoryRadios = screen.getAllByRole("radio", { name: /Váy Thiết Kế/i });
+    await user.click(categoryRadios[0]);
+
+    expect(categoryRadios[0]).toBeChecked();
+    expect(screen.getAllByRole("link", { name: /Đầm maxi/i }).length).toBeGreaterThan(0);
+  });
+
+  it("filters products when initialType is camera", () => {
+    render(
+      <ProductCatalogView
+        products={DEFAULT_FEATURED_PRODUCTS}
+        categories={DEFAULT_CATEGORIES}
+        initialType="camera"
+      />
+    );
+
+    expect(screen.getAllByRole("link", { name: /Sony/i }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("link", { name: /Đầm maxi/i })).not.toBeInTheDocument();
+  });
+
   it("has no accessibility violations", async () => {
     const { container } = render(
       <ProductCatalogView

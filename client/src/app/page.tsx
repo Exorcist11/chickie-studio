@@ -33,21 +33,21 @@ export default async function HomePage() {
       description: "Đa dạng phong cách, từ dịu dàng nữ tính đến cá tính hiện đại.",
       imageUrl:
         "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&auto=format&fit=crop",
-      href: "/products?category=vay-thiet-ke",
+      href: "/products?type=costume",
     },
     {
       title: "Thuê máy ảnh",
       description: "Thiết bị chuyên nghiệp, đa dạng thương hiệu, phụ kiện đầy đủ.",
       imageUrl:
         "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop",
-      href: "/products?category=may-anh-du-lich",
+      href: "/products?type=camera",
     },
     {
       title: "Dịch vụ chụp ảnh",
       description: "Các gói chụp đa dạng, concept độc đáo, đội ngũ nhiếp ảnh gia chuyên nghiệp.",
       imageUrl:
         "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop",
-      href: "/products",
+      href: "/products?type=photography",
     },
   ];
 

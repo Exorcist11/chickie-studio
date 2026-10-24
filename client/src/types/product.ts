@@ -2,6 +2,7 @@ export interface ProductListItem {
   id: number;
   categoryId?: number;
   categoryName?: string;
+  type?: "COSTUME" | "CAMERA" | "PHOTOGRAPHY" | string;
   productCode: string;
   name: string;
   slug: string;
@@ -32,6 +33,7 @@ export interface ProductDetail {
   id: number;
   categoryId?: number;
   categoryName?: string;
+  type?: "COSTUME" | "CAMERA" | "PHOTOGRAPHY" | string;
   productCode: string;
   name: string;
   slug: string;
@@ -49,6 +51,7 @@ export interface ProductDetail {
 
 export interface ProductQueryParams {
   categoryId?: number | string;
+  type?: string;
   search?: string;
   page?: number;
   size?: number;

@@ -118,4 +118,115 @@ describe("BookingForm component", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it("renders correctly for CAMERA pillar with equipment wording and combo options", () => {
+    const cameraVariants = [
+      { id: 1, size: "Bộ Kit Tiêu Chuẩn", color: "Đen Canon", sku: "R50-KIT" },
+      { id: 2, size: "Combo 2 Pin + Thẻ 64GB", color: "Đen Canon", sku: "R50-COMBO" },
+    ];
+
+    render(
+      <BookingForm
+        productId={7}
+        productName="Canon EOS R50"
+        rentalPrice={270000}
+        depositPrice={1800000}
+        variants={cameraVariants}
+        pillar="CAMERA"
+      />
+    );
+
+    expect(screen.getByText("Đặt Thuê Máy Ảnh & Thiết Bị")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Xác Nhận Thuê Thiết Bị" })).toBeInTheDocument();
+    expect(screen.getByText(/Phiên bản \/ Bộ Combo:/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Combo 2 Pin + Thẻ 64GB" })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Nhận & test máy trực tiếp tại Studio:/i)).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Nhập địa chỉ nhận máy tại Hà Nội...")
+    ).toBeInTheDocument();
+  });
+
+  it("renders correctly for PHOTOGRAPHY pillar with package scale and session wording", () => {
+    const photographyVariants = [
+      { id: 1, size: "Cá nhân (1 người)", color: "Tone Nàng Thơ", sku: "DV-1" },
+      { id: 2, size: "Cặp đôi (2 người)", color: "Tone Nàng Thơ", sku: "DV-2" },
+    ];
+
+    render(
+      <BookingForm
+        productId={9}
+        productName="Gói Chụp Ngoại Cảnh Nàng Thơ"
+        rentalPrice={890000}
+        depositPrice={300000}
+        variants={photographyVariants}
+        pillar="PHOTOGRAPHY"
+      />
+    );
+
+    expect(screen.getByText("Đăng Ký & Đặt Lịch Chụp Ảnh")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Xác Nhận Đặt Lịch Chụp" })).toBeInTheDocument();
+    expect(screen.getByText(/Quy mô gói chụp:/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cặp đôi (2 người)" })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Chụp tại Studio của Chickie:/i)).toBeInTheDocument();
+  });
+
+  it("allows selecting variants, colors, and entering address and notes", async () => {
+    const user = userEvent.setup();
+    const cameraVariants = [
+      { id: 1, size: "Bộ Kit Tiêu Chuẩn", color: "Đen Canon", sku: "R50-KIT" },
+      { id: 2, size: "Combo 2 Pin + Thẻ 64GB", color: "Bạc Vintage", sku: "R50-COMBO" },
+    ];
+
+    render(
+      <BookingForm
+        productId={7}
+        productName="Canon EOS R50"
+        rentalPrice={270000}
+        depositPrice={1800000}
+        variants={cameraVariants}
+        pillar="CAMERA"
+      />
+    );
+
+    // Click variant button
+    const variantBtn = screen.getByRole("button", { name: "Combo 2 Pin + Thẻ 64GB" });
+    await user.click(variantBtn);
+
+    // Click color button
+    const colorBtn = screen.getByRole("button", { name: "Bạc Vintage" });
+    await user.click(colorBtn);
+
+    // Enter address and note
+    const addressInput = screen.getByPlaceholderText("Nhập địa chỉ nhận máy tại Hà Nội...");
+    await user.type(addressInput, "123 Cầu Giấy, Hà Nội");
+
+    const noteInput = screen.getByPlaceholderText("Ví dụ: Đi chụp kỷ yếu ngoại cảnh, cần hướng dẫn set màu film...");
+    await user.type(noteInput, "Cần lấy lúc 8h sáng");
+
+    expect(addressInput).toHaveValue("123 Cầu Giấy, Hà Nội");
+    expect(noteInput).toHaveValue("Cần lấy lúc 8h sáng");
+  });
+
+  it("shows error when fullName is filled but phone is missing", async () => {
+    const user = userEvent.setup();
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+      />
+    );
+
+    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
+    await user.type(nameInput, "Nguyễn Mai Linh");
+
+    const submitBtn = screen.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" });
+    await user.click(submitBtn);
+
+    expect(
+      screen.getByText("Vui lòng nhập số điện thoại để tiệm liên hệ.")
+    ).toBeInTheDocument();
+  });
 });
+

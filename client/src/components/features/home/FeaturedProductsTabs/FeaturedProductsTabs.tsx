@@ -17,11 +17,11 @@ export interface CategoryFilterItem {
 
 const FILTER_TABS: CategoryFilterItem[] = [
   { key: "all", label: "Tất cả" },
-  { key: "vay-cuoi", label: "Váy cưới", categoryKeyword: "váy" },
-  { key: "dam-da-hoi", label: "Đầm dạ hội", categoryKeyword: "dạ hội" },
-  { key: "vest", label: "Vest", categoryKeyword: "vest" },
+  { key: "trang-phuc", label: "Trang phục", categoryKeyword: "trang-phuc" },
+  { key: "may-anh", label: "Máy ảnh du lịch", categoryKeyword: "may-anh" },
+  { key: "dich-vu-chup", label: "Dịch vụ chụp", categoryKeyword: "dich-vu" },
   { key: "ao-dai", label: "Áo dài", categoryKeyword: "áo dài" },
-  { key: "set-do", label: "Set đồ", categoryKeyword: "set" },
+  { key: "dam-da-hoi", label: "Đầm dạ hội", categoryKeyword: "dạ hội" },
 ];
 
 export interface FeaturedProductsTabsProps {
@@ -37,6 +37,46 @@ export const FeaturedProductsTabs: React.FC<FeaturedProductsTabsProps> = ({
 
   const filteredProducts = React.useMemo(() => {
     if (activeTab === "all") return products.slice(0, 8);
+
+    if (activeTab === "may-anh") {
+      const cameras = products.filter(
+        (p) =>
+          p.type?.toUpperCase() === "CAMERA" ||
+          p.categoryId === 4 ||
+          p.categoryName?.toLowerCase().includes("máy ảnh") ||
+          p.slug.includes("sony") ||
+          p.slug.includes("canon") ||
+          p.slug.includes("fujifilm")
+      );
+      return cameras.length > 0 ? cameras.slice(0, 8) : products.slice(0, 8);
+    }
+
+    if (activeTab === "dich-vu-chup") {
+      const services = products.filter(
+        (p) =>
+          p.type?.toUpperCase() === "PHOTOGRAPHY" ||
+          p.categoryId === 6 ||
+          p.categoryId === 7 ||
+          p.categoryName?.toLowerCase().includes("chụp") ||
+          p.productCode.startsWith("DV")
+      );
+      return services.length > 0 ? services.slice(0, 8) : products.slice(0, 8);
+    }
+
+    if (activeTab === "trang-phuc") {
+      const costumes = products.filter(
+        (p) =>
+          p.type?.toUpperCase() === "COSTUME" ||
+          (!p.type &&
+            p.categoryId !== 4 &&
+            p.categoryId !== 6 &&
+            p.categoryId !== 7 &&
+            !p.productCode.startsWith("MA") &&
+            !p.productCode.startsWith("DV"))
+      );
+      return costumes.length > 0 ? costumes.slice(0, 8) : products.slice(0, 8);
+    }
+
     const selected = FILTER_TABS.find((t) => t.key === activeTab);
     if (!selected || !selected.categoryKeyword) return products.slice(0, 8);
 

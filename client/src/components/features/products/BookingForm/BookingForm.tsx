@@ -15,6 +15,10 @@ import {
 import { Button, DateRangeField, SizeSelector } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { ProductVariant } from "@/types/product";
+import {
+  BusinessPillar,
+  PILLAR_CONFIGS,
+} from "../product-pillar.config";
 
 export interface BookingFormProps {
   productId: number;
@@ -22,6 +26,7 @@ export interface BookingFormProps {
   rentalPrice: number;
   depositPrice: number;
   variants?: ProductVariant[];
+  pillar?: BusinessPillar;
   className?: string;
 }
 
@@ -31,14 +36,30 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   rentalPrice,
   depositPrice,
   variants = [],
+  pillar = "COSTUME",
   className,
 }) => {
+  const activePillar = pillar || "COSTUME";
+  const pillarConfig = PILLAR_CONFIGS[activePillar].booking;
+
   // Sizes & Colors extraction from variants
   const availableSizes = React.useMemo(() => {
-    if (variants.length === 0) return ["S", "M", "L"];
+    if (variants.length === 0) {
+      return activePillar === "CAMERA"
+        ? ["Bộ Kit Tiêu Chuẩn"]
+        : activePillar === "PHOTOGRAPHY"
+        ? ["Gói Tiêu Chuẩn"]
+        : ["S", "M", "L"];
+    }
     const unique = Array.from(new Set(variants.map((v) => v.size)));
-    return unique.length > 0 ? unique : ["S", "M", "L"];
-  }, [variants]);
+    return unique.length > 0
+      ? unique
+      : activePillar === "CAMERA"
+      ? ["Bộ Kit Tiêu Chuẩn"]
+      : activePillar === "PHOTOGRAPHY"
+      ? ["Gói Tiêu Chuẩn"]
+      : ["S", "M", "L"];
+  }, [variants, activePillar]);
 
   const availableColors = React.useMemo(() => {
     if (variants.length === 0) return [];
@@ -52,6 +73,13 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [selectedColor, setSelectedColor] = React.useState<string>(
     availableColors[0] || ""
   );
+
+  // Sync selectedSize if availableSizes changes
+  React.useEffect(() => {
+    if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
+      setSelectedSize(availableSizes[0]);
+    }
+  }, [availableSizes, selectedSize]);
 
   // Default dates: tomorrow to day after tomorrow
   const today = new Date();
@@ -128,30 +156,58 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       <div className="border-b border-line pb-4">
         <div className="flex items-center gap-2 text-burgundy text-xs font-semibold uppercase tracking-wider mb-1">
           <Sparkles className="w-4 h-4 text-burgundy" />
-          <span>Đặt Lịch Thuê & Thử Váy</span>
+          <span>{pillarConfig.title}</span>
         </div>
         <p className="text-xs text-ink-muted">
-          Giữ lịch nhanh chóng • Nhận đồ thơm tho • Hỗ trợ đổi size tận tình
+          {pillarConfig.subtitle}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
-        {/* Size Selection */}
-        <div className="space-y-1.5">
-          <SizeSelector
-            label="Kích cỡ (Size)"
-            sizes={availableSizes}
-            value={selectedSize}
-            onChange={setSelectedSize}
-            sizeGuideAction={<span>Bảng số đo</span>}
-          />
-        </div>
+        {/* Size / Variant Selection */}
+        {pillarConfig.showSizeGuide ? (
+          <div className="space-y-1.5">
+            <SizeSelector
+              label={pillarConfig.variantLabel}
+              sizes={availableSizes}
+              value={selectedSize}
+              onChange={setSelectedSize}
+              sizeGuideAction={<span>Bảng số đo</span>}
+            />
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-sm">
+              <span className="font-medium text-ink">
+                {pillarConfig.variantLabel}:{" "}
+                <strong className="text-burgundy font-semibold">{selectedSize}</strong>
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {availableSizes.map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setSelectedSize(v)}
+                  className={cn(
+                    "px-3.5 py-2 rounded-xl text-xs font-medium border transition-all text-left",
+                    selectedSize === v
+                      ? "border-burgundy bg-burgundy/10 text-burgundy font-semibold shadow-xs"
+                      : "border-line bg-white text-ink hover:border-burgundy/40"
+                  )}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
-        {/* Color Selection (if multiple) */}
+        {/* Color / Style Selection (if multiple) */}
         {availableColors.length > 1 && (
           <div className="space-y-2">
             <span className="text-sm font-medium text-ink">
-              Màu sắc:{" "}
+              {pillarConfig.colorLabel}{" "}
               <strong className="text-burgundy font-semibold">
                 {selectedColor || "Mặc định"}
               </strong>
@@ -179,7 +235,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
         {/* Rental Dates */}
         <div className="space-y-1">
           <DateRangeField
-            label="Thời gian thuê trang phục"
+            label={pillarConfig.dateRangeLabel}
             startDate={startDate}
             endDate={endDate}
             minDate={formatDateStr(today)}
@@ -190,8 +246,11 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           <div className="flex items-center gap-1.5 text-xs text-ink-muted mt-1">
             <Clock className="w-3.5 h-3.5 text-burgundy" />
             <span>
-              Thời gian thuê tính:{" "}
-              <strong className="text-burgundy font-medium">{rentalDays} ngày</strong> (24h/ngày)
+              Thời gian tính:{" "}
+              <strong className="text-burgundy font-medium">
+                {rentalDays} {pillarConfig.durationUnitLabel}
+              </strong>
+              {activePillar !== "PHOTOGRAPHY" && " (24h/ngày)"}
             </span>
           </div>
         </div>
@@ -242,7 +301,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             </div>
           </div>
 
-          {/* Try at studio checkbox */}
+          {/* Studio Option Checkbox */}
           <div className="p-3 rounded-xl bg-ivory/60 border border-line flex items-start gap-2.5">
             <input
               id="try-at-studio"
@@ -256,9 +315,9 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               className="text-xs text-ink cursor-pointer select-none leading-relaxed"
             >
               <strong className="font-semibold text-burgundy">
-                Thử đồ trực tiếp tại Studio:
+                {pillarConfig.studioCheckboxTitle}
               </strong>{" "}
-              Số 18 Ngõ 120 Hoàng Hoa Thám, Ba Đình, Hà Nội (Mở cửa 8:30 - 21:00)
+              {pillarConfig.studioCheckboxAddress}
             </label>
           </div>
 
@@ -268,14 +327,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 htmlFor="booking-address"
                 className="block text-xs font-medium text-ink mb-1"
               >
-                Địa chỉ nhận hàng (Giao tận nơi)
+                {pillarConfig.deliveryAddressLabel}
               </label>
               <div className="relative flex items-center">
                 <MapPin className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
                 <input
                   id="booking-address"
                   type="text"
-                  placeholder="Nhập địa chỉ nhận đồ tại Hà Nội hoặc tỉnh..."
+                  placeholder={pillarConfig.deliveryAddressPlaceholder}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   className="w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border border-line text-ink focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/20"
@@ -289,12 +348,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               htmlFor="booking-note"
               className="block text-xs font-medium text-ink mb-1"
             >
-              Ghi chú thêm (chiều cao, cân nặng, thời gian nhận)
+              {pillarConfig.noteLabel}
             </label>
             <textarea
               id="booking-note"
               rows={2}
-              placeholder="Ví dụ: Cao 1m62 nặng 48kg, cần giao trước 9h sáng thứ 7..."
+              placeholder={pillarConfig.notePlaceholder}
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="w-full p-2.5 rounded-btn bg-white text-sm border border-line text-ink focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/20 resize-none"
@@ -306,7 +365,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
         <div className="rounded-xl bg-ivory/50 border border-line p-4 space-y-2.5 text-sm">
           <div className="flex justify-between items-center text-ink-muted text-xs">
             <span>
-              Giá thuê ({formattedRentalPrice}đ x {rentalDays} ngày):
+              {activePillar === "PHOTOGRAPHY" ? "Chi phí gói:" : "Giá thuê:"}{" "}
+              ({formattedRentalPrice}đ x {rentalDays} {pillarConfig.durationUnitLabel}):
             </span>
             <span className="font-medium text-ink">{formattedTotalRentalFee}đ</span>
           </div>
@@ -314,7 +374,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           <div className="flex justify-between items-center text-ink-muted text-xs">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-burgundy" />
-              Tiền cọc bảo hiểm (Hoàn 100%):
+              {pillarConfig.depositSummaryLabel}
             </span>
             <span className="font-medium text-ink">{formattedDepositPrice}đ</span>
           </div>
@@ -323,7 +383,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             <div>
               <div className="text-xs font-medium text-ink">Tổng thanh toán dự kiến:</div>
               <div className="text-[11px] text-ink-muted">
-                (Đã gồm tiền cọc, cọc hoàn lại khi trả đồ)
+                {pillarConfig.depositSummaryNote}
               </div>
             </div>
             <div className="text-lg font-bold text-burgundy">{formattedTotalAmount}đ</div>
@@ -343,7 +403,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           className="w-full justify-center shadow-md font-semibold text-base py-3.5"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Đang gửi thông tin..." : "Xác Nhận Đặt Thuê Ngay"}
+          {isSubmitting ? "Đang gửi thông tin..." : pillarConfig.submitBtnText}
         </Button>
       </form>
 
@@ -374,28 +434,28 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 id="success-modal-title"
                 className="font-serif text-xl font-semibold text-ink"
               >
-                Đặt Lịch Thuê Thành Công!
+                {pillarConfig.successModalTitle}
               </h3>
               <p className="text-xs text-ink-muted">
-                Chickie Studio đã nhận được thông tin đăng ký của bạn.
+                {pillarConfig.successModalSubtitle}
               </p>
             </div>
 
             <div className="p-3.5 rounded-xl bg-ivory/60 border border-line text-left text-xs space-y-2">
               <div className="flex justify-between">
-                <span className="text-ink-muted">Trang phục:</span>
+                <span className="text-ink-muted">{pillarConfig.successItemLabel}</span>
                 <span className="font-semibold text-ink line-clamp-1">{productName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-ink-muted">Kích cỡ / Màu:</span>
+                <span className="text-ink-muted">{pillarConfig.successVariantLabel}</span>
                 <span className="font-medium text-ink">
-                  Size {selectedSize} {selectedColor ? `• ${selectedColor}` : ""}
+                  {selectedSize} {selectedColor ? `• ${selectedColor}` : ""}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-ink-muted">Thời gian:</span>
                 <span className="font-medium text-ink">
-                  {startDate} đến {endDate} ({rentalDays} ngày)
+                  {startDate} đến {endDate} ({rentalDays} {pillarConfig.durationUnitLabel})
                 </span>
               </div>
               <div className="flex justify-between">
@@ -411,9 +471,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             </div>
 
             <p className="text-xs text-ink-muted leading-relaxed">
-              Chuyên viên tiệm sẽ gọi hoặc nhắn tin Zalo tới số{" "}
-              <strong className="text-ink">{phone}</strong> trong vòng 15 phút để chốt lịch
-              và chuẩn bị đồ thơm tho cho bạn!
+              {pillarConfig.successFollowupNote.replace(
+                "số điện thoại của bạn",
+                `số ${phone}`
+              )}
             </p>
 
             <Button
@@ -422,7 +483,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               className="w-full justify-center"
               onClick={() => setIsSuccessModalOpen(false)}
             >
-              Tiếp tục khám phá đồ đẹp
+              {pillarConfig.successContinueBtnText}
             </Button>
           </div>
         </div>
@@ -430,3 +491,4 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     </div>
   );
 };
+

@@ -14,6 +14,7 @@ export interface ProductCardProps {
   slug: string;
   imageUrl: string;
   imageAlt?: string;
+  badge?: string;
   price: number;
   perDayLabel?: string;
   rating?: number;
@@ -30,6 +31,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   slug,
   imageUrl,
   imageAlt,
+  badge,
   price,
   perDayLabel = "/ngày",
   rating = 5.0,
@@ -60,6 +62,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     >
       {/* Image Container with 3:4 ratio */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-ivory">
+        {badge && (
+          <span className="absolute top-2.5 left-2.5 z-10 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-ink/80 text-warm-white backdrop-blur-xs shadow-xs">
+            {badge}
+          </span>
+        )}
+
         <Link href={`/products/${slug}`} className="block w-full h-full">
           <Image
             src={imageUrl}

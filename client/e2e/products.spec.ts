@@ -14,9 +14,8 @@ test.describe("Client Products and Booking E2E Tests", () => {
     const productCards = page.locator(".shadow-card");
     await expect(productCards.first()).toBeVisible();
 
-    // Click vào danh mục đầu tiên
-    const categoryPills = page.getByRole("navigation", { name: "Lọc theo danh mục" });
-    await expect(categoryPills).toBeVisible();
+    // Kiểm tra bộ lọc danh mục và sắp xếp
+    await expect(page.getByText("Bộ lọc tìm kiếm")).toBeVisible();
 
     // Kiểm tra ô dropdown sort giá sản phẩm
     const sortSelect = page.getByRole("combobox", { name: "Sắp xếp sản phẩm" });
@@ -82,4 +81,81 @@ test.describe("Client Products and Booking E2E Tests", () => {
       page.getByRole("heading", { name: "Đặt Lịch Thuê Thành Công!" })
     ).not.toBeVisible();
   });
+
+  test("điều hướng từ Header và lọc theo 3 mảng kinh doanh: Thuê máy ảnh, Trang phục, Dịch vụ chụp", async ({
+    page,
+  }) => {
+    // 1. Vào trang chủ và click 'Thuê máy ảnh' trên thanh điều hướng
+    await page.goto("/");
+    const cameraNavLink = page.getByRole("link", { name: "Thuê máy ảnh" }).first();
+    await expect(cameraNavLink).toBeVisible();
+    await cameraNavLink.click();
+
+    // Xác nhận đã chuyển hướng đến /products?type=camera
+    await expect(page).toHaveURL(/.*\/products\?type=camera.*/);
+    await expect(page.getByText("Tiện ích thuê máy ảnh").first()).toBeVisible();
+
+    // Kiểm tra danh sách hiển thị máy ảnh và badge tương ứng
+    await expect(page.getByText(/Sony A6400/i).first()).toBeVisible();
+    await expect(page.getByText(/Canon EOS R50/i).first()).toBeVisible();
+    await expect(page.getByText("Máy ảnh & Thiết bị").first()).toBeVisible();
+
+    // 2. Chuyển sang mảng 'Dịch vụ chụp' bằng Header navigation
+    const photoNavLink = page.getByRole("link", { name: "Dịch vụ chụp" }).first();
+    await expect(photoNavLink).toBeVisible();
+    await photoNavLink.click();
+
+    // Xác nhận đã chuyển hướng đến /products?type=photography
+    await expect(page).toHaveURL(/.*\/products\?type=photography.*/);
+    await expect(page.getByText("Ưu đãi gói chụp").first()).toBeVisible();
+    await expect(page.getByText("Gói Chụp Ngoại Cảnh Nàng Thơ")).toBeVisible();
+    await expect(page.getByText("Gói dịch vụ chụp").first()).toBeVisible();
+
+    // 3. Chuyển sang mảng 'Thuê trang phục' bằng Header navigation
+    const costumeNavLink = page.getByRole("link", { name: "Thuê trang phục" }).first();
+    await expect(costumeNavLink).toBeVisible();
+    await costumeNavLink.click();
+
+    // Xác nhận đã chuyển hướng đến /products?type=costume
+    await expect(page).toHaveURL(/.*\/products\?type=costume.*/);
+    await expect(page.getByText("Kích cỡ (Size)")).toBeVisible();
+    await expect(page.getByText("Trang phục thiết kế").first()).toBeVisible();
+  });
+
+  test("hiển thị chi tiết sản phẩm máy ảnh theo mảng CAMERA và đặt thuê thiết bị", async ({
+    page,
+  }) => {
+    await page.goto("/products/canon-eos-r50-lens-18-45mm");
+
+    // Kiểm tra tiêu đề và badge của mảng máy ảnh
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Canon EOS R50");
+    await expect(page.getByText("Thiết bị sẵn sàng (Đã test kỹ thuật 100%)")).toBeVisible();
+    await expect(page.getByText("Thông số & Tình trạng:")).toBeVisible();
+    await expect(page.getByText("Mục đích sử dụng:")).toBeVisible();
+    await expect(page.getByText("Thông số kỹ thuật & Giới thiệu thiết bị")).toBeVisible();
+
+    // Kiểm tra cam kết thiết bị
+    await expect(page.getByText("Kiểm tra kỹ thuật 100% trước bàn giao")).toBeVisible();
+    await expect(page.getByText("Kèm đầy đủ phụ kiện tác nghiệp")).toBeVisible();
+    await expect(page.getByText("Hỗ trợ set màu máy & hướng dẫn sử dụng")).toBeVisible();
+
+    // Kiểm tra BookingForm cho thiết bị
+    await expect(page.getByText("Đặt Thuê Máy Ảnh & Thiết Bị")).toBeVisible();
+    await expect(page.getByText(/Phiên bản \/ Bộ Combo:/i)).toBeVisible();
+
+    // Điền thông tin đặt thuê
+    await page.getByPlaceholder("Ví dụ: Nguyễn Quỳnh Anh").fill("Lê Hoàng Nam");
+    await page.getByPlaceholder("Ví dụ: 0912 345 678").fill("0981234567");
+
+    // Submit form
+    const submitBtn = page.getByRole("button", { name: "Xác Nhận Thuê Thiết Bị" });
+    await submitBtn.click();
+
+    // Kiểm tra Modal thành công
+    await expect(
+      page.getByRole("heading", { name: "Đặt Thuê Thiết Bị Thành Công!" })
+    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("Lê Hoàng Nam - 0981234567")).toBeVisible();
+  });
 });
+

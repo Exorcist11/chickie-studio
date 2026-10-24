@@ -23,6 +23,7 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
     id: 1,
     categoryId: 1,
     categoryName: "Váy Thiết Kế",
+    type: "COSTUME",
     productCode: "VTK-001",
     name: "Đầm maxi voan xòe tiểu thư dáng dài chụp ngoại cảnh",
     slug: "dam-maxi-voan-xoe-tieu-thu",
@@ -37,6 +38,7 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
     id: 2,
     categoryId: 2,
     categoryName: "Áo Dài Truyền Thống & Cách Tân",
+    type: "COSTUME",
     productCode: "AD-002",
     name: "Áo dài cách tân hoa sen thêu tay kỷ yếu thanh lịch",
     slug: "ao-dai-cach-tan-hoa-sen",
@@ -51,6 +53,7 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
     id: 3,
     categoryId: 3,
     categoryName: "Đầm Dạ Hội & Tiệc",
+    type: "COSTUME",
     productCode: "DDH-003",
     name: "Đầm dạ hội satin trễ vai sang trọng dự tiệc tối",
     slug: "dam-da-hoi-satin-tre-vai",
@@ -65,6 +68,7 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
     id: 4,
     categoryId: 1,
     categoryName: "Váy Thiết Kế",
+    type: "COSTUME",
     productCode: "VTK-004",
     name: "Váy ren trắng đính ngọc dáng xòe công chúa cổ điển",
     slug: "vay-ren-trang-dinh-ngoc",
@@ -79,6 +83,7 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
     id: 5,
     categoryId: 4,
     categoryName: "Máy Ảnh Du Lịch & Phụ Kiện",
+    type: "CAMERA",
     productCode: "MA-005",
     name: "Combo Máy ảnh Sony A6400 kèm lens 50mm f1.8 du lịch chân dung",
     slug: "combo-sony-a6400-lens-50mm",
@@ -93,6 +98,7 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
     id: 6,
     categoryId: 2,
     categoryName: "Áo Dài Truyền Thống & Cách Tân",
+    type: "COSTUME",
     productCode: "AD-006",
     name: "Áo dài gấm đỏ truyền thống cưới hỏi thêu chim hỷ tước",
     slug: "ao-dai-gam-do-truyen-thong",
@@ -103,6 +109,81 @@ export const DEFAULT_FEATURED_PRODUCTS: ProductListItem[] = [
       "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&auto=format&fit=crop",
     variantCount: 3,
   },
+  {
+    id: 7,
+    categoryId: 4,
+    categoryName: "Máy Ảnh Du Lịch & Phụ Kiện",
+    type: "CAMERA",
+    productCode: "MA-006",
+    name: "Máy ảnh Canon EOS R50 kèm lens Kit 18-45mm STM đa dụng",
+    slug: "canon-eos-r50-lens-18-45mm",
+    rentalPrice: 270000,
+    depositPrice: 1800000,
+    status: "ACTIVE",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&auto=format&fit=crop",
+    variantCount: 1,
+  },
+  {
+    id: 8,
+    categoryId: 4,
+    categoryName: "Máy Ảnh Du Lịch & Phụ Kiện",
+    type: "CAMERA",
+    productCode: "MA-007",
+    name: "Máy ảnh Fujifilm X-T30 II kèm lens XF 35mm f2 tone màu Film vintage",
+    slug: "fujifilm-x-t30-ii-lens-35mm",
+    rentalPrice: 320000,
+    depositPrice: 2500000,
+    status: "ACTIVE",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?w=800&auto=format&fit=crop",
+    variantCount: 1,
+  },
+  {
+    id: 9,
+    categoryId: 6,
+    categoryName: "Gói Chụp Ngoại Cảnh & Kỷ Yếu",
+    type: "PHOTOGRAPHY",
+    productCode: "DV-001",
+    name: "Gói Chụp Ngoại Cảnh Nàng Thơ 2 Giờ (Nhiếp ảnh gia + 20 ảnh Retouch)",
+    slug: "goi-chup-ngoai-canh-nang-tho",
+    rentalPrice: 890000,
+    depositPrice: 300000,
+    status: "ACTIVE",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop",
+    variantCount: 1,
+  },
+  {
+    id: 10,
+    categoryId: 6,
+    categoryName: "Gói Chụp Ngoại Cảnh & Kỷ Yếu",
+    type: "PHOTOGRAPHY",
+    productCode: "DV-002",
+    name: "Gói Chụp Kỷ Yếu Nhóm Bạn Thân Thanh Xuân (Kèm thợ chụp + 40 ảnh Retouch)",
+    slug: "goi-chup-ky-yeu-thanh-xuan",
+    rentalPrice: 1490000,
+    depositPrice: 500000,
+    status: "ACTIVE",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+    variantCount: 1,
+  },
+  {
+    id: 11,
+    categoryId: 7,
+    categoryName: "Gói Chụp Concept Studio & Lookbook",
+    type: "PHOTOGRAPHY",
+    productCode: "DV-003",
+    name: "Gói Chụp Concept Studio Lookbook Cá Nhân (Studio chuyên nghiệp + Makeup)",
+    slug: "goi-chup-studio-lookbook-ca-nhan",
+    rentalPrice: 1200000,
+    depositPrice: 400000,
+    status: "ACTIVE",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop",
+    variantCount: 1,
+  },
 ];
 
 export const DEFAULT_PRODUCT_DETAILS: Record<string, ProductDetail> = {
@@ -110,6 +191,7 @@ export const DEFAULT_PRODUCT_DETAILS: Record<string, ProductDetail> = {
     id: 1,
     categoryId: 1,
     categoryName: "Váy Thiết Kế",
+    type: "COSTUME",
     productCode: "VTK-001",
     name: "Đầm maxi voan xòe tiểu thư dáng dài chụp ngoại cảnh",
     slug: "dam-maxi-voan-xoe-tieu-thu",
@@ -154,6 +236,7 @@ export const DEFAULT_PRODUCT_DETAILS: Record<string, ProductDetail> = {
     id: 2,
     categoryId: 2,
     categoryName: "Áo Dài Truyền Thống & Cách Tân",
+    type: "COSTUME",
     productCode: "AD-002",
     name: "Áo dài cách tân hoa sen thêu tay kỷ yếu thanh lịch",
     slug: "ao-dai-cach-tan-hoa-sen",
@@ -187,6 +270,210 @@ export const DEFAULT_PRODUCT_DETAILS: Record<string, ProductDetail> = {
       },
     ],
   },
+  "combo-sony-a6400-lens-50mm": {
+    id: 5,
+    categoryId: 4,
+    categoryName: "Máy Ảnh Du Lịch & Phụ Kiện",
+    type: "CAMERA",
+    productCode: "MA-005",
+    name: "Combo Máy ảnh Sony A6400 kèm lens 50mm f1.8 du lịch chân dung",
+    slug: "combo-sony-a6400-lens-50mm",
+    description:
+      "Bộ máy ảnh Sony A6400 cảm biến APS-C 24.2MP lấy nét siêu nhanh 0.02s, đi kèm lens chân dung Sony 50mm f1.8 OSS xóa phông mù mịt. Tặng kèm thẻ nhớ 64GB tốc độ cao, 2 pin và túi chống sốc.",
+    material: "Cảm biến APS-C 24.2MP, Lens 50mm f1.8 OSS, Tình trạng mới 98%",
+    occasion: "Chụp ảnh ngoại cảnh, du lịch, chân dung, kỷ yếu",
+    rentalPrice: 290000,
+    depositPrice: 2000000,
+    status: "ACTIVE",
+    variants: [
+      { id: 501, size: "Bộ Kit Tiêu Chuẩn", color: "Đen Graphite", sku: "MA005-STD-BLK" },
+      { id: 502, size: "Combo 2 Pin + Thẻ 64GB", color: "Đen Graphite", sku: "MA005-COMBO-BLK" },
+    ],
+    images: [
+      {
+        id: 6,
+        imageUrl:
+          "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop",
+        isThumbnail: true,
+        displayOrder: 1,
+      },
+      {
+        id: 7,
+        imageUrl:
+          "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&auto=format&fit=crop",
+        isThumbnail: false,
+        displayOrder: 2,
+      },
+    ],
+  },
+  "canon-eos-r50-lens-18-45mm": {
+    id: 7,
+    categoryId: 4,
+    categoryName: "Máy Ảnh Du Lịch & Phụ Kiện",
+    type: "CAMERA",
+    productCode: "MA-006",
+    name: "Máy ảnh Canon EOS R50 kèm lens Kit 18-45mm STM đa dụng",
+    slug: "canon-eos-r50-lens-18-45mm",
+    description:
+      "Canon EOS R50 là dòng máy ảnh mirrorless nhỏ gọn ấn tượng với cảm biến CMOS APS-C 24.2MP và chip xử lý DIGIC X thế hệ mới. Hệ thống lấy nét Dual Pixel CMOS AF II thông minh nhận diện khuôn mặt, ánh mắt người và động vật. Kèm lens kit 18-45mm IS STM chống rung mượt mà, phù hợp chụp ảnh du lịch, chân dung kỷ yếu và quay vlog 4K 30p sắc nét.",
+    material: "Cảm biến APS-C 24.2MP, Chip DIGIC X, Lens 18-45mm STM, Tình trạng mới 99%",
+    occasion: "Quay Vlog, Du lịch khám phá, Chân dung kỷ yếu, Chụp sự kiện ngoài trời",
+    rentalPrice: 270000,
+    depositPrice: 1800000,
+    status: "ACTIVE",
+    variants: [
+      { id: 701, size: "Bộ Kit Tiêu Chuẩn", color: "Đen Canon", sku: "R50-KIT-BLK" },
+      { id: 702, size: "Combo 2 Pin + Thẻ 64GB", color: "Đen Canon", sku: "R50-COMBO-BLK" },
+      { id: 703, size: "Full Combo Kèm Gimbal", color: "Đen Canon", sku: "R50-GIMBAL-BLK" },
+    ],
+    images: [
+      {
+        id: 10,
+        imageUrl:
+          "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&auto=format&fit=crop",
+        isThumbnail: true,
+        displayOrder: 1,
+      },
+      {
+        id: 11,
+        imageUrl:
+          "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop",
+        isThumbnail: false,
+        displayOrder: 2,
+      },
+      {
+        id: 12,
+        imageUrl:
+          "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?w=800&auto=format&fit=crop",
+        isThumbnail: false,
+        displayOrder: 3,
+      },
+    ],
+  },
+  "fujifilm-x-t30-ii-lens-35mm": {
+    id: 8,
+    categoryId: 4,
+    categoryName: "Máy Ảnh Du Lịch & Phụ Kiện",
+    type: "CAMERA",
+    productCode: "MA-007",
+    name: "Máy ảnh Fujifilm X-T30 II kèm lens XF 35mm f2 tone màu Film vintage",
+    slug: "fujifilm-x-t30-ii-lens-35mm",
+    description:
+      "Fujifilm X-T30 II sở hữu 18 bộ lọc giả lập màu Film kinh điển của Fuji như Classic Chrome, Classic Neg cho ảnh chụp ra đẹp ngay không cần chỉnh sửa hậu kỳ. Cảm biến X-Trans CMOS 4 26.1MP kết hợp ống kính XF 35mm F2 R WR sắc nét từng chi tiết.",
+    material: "Cảm biến X-Trans CMOS 4 26.1MP, Lens XF 35mm F2, Tình trạng 98%",
+    occasion: "Chụp ảnh phong cách Film vintage, Dạo phố, Cafe sống ảo, Kỷ yếu",
+    rentalPrice: 320000,
+    depositPrice: 2500000,
+    status: "ACTIVE",
+    variants: [
+      { id: 801, size: "Bộ Kit Tiêu Chuẩn", color: "Bạc Cổ Điển", sku: "XT30-KIT-SLV" },
+      { id: 802, size: "Combo 2 Pin + Thẻ 128GB", color: "Bạc Cổ Điển", sku: "XT30-COMBO-SLV" },
+    ],
+    images: [
+      {
+        id: 13,
+        imageUrl:
+          "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?w=800&auto=format&fit=crop",
+        isThumbnail: true,
+        displayOrder: 1,
+      },
+    ],
+  },
+  "goi-chup-ngoai-canh-nang-tho": {
+    id: 9,
+    categoryId: 6,
+    categoryName: "Gói Chụp Ngoại Cảnh & Kỷ Yếu",
+    type: "PHOTOGRAPHY",
+    productCode: "DV-001",
+    name: "Gói Chụp Ngoại Cảnh Nàng Thơ 2 Giờ (Nhiếp ảnh gia + 20 ảnh Retouch)",
+    slug: "goi-chup-ngoai-canh-nang-tho",
+    description:
+      "Gói dịch vụ chụp ảnh ngoại cảnh 2 giờ tại các địa điểm thơ mộng Hà Nội. Đội ngũ photographer nhiệt tình hướng dẫn tạo dáng từ A-Z, trả toàn bộ file gốc và 20 ảnh photoshop kỹ lưỡng.",
+    material: "Gói dịch vụ chụp ảnh trọn gói (2 giờ chụp + 20 ảnh chỉnh sửa)",
+    occasion: "Chụp ảnh cá nhân kỷ niệm, sinh nhật, dạo phố nàng thơ",
+    rentalPrice: 890000,
+    depositPrice: 300000,
+    status: "ACTIVE",
+    variants: [
+      { id: 901, size: "Cá nhân (1 người)", color: "Tone Nàng Thơ Vintage", sku: "DV001-SINGLE" },
+      { id: 902, size: "Cặp đôi (2 người)", color: "Tone Nàng Thơ Vintage", sku: "DV001-COUPLE" },
+      { id: 903, size: "Nhóm bạn (3-5 người)", color: "Tone Trong Trẻo Nhật Bản", sku: "DV001-GROUP" },
+    ],
+    images: [
+      {
+        id: 8,
+        imageUrl:
+          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop",
+        isThumbnail: true,
+        displayOrder: 1,
+      },
+      {
+        id: 9,
+        imageUrl:
+          "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        isThumbnail: false,
+        displayOrder: 2,
+      },
+    ],
+  },
+  "goi-chup-ky-yeu-thanh-xuan": {
+    id: 10,
+    categoryId: 6,
+    categoryName: "Gói Chụp Ngoại Cảnh & Kỷ Yếu",
+    type: "PHOTOGRAPHY",
+    productCode: "DV-002",
+    name: "Gói Chụp Kỷ Yếu Nhóm Bạn Thân Thanh Xuân (Kèm thợ chụp + 40 ảnh Retouch)",
+    slug: "goi-chup-ky-yeu-thanh-xuan",
+    description:
+      "Gói chụp ảnh kỷ yếu thanh xuân dành cho nhóm bạn thân từ 3 đến 8 người. Ekip gồm 1 thợ chính và 1 trợ lý ánh sáng, hỗ trợ đạo cụ (loa cẩm tay, bóng bay, hoa tươi). Bàn giao 100% file gốc ngay trong ngày và 40 ảnh chỉnh sửa tỉ mỉ.",
+    material: "Ekip chuyên nghiệp 3 giờ, Hỗ trợ đạo cụ & Concept trọn gói",
+    occasion: "Kỷ yếu tốt nghiệp cấp 3, đại học, Nhóm bạn thân dạo phố Hà Nội",
+    rentalPrice: 1490000,
+    depositPrice: 500000,
+    status: "ACTIVE",
+    variants: [
+      { id: 1001, size: "Nhóm 3 - 5 người", color: "Tone Thanh Xuân Hàn Quốc", sku: "DV002-GRP-5" },
+      { id: 1002, size: "Nhóm 6 - 8 người", color: "Tone Thanh Xuân Hàn Quốc", sku: "DV002-GRP-8" },
+    ],
+    images: [
+      {
+        id: 14,
+        imageUrl:
+          "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop",
+        isThumbnail: true,
+        displayOrder: 1,
+      },
+    ],
+  },
+  "goi-chup-studio-lookbook-ca-nhan": {
+    id: 11,
+    categoryId: 7,
+    categoryName: "Gói Chụp Concept Studio & Lookbook",
+    type: "PHOTOGRAPHY",
+    productCode: "DV-003",
+    name: "Gói Chụp Concept Studio Lookbook Cá Nhân (Studio chuyên nghiệp + Makeup)",
+    slug: "goi-chup-studio-lookbook-ca-nhan",
+    description:
+      "Trọn gói chụp ảnh cá nhân profile, lookbook thời trang hoặc sinh nhật tại Studio Chickie. Đã bao gồm thợ trang điểm làm tóc chuyên nghiệp, phòng chụp máy lạnh với hệ thống đèn Profoto chuẩn quốc tế.",
+    material: "Studio chuyên nghiệp 2 giờ, Bao gồm Makeup & Làm tóc",
+    occasion: "Chụp ảnh sinh nhật cá nhân, Profile nghệ thuật, Lookbook thời trang",
+    rentalPrice: 1200000,
+    depositPrice: 400000,
+    status: "ACTIVE",
+    variants: [
+      { id: 1101, size: "Gói Cá Nhân Cơ Bản", color: "Concept Tone Trắng Tối Giản", sku: "DV003-BASIC" },
+      { id: 1102, size: "Gói Cá Nhân Cao Cấp", color: "Concept Hoa Nghệ Thuật", sku: "DV003-PREMIUM" },
+    ],
+    images: [
+      {
+        id: 15,
+        imageUrl:
+          "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop",
+        isThumbnail: true,
+        displayOrder: 1,
+      },
+    ],
+  },
 };
 
 export async function getPublicProducts(
@@ -195,6 +482,9 @@ export async function getPublicProducts(
   const query = new URLSearchParams();
   if (params?.categoryId !== undefined && params.categoryId !== "") {
     query.append("categoryId", String(params.categoryId));
+  }
+  if (params?.type) {
+    query.append("type", params.type.toUpperCase());
   }
   if (params?.search) {
     query.append("search", params.search);
@@ -251,6 +541,11 @@ function filterDefaultProducts(
   defaultResult: PageResult<ProductListItem>
 ): PageResult<ProductListItem> {
   let list = [...DEFAULT_FEATURED_PRODUCTS];
+
+  if (params?.type) {
+    const targetType = params.type.toUpperCase();
+    list = list.filter((p) => p.type?.toUpperCase() === targetType);
+  }
 
   if (params?.categoryId) {
     list = list.filter((p) => String(p.categoryId) === String(params.categoryId));
@@ -313,24 +608,58 @@ export async function getPublicProductDetail(
   );
 
   if (listMatch) {
+    const isCamera = listMatch.type === "CAMERA";
+    const isPhotography = listMatch.type === "PHOTOGRAPHY";
+
+    const defaultDescription = isCamera
+      ? `Thiết bị máy ảnh chính hãng đã qua kiểm định kỹ thuật 100% tại Chickie Studio. Sensor sạch, ống kính trong trẻo, đi kèm pin, sạc và thẻ nhớ tốc độ cao.`
+      : isPhotography
+      ? `Gói dịch vụ chụp ảnh chuyên nghiệp tại Chickie Studio với photographer dày dặn kinh nghiệm, hỗ trợ tạo dáng và trả toàn bộ file gốc cùng ảnh chỉnh sửa nước ảnh cao cấp.`
+      : `Thiết kế cao cấp độc quyền từ Chickie Studio. Trang phục được giặt khô là hơi khử khuẩn thơm tho trước khi giao tới khách hàng.`;
+
+    const defaultMaterial = isCamera
+      ? "Cảm biến chất lượng cao, ống kính sắc nét, tình trạng 98-99%"
+      : isPhotography
+      ? "Dịch vụ chụp ảnh trọn gói (Photographer chuyên nghiệp + Retouch)"
+      : "Chất liệu cao cấp, mềm mại và tôn dáng";
+
+    const defaultOccasion = isCamera
+      ? "Quay Vlog, Du lịch, Chụp chân dung, Kỷ yếu & Sự kiện"
+      : isPhotography
+      ? "Chụp ảnh kỷ yếu, Sự kiện, Sinh nhật cá nhân, Lookbook thời trang"
+      : "Chụp ảnh kỷ yếu, tiệc cưới, sự kiện, dạo phố sống ảo";
+
+    const defaultVariants = isCamera
+      ? [
+          { id: 1, size: "Bộ Kit Tiêu Chuẩn", color: "Mặc định", sku: `${listMatch.productCode}-STD` },
+          { id: 2, size: "Combo 2 Pin + Thẻ Nhớ", color: "Mặc định", sku: `${listMatch.productCode}-COMBO` },
+        ]
+      : isPhotography
+      ? [
+          { id: 1, size: "Gói Cá Nhân", color: "Tone Tự Nhiên", sku: `${listMatch.productCode}-SINGLE` },
+          { id: 2, size: "Gói Nhóm", color: "Tone Tự Nhiên", sku: `${listMatch.productCode}-GROUP` },
+        ]
+      : [
+          { id: 1, size: "S", color: "Tiêu chuẩn", sku: `${listMatch.productCode}-S` },
+          { id: 2, size: "M", color: "Tiêu chuẩn", sku: `${listMatch.productCode}-M` },
+          { id: 3, size: "L", color: "Tiêu chuẩn", sku: `${listMatch.productCode}-L` },
+        ];
+
     return {
       id: listMatch.id,
       categoryId: listMatch.categoryId,
       categoryName: listMatch.categoryName,
+      type: listMatch.type || "COSTUME",
       productCode: listMatch.productCode,
       name: listMatch.name,
       slug: listMatch.slug,
-      description: `Thiết kế cao cấp độc quyền từ Chickie Studio. Trang phục được giặt khô là hơi khử khuẩn thơm tho trước khi giao tới khách hàng.`,
-      material: "Chất liệu cao cấp, mềm mại và tôn dáng",
-      occasion: "Chụp ảnh kỷ yếu, tiệc cưới, sự kiện, dạo phố sống ảo",
+      description: defaultDescription,
+      material: defaultMaterial,
+      occasion: defaultOccasion,
       rentalPrice: listMatch.rentalPrice,
       depositPrice: listMatch.depositPrice,
       status: listMatch.status,
-      variants: [
-        { id: 1, size: "S", color: "Tiêu chuẩn", sku: `${listMatch.productCode}-S` },
-        { id: 2, size: "M", color: "Tiêu chuẩn", sku: `${listMatch.productCode}-M` },
-        { id: 3, size: "L", color: "Tiêu chuẩn", sku: `${listMatch.productCode}-L` },
-      ],
+      variants: defaultVariants,
       images: [
         {
           id: 1,

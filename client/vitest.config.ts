@@ -35,6 +35,7 @@ export default defineConfig({
         "next.config.mjs",
         "src/lib/fonts.ts",
         "src/components/ui/primitives/**",
+        "src/types/**",
       ],
     },
   },

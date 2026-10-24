@@ -7,7 +7,118 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
-- **Triển Khai Hoàn Thiện Tính Năng Quản Lý Sản Phẩm, Biến Thể & Thư Viện Ảnh (CAT-002 - ✅ DONE)**:
+- **Trang Chi Tiết Sản Phẩm Client Thích Ứng Theo 3 Mảng Kinh Doanh Cốt Lõi (PRD-CLIENT-PRODUCT-PILLAR - ✅ DONE)**:
+  - **Kiến trúc Cấu hình Mảng [client/src/components/features/products/product-pillar.config.ts](file:///e:/chickie-studio/client/src/components/features/products/product-pillar.config.ts)**:
+    - Xây dựng module cấu hình chuyên biệt `PILLAR_CONFIGS` và hàm nhận diện mảng `resolveProductPillar` cho 3 mảng kinh doanh: `COSTUME` (Thuê trang phục), `CAMERA` (Thuê máy ảnh & thiết bị), `PHOTOGRAPHY` (Dịch vụ chụp ảnh).
+    - Tùy biến toàn diện theo mảng: Breadcrumb badge link, trạng thái khả dụng (`Sẵn sàng cho thuê`, `Thiết bị sẵn sàng (Đã test kỹ thuật 100%)`, `Lịch chụp đang mở (Nhận book lịch trước)`), đơn vị tính giá (`/ngày` vs `/gói`), thông báo tiền cọc (hoàn 100% khi trả đồ/máy vs trừ trực tiếp khi chụp).
+    - Thẻ thông số (Specs): Biểu tượng Lucide và nhãn ngữ cảnh (`Chất liệu cao cấp` vs `Thông số & Tình trạng` vs `Quyền lợi gói chụp`; `Dịp phù hợp` vs `Mục đích sử dụng` vs `Địa điểm & Concept`).
+    - Tiêu đề giới thiệu: `Mô tả thiết kế & Phom dáng` (Costume), `Thông số kỹ thuật & Giới thiệu thiết bị` (Camera), `Chi tiết quyền lợi & Quy trình gói chụp` (Photography).
+    - Bộ 3 cam kết studio (Guarantees):
+      - `COSTUME`: Giặt hấp tiệt trùng trước khi giao, Giao hỏa tốc nội thành Hà Nội, Hỗ trợ đổi size linh hoạt trong ngày.
+      - `CAMERA`: Kiểm tra kỹ thuật 100% trước bàn giao (sensor sạch bóng, thấu kính không trầy xước), Kèm đầy đủ phụ kiện tác nghiệp (2 pin, sạc, thẻ nhớ tốc độ cao, túi chống sốc), Hỗ trợ set màu máy & hướng dẫn sử dụng.
+      - `PHOTOGRAPHY`: Bàn giao 100% file ảnh gốc trong 24h, Photographer chuyên nghiệp & nhiệt tình, Retouch da & màu kỹ lưỡng đến khi ưng ý.
+  - **Tối Ưu Form Đặt Lịch & Thuê [BookingForm.tsx](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx)**:
+    - Loại bỏ hiển thị chọn kích cỡ quần áo (Size S/M/L) và nút xem bảng số đo khi xem máy ảnh hoặc gói chụp; thay thế bằng bộ nút chọn biến thể hiện đại (`Phiên bản / Bộ Combo` cho máy ảnh, `Quy mô gói chụp` cho dịch vụ chụp).
+    - Nhãn ngày đặt: `Thời gian thuê trang phục` vs `Thời gian thuê thiết bị` vs `Ngày chụp dự kiến`.
+    - Checkbox studio: `Thử đồ trực tiếp tại Studio` vs `Nhận & test máy trực tiếp tại Studio` vs `Chụp tại Studio của Chickie`.
+    - Địa chỉ giao nhận / địa điểm chụp: Tự động điều chỉnh nhãn và placeholder phù hợp.
+    - Bảng dự toán chi phí & Modal xác nhận: Điều chỉnh tiêu đề, nhãn dòng cọc, nhãn loại mặt hàng, hướng dẫn liên hệ sau khi đăng ký thành công.
+  - **Trang Chi Tiết [client/src/app/products/[slug]/page.tsx](file:///e:/chickie-studio/client/src/app/products/[slug]/page.tsx)**:
+    - Nhận diện `pillar` qua `product.type` hoặc danh mục, truyền vào các khối nội dung và `BookingForm`.
+    - Khối sản phẩm tương tự (Similar Products): Đổi tiêu đề và mô tả theo mảng (`Mẫu Thiết Kế Tương Tự`, `Thiết Bị & Phụ Kiện Tương Tự`, `Gói Chụp & Dịch Vụ Khác`), tự động ưu tiên lọc theo mảng tương ứng.
+  - **Dữ Liệu Mock API [client/src/lib/api/product.ts](file:///e:/chickie-studio/client/src/lib/api/product.ts)**:
+    - Bổ sung chi tiết sản phẩm mẫu cho Canon EOS R50 (`canon-eos-r50-lens-18-45mm`), Fujifilm X-T30 II, các gói chụp kỷ yếu và lookbook cá nhân với đầy đủ biến thể và thông số chuẩn từng mảng.
+    - Cập nhật logic fallback trong `getPublicProductDetail` để tự động tạo thông số theo mảng tương ứng.
+  - **Kiểm Thử & Đảm Bảo Chất Lượng**:
+    - Thêm unit test kiểm thử cấu hình 3 mảng trong [product-pillar.config.test.ts](file:///e:/chickie-studio/client/src/components/features/products/product-pillar.config.test.ts).
+    - Thêm unit test kiểm thử `CAMERA` và `PHOTOGRAPHY` trong [BookingForm.test.tsx](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.test.tsx).
+    - Thêm E2E Playwright test kiểm thử chi tiết sản phẩm máy ảnh Canon EOS R50 và đặt thuê thành công trong [products.spec.ts](file:///e:/chickie-studio/client/e2e/products.spec.ts).
+    - Toàn bộ Client: **40 test files, 185 unit tests pass 100%**, coverage đạt tiêu chuẩn ($\ge 80\%$), TypeScript `tsc` 0 errors, ESLint 0 errors, Playwright E2E **8/8 tests pass 100%**.
+
+  - **Kiến trúc Cấu hình Mảng Kinh Doanh [crm/src/pages/products/constants.ts](file:///e:/chickie-studio/crm/src/pages/products/constants.ts)**:
+    - Xây dựng bản đồ cấu hình `PILLAR_PRODUCT_CONFIG` cho 3 mảng: `COSTUME` (Thuê trang phục), `CAMERA` (Thuê máy ảnh), `PHOTOGRAPHY` (Dịch vụ chụp ảnh).
+    - Tùy biến toàn diện theo mảng: Biểu tượng (Icon), Tiêu đề, Mô tả phụ, Huy hiệu Header, Nhãn giá thuê / tiền cọc, Nút tính nhanh tiền cọc (Preset calculations), Nhãn & Danh sách nút thêm nhanh biến thể (Quick chips), Nhãn trường thông số đặc tính `material` và `occasion`.
+  - **Modal Thêm / Chỉnh Sửa [ProductModal.tsx](file:///e:/chickie-studio/crm/src/pages/products/components/ProductModal/ProductModal.tsx)**:
+    - Lắng nghe sự kiện đổi danh mục `categoryId` tức thì qua TanStack `useStore(form.store, ...)`.
+    - **Header & Navigation**: Badge nhận diện mảng (`LOOKBOOK TRANG PHỤC`, `THIẾT BỊ MÁY ẢNH`, `GÓI DỊCH VỤ CHỤP`), Tab bước 04 đổi tương ứng (`Chất liệu & Dịp`, `Thông số thiết bị`, `Quy cách gói chụp`).
+    - **Section 1 (Thông tin)**:
+      - Loại bỏ hoàn toàn emoji (`👗`, `📷`, `✨`); nâng cấp component [Select.tsx](file:///e:/chickie-studio/crm/src/components/ui/Select/Select.tsx) hỗ trợ `icon` trong `SelectOption` để render trực tiếp Lucide icon (`Shirt`, `Camera`, `Sparkles`) đồng bộ giao diện trong cả trigger và menu dropdown.
+      - Hiển thị huy hiệu mảng kinh doanh với icon động ngay dưới ô chọn danh mục; placeholder tên và mã sản phẩm tự thay đổi theo ngữ cảnh (`VAY-DAHOI-01`, `CAM-SONY-A6400`, `PHOTO-NGOAICANH-01`).
+    - **Section 2 (Bảng giá & Biến thể)**:
+      - Tự động thay đổi nhãn giá (`Giá thuê trang phục / ngày`, `Giá thuê thiết bị / ngày`, `Giá trọn gói dịch vụ chụp`) và nhãn tiền cọc (`Tiền cọc trang phục`, `Tiền cọc thiết bị / máy ảnh`, `Tiền cọc giữ lịch chụp`).
+      - Nút preset cọc thông minh: tính theo 100%-200% tiền thuê đồ, 100%-300% cho máy ảnh giá trị cao, hoặc 30%-50% giữ lịch gói chụp.
+      - Biến thể kích cỡ: Tự động chuyển đổi giữa `Select` Size thời trang (`S, M, L, XL, Freesize`), `TextField` phiên bản bộ kit máy ảnh (`Body Only, Kit 16-50mm, Combo 2 Pin`), hoặc quy mô gói chụp (`Gói Cá Nhân, Gói Cặp Đôi, Gói Nhóm 3-5 Bạn`).
+      - Thêm nhanh biến thể qua hàng Chip một chạm theo từng mảng.
+    - **Section 3 (Thư viện hình ảnh)**: Thay đổi tiêu đề và thông điệp tương ứng (Ảnh mẫu Lookbook, Ảnh thiết bị & Phụ kiện thực tế, Bộ ảnh demo Concept & Portfolio).
+    - **Section 4 (Đặc tính chuyên biệt)**:
+      - `COSTUME`: Chất liệu may mặc & Dịp sự kiện phù hợp.
+      - `CAMERA`: Phụ kiện kèm theo/Tình trạng máy & Mục đích sử dụng/Tính năng nổi bật.
+      - `PHOTOGRAPHY`: Quyền lợi gói chụp (File ảnh/Hậu kỳ) & Thời lượng chụp/Concept/Makeup.
+  - **Modal Xem Chi Tiết [ProductViewModal.tsx](file:///e:/chickie-studio/crm/src/pages/products/components/ProductViewModal/ProductViewModal.tsx)**:
+    - Bổ sung huy hiệu định danh mảng kinh doanh với màu sắc chuẩn token thương hiệu.
+    - Bảng thông số và biến thể tự động hiển thị tiêu đề cột phù hợp với từng mảng kinh doanh.
+  - **Kiểm thử tự động & Đảm bảo chất lượng**:
+    - Thêm test case `adapts form interface dynamically when switching category across business pillars` trong [ProductsPage.test.tsx](file:///e:/chickie-studio/crm/src/pages/products/ProductsPage.test.tsx).
+    - Toàn bộ CRM: **42 test files, 170 unit tests pass 100%**, coverage đạt **96.16%** statements/lines và **88.24%** branches (vượt ngưỡng $\ge 80\%$), TypeScript `tsc` 0 errors, ESLint 0 errors/warnings, `vite build` 100% pass.
+
+- **Cập Nhật Quản Lý Danh Mục Theo 3 Mảng Kinh Doanh Cốt Lõi Trên CRM (CRM Category Pillars - ✅ DONE)**:
+  - **Đồng bộ Data Model & Service API**:
+    - Cập nhật kiểu dữ liệu [src/types/category.ts](file:///e:/chickie-studio/crm/src/types/category.ts): bổ sung enum `CategoryType = "COSTUME" | "CAMERA" | "PHOTOGRAPHY"` và trường `type?: CategoryType` trong `Category`, `CreateCategoryInput`, `UpdateCategoryInput`.
+    - Cập nhật [category.service.test.ts](file:///e:/chickie-studio/crm/src/services/category.service.test.ts) đồng bộ dữ liệu mock kiểm thử API.
+  - **Giao diện Quản Lý Danh Mục [CategoriesPage.tsx](file:///e:/chickie-studio/crm/src/pages/categories/CategoriesPage.tsx)**:
+    - Bổ sung thanh Tab chuyển mảng kinh doanh (Segmented Pillar Tabs) với 4 tùy chọn: **Tất cả mảng**, **Thuê trang phục** (`COSTUME`), **Thuê máy ảnh** (`CAMERA`), **Dịch vụ chụp ảnh** (`PHOTOGRAPHY`).
+    - Hiển thị badge số lượng danh mục trực tiếp theo từng mảng trên từng Tab giúp theo dõi phân bổ danh mục theo thời gian thực.
+    - Bảng dữ liệu `DataTable`: Bổ sung cột **Mảng kinh doanh** hiển thị Badge định danh kèm icon đặc trưng (Áo dài cho COSTUME, Máy ảnh cho CAMERA, Lấp lánh cho PHOTOGRAPHY) với phong cách màu sắc chuẩn hệ thống tokens.
+  - **Modal Tạo / Chỉnh Sửa [CategoryModal.tsx](file:///e:/chickie-studio/crm/src/pages/categories/components/CategoryModal/CategoryModal.tsx)**:
+    - Bổ sung trường chọn **Mảng kinh doanh** qua component `Select` chuẩn shadcn/ui tích hợp Zod validation schema.
+    - Mặc định là `COSTUME` (Thuê trang phục) khi tạo mới; tự động bind dữ liệu mảng hiện tại khi chỉnh sửa.
+  - **Modal Xem Chi Tiết [CategoryViewModal.tsx](file:///e:/chickie-studio/crm/src/pages/categories/components/CategoryViewModal/CategoryViewModal.tsx)**:
+    - Bổ sung mục hiển thị Mảng kinh doanh của danh mục kèm icon và badge trực quan.
+  - **SCSS Module BEM Chuẩn Hóa**:
+    - Cập nhật [CategoriesPage.module.scss](file:///e:/chickie-studio/crm/src/pages/categories/CategoriesPage.module.scss) và [CategoryViewModal.module.scss](file:///e:/chickie-studio/crm/src/pages/categories/components/CategoryViewModal/CategoryViewModal.module.scss) với các class `.pillarTabs`, `.pillarTab`, `.typeBadge` (các biến thể `--costume`, `--camera`, `--photography`) tuân thủ 100% CẤM inline CSS.
+  - **Đa ngôn ngữ (i18n)**:
+    - Bổ sung đầy đủ nhãn song ngữ `category.type`, `category.typePlaceholder`, `category.typeRequired`, `category.types.*` trong cả [vi.json](file:///e:/chickie-studio/crm/src/i18n/locales/vi.json) và [en.json](file:///e:/chickie-studio/crm/src/i18n/locales/en.json).
+  - **Kiểm thử tự động & Đảm bảo chất lượng**:
+    - Cập nhật bộ unit test [CategoriesPage.test.tsx](file:///e:/chickie-studio/crm/src/pages/categories/CategoriesPage.test.tsx): kiểm thử hiển thị thanh tab mảng, lọc danh mục theo mảng, tạo mới danh mục với mảng kinh doanh được chọn.
+    - Toàn bộ CRM test suite đạt: **42 test files, 169 unit tests pass 100%**, coverage đạt **96.16%** statements/lines và **88.17%** branches (vượt ngưỡng $\ge 80\%$), TypeScript typecheck 0 errors, ESLint 0 errors/warnings.
+
+- **Tối Ưu Trải Nghiệm Điều Hướng & Danh Sách Sản Phẩm Client (UI/UX Refactor - ✅ DONE)**:
+  - **Tối giản bố cục trang sản phẩm**:
+    - Loại bỏ hoàn toàn thanh tab chuyển mảng ngang trùng lặp ("Tất cả dịch vụ & sản phẩm", "Thuê trang phục", "Thuê máy ảnh", "Dịch vụ chụp ảnh") và thanh pills danh mục ngang ("Tất cả danh mục...") phía trên danh sách sản phẩm trong [ProductCatalogView.tsx](file:///e:/chickie-studio/client/src/components/features/products/ProductCatalogView/ProductCatalogView.tsx).
+    - Giữ trọn vẹn thanh công cụ tìm kiếm, đếm số lượng, sắp xếp và bộ lọc facet thông minh bên sidebar trái (`Desktop Sidebar` & `Mobile Drawer`).
+  - **Nâng cấp điều hướng Header [Header.tsx](file:///e:/chickie-studio/client/src/components/ui/Header/Header.tsx)**:
+    - Bổ sung hỗ trợ thuộc tính `currentType` và `activeHref` để làm nổi bật trạng thái active trực quan (gạch chân màu burgundy thanh lịch trên desktop, highlight nền hồng rose trên mobile drawer).
+    - Tự động đánh dấu active chuẩn xác cho từng mảng: "Thuê trang phục" (`type=costume`), "Thuê máy ảnh" (`type=camera`), "Dịch vụ chụp" (`type=photography`), "Lookbook" (không type).
+  - **Banner linh hoạt theo ngữ cảnh [app/products/page.tsx](file:///e:/chickie-studio/client/src/app/products/page.tsx)**:
+    - Banner đầu trang tự động cập nhật badge, tiêu đề H1 và mô tả phù hợp theo từng mảng kinh doanh được chọn từ Header.
+  - **Kiểm thử tự động**:
+    - Cập nhật unit test [ProductCatalogView.test.tsx](file:///e:/chickie-studio/client/src/components/features/products/ProductCatalogView/ProductCatalogView.test.tsx) và [Header.test.tsx](file:///e:/chickie-studio/client/src/components/ui/Header/Header.test.tsx).
+    - Cập nhật Playwright E2E [products.spec.ts](file:///e:/chickie-studio/client/e2e/products.spec.ts) kiểm thử điều hướng chuyển mảng trực tiếp từ Header.
+    - Đạt chuẩn chất lượng: 175 unit tests pass 100%, coverage đạt $\ge 80\%$, lint/typecheck sạch sẽ, 7/7 Playwright tests pass 100%.
+
+- **Triển Khai Hoàn Thiện Bộ Lọc 3 Mảng Kinh Doanh Cốt Lõi & Danh Sách Sản Phẩm Client (CAT-005 - ✅ DONE)**:
+  - **Khảo sát & Tối ưu Cơ sở dữ liệu (Database Architecture)**:
+    - Phát hiện DB trước đó chỉ chứa bảng `categories` phẳng với 5 danh mục thời trang/máy ảnh cơ bản, hoàn toàn chưa có nhóm phân loại 3 mảng kinh doanh và thiếu mảng "Dịch vụ chụp ảnh".
+    - Tạo migration [V6__add_category_type_and_photography_services.sql](file:///e:/chickie-studio/server/src/main/resources/db/migration/V6__add_category_type_and_photography_services.sql): Thêm cột `type VARCHAR(30) NOT NULL DEFAULT 'COSTUME'`, index `idx_categories_type`, cập nhật 4 danh mục trang phục (`COSTUME`), máy ảnh (`CAMERA`), và bổ sung 2 danh mục mới cho mảng dịch vụ chụp ảnh (`PHOTOGRAPHY`): `chup-anh-ngoai-canh` và `chup-anh-studio`.
+  - **Backend Server (Spring Boot & JPA)**:
+    - Tạo enum [CategoryType.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/category/entity/CategoryType.java) (`COSTUME`, `CAMERA`, `PHOTOGRAPHY`).
+    - Cập nhật entity [Category.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/category/entity/Category.java), DTOs [CategoryResponse.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/category/dto/CategoryResponse.java), [CreateCategoryRequest.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/category/dto/CreateCategoryRequest.java), [UpdateCategoryRequest.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/category/dto/UpdateCategoryRequest.java) kèm overloaded constructors bảo đảm 100% tương thích ngược.
+    - [ProductRepository.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/product/repository/ProductRepository.java): Bổ sung JPQL search query lọc theo `(:categoryType IS NULL OR c.type = :categoryType)`.
+    - [ProductService.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/product/service/ProductService.java) & [ProductServiceImpl.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/product/service/impl/ProductServiceImpl.java): Bổ sung phương thức `getProducts(categoryId, categoryType, status, search, pageable)`.
+    - [PublicProductController.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/product/controller/PublicProductController.java): Bổ sung query param `type` (`GET /api/public/products?type=CAMERA`).
+    - [DataInitializer.java](file:///e:/chickie-studio/server/src/main/java/com/chickiestudio/common/config/DataInitializer.java): Seed mẫu đủ 7 danh mục và 7 sản phẩm đại diện cho cả 3 mảng kinh doanh (Sony A6400, Canon EOS R50, Fujifilm X-T30 II, Gói chụp ngoại cảnh Nàng Thơ, Gói chụp kỷ yếu Thanh Xuân, Gói Studio Lookbook, Áo dài cách tân).
+    - Toàn bộ 113 unit/service/controller tests backend pass 100%.
+  - **Client Frontend (Next.js & shadcn/ui Tailwind)**:
+    - Điều hướng Header: Bổ sung 3 liên kết trực quan: **Thuê trang phục** (`/products?type=costume`), **Thuê máy ảnh** (`/products?type=camera`), **Dịch vụ chụp** (`/products?type=photography`).
+    - Trang chủ [page.tsx](file:///e:/chickie-studio/client/src/app/page.tsx): 3 thẻ dịch vụ nổi bật dẫn link trực tiếp vào 3 mảng tương ứng.
+    - Bộ lọc đa năng [ProductCatalogView.tsx](file:///e:/chickie-studio/client/src/components/features/products/ProductCatalogView/ProductCatalogView.tsx):
+      - Bổ sung thanh tab chuyển đổi 3 mảng kinh doanh ("Tất cả", "Thuê trang phục", "Thuê máy ảnh", "Dịch vụ chụp ảnh").
+      - Tự động đồng bộ và lọc lại các category con tương ứng từng mảng.
+      - Tự động thay đổi sidebar filter theo ngữ cảnh: Ẩn bộ lọc kích cỡ/màu sắc khi chọn máy ảnh hoặc gói chụp; thay thế bằng banner tiện ích đi kèm (thẻ nhớ, pin, hỗ trợ giả lập màu film cho máy ảnh; chụp kèm photographer, trả 100% file gốc và retouch cho dịch vụ chụp).
+      - Card sản phẩm [ProductCard.tsx](file:///e:/chickie-studio/client/src/components/ui/ProductCard/ProductCard.tsx) hiển thị badge trực quan ("Máy ảnh & Thiết bị", "Gói dịch vụ chụp", "Trang phục thiết kế").
+  - **Kiểm thử tự động (Unit & E2E)**:
+    - Client Unit Tests: 39 test files, 173 tests pass 100% (`npm run test`).
+    - Playwright E2E Tests: 7/7 tests pass 100% (`npm run test:e2e`), kiểm tra đầy đủ kịch bản điều hướng từ Header và lọc sản phẩm/dịch vụ của 3 mảng kinh doanh.
   - **CRM Frontend (`crm/`)**:
     - **Types & Service API**:
       - `ProductListResponse`, `ProductDetailResponse`, `CreateProductInput`, `UpdateProductInput`, `ProductStatus`, `PageResult` trong [src/types/product.ts](file:///e:/chickie-studio/crm/src/types/product.ts).
