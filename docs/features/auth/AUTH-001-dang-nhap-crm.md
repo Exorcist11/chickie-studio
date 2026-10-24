@@ -7,10 +7,10 @@
 | **Module** | AUTH |
 | **Phạm vi** | CRM, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Tech Lead / Fullstack Dev |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Ngày bắt đầu** | 2026-10-24 |
+| **Ngày hoàn thành** | 2026-10-24 |
 | **Phụ thuộc** | Không |
 
 ---
@@ -158,3 +158,4 @@ CREATE TABLE `users` (
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
+| 2026-10-24 | Fullstack Dev | Triển khai API Server Spring Boot 3 & UI CRM React, test coverage > 80% | ✅ DONE |

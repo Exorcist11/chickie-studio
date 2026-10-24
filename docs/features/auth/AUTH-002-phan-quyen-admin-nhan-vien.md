@@ -7,10 +7,10 @@
 | **Module** | AUTH |
 | **Phạm vi** | CRM, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Tech Lead / Security Engineer |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Ngày bắt đầu** | 2026-10-24 |
+| **Ngày hoàn thành** | 2026-10-24 |
 | **Phụ thuộc** | `AUTH-001` |
 
 ---
@@ -100,3 +100,4 @@ flowchart TD
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
+| 2026-10-24 | Security Engineer | Hoàn tất cấu hình RBAC Security, RoleGuard và PermissionGate | ✅ DONE |

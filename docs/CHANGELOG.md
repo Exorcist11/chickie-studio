@@ -7,6 +7,23 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Server Backend Architecture & CRM Authentication (AUTH-001, AUTH-002, AUTH-003 - ✅ DONE)**:
+  - **Khởi tạo kiến trúc Backend Spring Boot 3**:
+    - Thiết lập dự án Spring Boot 3.3.5 với Java 21 LTS, Spring Data JPA, Spring Security, Flyway Migration MySQL, MapStruct, JJWT 0.12 và JaCoCo.
+    - Cấu hình Maven Wrapper (`server/mvnw.cmd` và `server/mvnw`) thực thi độc lập.
+    - Tạo các bảng cơ sở dữ liệu qua Flyway migration: `V1__init_auth_and_users.sql` (bảng `users` và tài khoản admin mặc định) và `V2__create_refresh_tokens.sql` (bảng `refresh_tokens`).
+    - Kiến trúc phân tầng sạch: `BaseEntity`, `ApiResponse<T>`, DTO Java record, MapStruct `UserMapper`, `GlobalExceptionHandler`.
+    - Bảo mật và chống tấn công: Mã hóa BCrypt, Brute-force defense (tự động khóa tạm thời 15 phút sau 5 lần đăng nhập thất bại), Refresh Token Rotation, Token Reuse Detection và `@PreAuthorize("hasRole('ADMIN')")`.
+    - Kiểm thử tự động Server: 38/38 unit & WebMvcTest pass 100%, JaCoCo coverage đạt ngưỡng $\ge 80\%$ line và branch (`mvn clean verify` pass).
+  - **CRM Authentication & Role-Based Access Control (RBAC)**:
+    - Xây dựng `apiClient.ts` hỗ trợ tự động gửi Bearer token và silent refresh ngầm kèm cơ chế xếp hàng request khi gặp 401 Unauthorized.
+    - Xây dựng `AuthContext` và hook `useAuth()` quản lý trạng thái phiên, khôi phục phiên khi F5.
+    - Xây dựng `RoleGuard` và `PermissionGate` kiểm soát quyền truy cập trang và phân vùng giao diện giữa Admin và Nhân viên (Staff).
+    - Thiết kế trang `LoginPage` (`crm/src/pages/auth/LoginPage.tsx`) chuẩn nhận diện sang trọng, xác thực form bằng Zod, quản lý qua SCSS module, 0 inline CSS.
+    - Thiết kế trang `ForbiddenPage` (403 Access Denied) và layout tích hợp `MainDashboardLayout`.
+    - Bổ sung từ điển song ngữ `vi.json` và `en.json` đầy đủ các key cho `auth` và `permission`.
+    - Kiểm thử tự động CRM: 24 test suites, 66 unit tests pass 100%, độ phủ coverage đạt **94.15%** lines, **86.58%** branches, `tsc && vite build` hoàn thành trong 3.72s.
+
 - **CRM Modular Architecture & Primitive UI Components (Tái Cấu Trúc CRM Chuẩn Hóa)**:
   - Tái cấu trúc toàn bộ 13 common component sang kiến trúc thư mục module độc lập: `crm/src/components/common/<ComponentName>/` gồm `<ComponentName>.tsx`, `<ComponentName>.test.tsx`, `<ComponentName>.scss`, `index.ts`.
   - Bổ sung nhóm Primitive Components chuẩn shadcn/ui tại `crm/src/components/ui/`: `Button` (cva variants, sizes, loading state), `Input` (accessible labels, errors, icons), `Card` (CardHeader, CardTitle, CardContent, CardFooter), `Badge` (semantic badge variants).

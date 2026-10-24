@@ -26,18 +26,18 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 ## 2. Tính Năng Đang Thực Hiện & Tắc Nghẽn (Active & Blocked)
 
-> Hiện tại hệ thống đang ở giai đoạn khởi tạo tài liệu kỹ thuật & kiến trúc ban đầu. Chưa có tính năng nào đang `IN_PROGRESS` hoặc `BLOCKED`.
+> Cụm tính năng AUTH (AUTH-001, AUTH-002, AUTH-003) đã hoàn thành xuất sắc 100% cả Backend & CRM Frontend. Hệ thống sẵn sàng bước sang cụm tính năng tiếp theo.
 
 | ID | Tên tính năng | Phạm vi | Người phụ trách | Trạng thái | Lý do / Ghi chú |
 |---|---|---|---|---|---|
-| - | *(Trống)* | - | - | - | Sẵn sàng bước vào Giai đoạn triển khai code |
+| - | *(Trống)* | - | - | - | Sẵn sàng triển khai cụm tính năng tiếp theo (CAT hoặc CNT) |
 
 ---
 
 ## 3. Bảng Thống Kê Tiến Độ Tổng Thể
 
 | **UI** | Design System & Bộ Component | 1 | 0 | 0 | 0 | 1 | 100% |
-| **AUTH** | Xác thực & Phân quyền | 4 | 1 | 3 | 0 | 0 | 0% |
+| **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 5 | 0 | 0 | 0% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
@@ -45,9 +45,9 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **45** | **27** | **17** | **0** | **1** | **2.2%** |
+| **TỔNG CỘNG** | | **45** | **27** | **14** | **0** | **4** | **8.9%** |
 
-*(Lưu ý: UI-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 95%, docs đầy đủ; 17 tính năng cốt lõi P0 đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC, sẵn sàng code).*
+*(Lưu ý: UI-001 và AUTH-001/002/003 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 14 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -63,9 +63,9 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ### 4.1. Module AUTH (Xác Thực & Phân Quyền)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
-| `AUTH-001` | Đăng nhập hệ thống quản trị CRM | CRM, SERVER | P0 | 📝 SPEC | Fullstack Dev | - | - | [AUTH-001](features/auth/AUTH-001-dang-nhap-crm.md) |
-| `AUTH-002` | Phân quyền vai trò Admin và Nhân viên | CRM, SERVER | P0 | 📝 SPEC | Tech Lead | - | - | [AUTH-002](features/auth/AUTH-002-phan-quyen-admin-nhan-vien.md) |
-| `AUTH-003` | Refresh Token & Quản lý phiên làm việc | CRM, SERVER | P0 | 📝 SPEC | Fullstack Dev | - | - | [AUTH-003](features/auth/AUTH-003-refresh-token-quan-ly-phien.md) |
+| `AUTH-001` | Đăng nhập hệ thống quản trị CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [AUTH-001](features/auth/AUTH-001-dang-nhap-crm.md) |
+| `AUTH-002` | Phân quyền vai trò Admin và Nhân viên | CRM, SERVER | P0 | ✅ DONE | Tech Lead | 2026-10-24 | 2026-10-24 | [AUTH-002](features/auth/AUTH-002-phan-quyen-admin-nhan-vien.md) |
+| `AUTH-003` | Refresh Token & Quản lý phiên làm việc | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [AUTH-003](features/auth/AUTH-003-refresh-token-quan-ly-phien.md) |
 | `AUTH-004` | Quản lý danh sách tài khoản nhân viên | CRM, SERVER | P1 | ⬜ TODO | - | - | - | - |
 
 ---
@@ -156,6 +156,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-24 | `AUTH-001/002/003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện kiến trúc Server Spring Boot 3 + Flyway MySQL, JWT Auth, RBAC RoleGuard, UI Login CRM, test coverage Server & CRM $\ge 85\%$ |
 | 2026-10-24 | `UI-001` | ⬜ TODO $\rightarrow$ ✅ DONE | Senior Frontend Engineer | Hoàn thành toàn diện bộ component UI dùng chung cho Client & CRM, test coverage $\ge 95\%$, docs tại COMPONENTS.md |
 | 2026-10-24 | Toàn bộ 17 tính năng P0 | ⬜ TODO $\rightarrow$ 📝 SPEC | Tech Lead | Hoàn tất tài liệu đặc tả kỹ thuật chi tiết cho toàn bộ MVP P0 |
 | 2026-10-24 | Khởi tạo hệ thống | Khởi tạo | Tech Lead | Lập bảng theo dõi 44 tính năng cho toàn bộ dự án Chickie Studio |
