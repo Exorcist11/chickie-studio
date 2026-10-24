@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    show-sql: false
+
+  flyway:
+    enabled: false
+
+chickie:
+  jwt:
+    secret: 4c6869636b696553747564696f5365637265744b657932303236466f724a575441757468656e7469636174696f6e546f6b656e
+    access-token-expiration-ms: 900000
+    refresh-token-expiration-ms: 604800000

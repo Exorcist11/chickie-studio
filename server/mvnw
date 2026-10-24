@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "$(dirname "$0")/.tools/apache-maven-3.9.9/bin/mvn" "$@"
