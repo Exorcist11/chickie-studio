@@ -1,0 +1,49 @@
+{
+  "common": {
+    "search": "Tìm kiếm...",
+    "favorite": "Yêu thích",
+    "account": "Tài khoản",
+    "perDay": "/ngày",
+    "loading": "Đang tải...",
+    "close": "Đóng",
+    "rentNow": "Thuê ngay",
+    "explore": "Khám phá",
+    "viewDetails": "Xem chi tiết",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy bỏ",
+    "empty": "Không có dữ liệu",
+    "all": "Tất cả",
+    "color": "Màu sắc",
+    "size": "Kích cỡ",
+    "outOfStock": "Hết hàng",
+    "selectDate": "Chọn ngày",
+    "fromDate": "Từ ngày",
+    "toDate": "Đến ngày",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu"
+  },
+  "order": {
+    "status": {
+      "PENDING": "Chờ xác nhận",
+      "CONFIRMED": "Đã xác nhận",
+      "DEPOSITED": "Đã đặt cọc",
+      "DELIVERED": "Đang cho thuê",
+      "RETURNED": "Đã trả đồ",
+      "COMPLETED": "Hoàn tất",
+      "CANCELLED": "Đã hủy",
+      "OVERDUE": "Quá hạn trả"
+    }
+  },
+  "rating": {
+    "score": "Điểm",
+    "reviews": "đánh giá"
+  },
+  "footer": {
+    "tagline": "More than just a dress",
+    "contactZalo": "Nhắn tin Zalo",
+    "contactFacebook": "Chat Facebook",
+    "hotline": "Hotline: 0987.654.321",
+    "address": "Địa chỉ: Hà Nội, Việt Nam",
+    "copyright": "© 2026 Chickie Studio. All rights reserved."
+  }
+}

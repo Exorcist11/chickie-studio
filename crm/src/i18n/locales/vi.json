@@ -1,0 +1,63 @@
+{
+  "common": {
+    "search": "Tìm kiếm...",
+    "filter": "Bộ lọc",
+    "reset": "Đặt lại",
+    "all": "Tất cả",
+    "actions": "Thao tác",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "add": "Thêm mới",
+    "save": "Lưu thay đổi",
+    "loading": "Đang tải dữ liệu...",
+    "empty": "Không có dữ liệu",
+    "dateRange": "Khoảng ngày",
+    "status": "Trạng thái",
+    "export": "Xuất Excel"
+  },
+  "orderStatus": {
+    "PENDING": "Chờ xác nhận",
+    "CONFIRMED": "Đã xác nhận",
+    "DEPOSITED": "Đã đặt cọc",
+    "DELIVERED": "Đang cho thuê",
+    "RETURNED": "Đã trả đồ",
+    "COMPLETED": "Hoàn tất",
+    "CANCELLED": "Đã hủy",
+    "OVERDUE": "Quá hạn trả"
+  },
+  "itemStatus": {
+    "AVAILABLE": "Sẵn sàng",
+    "RENTED": "Đang cho thuê",
+    "CLEANING": "Đang giặt ủi",
+    "REPAIRING": "Đang sửa chữa",
+    "INACTIVE": "Ngừng sử dụng"
+  },
+  "upload": {
+    "uploadText": "Kéo thả hoặc nhấp để tải ảnh lên",
+    "uploadHint": "Hỗ trợ JPG, PNG, WEBP (tối đa 5MB/ảnh)",
+    "fileSizeError": "Kích thước ảnh vượt quá 5MB!",
+    "fileTypeError": "Định dạng file không hợp lệ!"
+  },
+  "kpi": {
+    "revenue": "Doanh thu",
+    "orders": "Tổng đơn thuê",
+    "newCustomers": "Khách hàng mới",
+    "trendUp": "tăng so với tháng trước",
+    "trendDown": "giảm so với tháng trước"
+  },
+  "error": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Không thể tải dữ liệu, vui lòng kiểm tra kết nối mạng và thử lại.",
+    "retry": "Thử lại"
+  },
+  "menu": {
+    "dashboard": "Tổng quan",
+    "orders": "Đơn thuê",
+    "products": "Sản phẩm",
+    "customers": "Khách hàng",
+    "reports": "Báo cáo",
+    "settings": "Cài đặt"
+  }
+}

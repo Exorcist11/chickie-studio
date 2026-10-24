@@ -1,0 +1,63 @@
+{
+  "common": {
+    "search": "Search...",
+    "filter": "Filter",
+    "reset": "Reset",
+    "all": "All",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add New",
+    "save": "Save Changes",
+    "loading": "Loading data...",
+    "empty": "No data",
+    "dateRange": "Date Range",
+    "status": "Status",
+    "export": "Export Excel"
+  },
+  "orderStatus": {
+    "PENDING": "Pending",
+    "CONFIRMED": "Confirmed",
+    "DEPOSITED": "Deposited",
+    "DELIVERED": "Delivered",
+    "RETURNED": "Returned",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "OVERDUE": "Overdue"
+  },
+  "itemStatus": {
+    "AVAILABLE": "Available",
+    "RENTED": "Rented",
+    "CLEANING": "Cleaning",
+    "REPAIRING": "Repairing",
+    "INACTIVE": "Inactive"
+  },
+  "upload": {
+    "uploadText": "Drag and drop or click to upload photos",
+    "uploadHint": "Supports JPG, PNG, WEBP (max 5MB/image)",
+    "fileSizeError": "Image size exceeds 5MB!",
+    "fileTypeError": "Invalid file format!"
+  },
+  "kpi": {
+    "revenue": "Revenue",
+    "orders": "Total Orders",
+    "newCustomers": "New Customers",
+    "trendUp": "increase vs last month",
+    "trendDown": "decrease vs last month"
+  },
+  "error": {
+    "title": "An error occurred",
+    "description": "Unable to load data, please check your network connection and try again.",
+    "retry": "Retry"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "orders": "Orders",
+    "products": "Products",
+    "customers": "Customers",
+    "reports": "Reports",
+    "settings": "Settings"
+  }
+}

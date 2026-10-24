@@ -1,0 +1,49 @@
+{
+  "common": {
+    "search": "Search...",
+    "favorite": "Favorites",
+    "account": "Account",
+    "perDay": "/day",
+    "loading": "Loading...",
+    "close": "Close",
+    "rentNow": "Rent now",
+    "explore": "Explore",
+    "viewDetails": "View details",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "empty": "No data available",
+    "all": "All",
+    "color": "Color",
+    "size": "Size",
+    "outOfStock": "Out of stock",
+    "selectDate": "Select date",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "order": {
+    "status": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "DEPOSITED": "Deposited",
+      "DELIVERED": "Delivered",
+      "RETURNED": "Returned",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "OVERDUE": "Overdue"
+    }
+  },
+  "rating": {
+    "score": "Score",
+    "reviews": "reviews"
+  },
+  "footer": {
+    "tagline": "More than just a dress",
+    "contactZalo": "Message via Zalo",
+    "contactFacebook": "Chat on Facebook",
+    "hotline": "Hotline: 0987.654.321",
+    "address": "Address: Hanoi, Vietnam",
+    "copyright": "© 2026 Chickie Studio. All rights reserved."
+  }
+}
