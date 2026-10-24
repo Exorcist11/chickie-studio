@@ -1,0 +1,76 @@
+services:
+  chickie-db:
+    image: mysql:8.0
+    container_name: chickie-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret_password_2026
+      MYSQL_DATABASE: chickie_db
+      MYSQL_USER: chickie_user
+      MYSQL_PASSWORD: chickie_pass_2026
+    ports:
+      - "3307:3306"
+    volumes:
+      - chickie_mysql_data:/var/lib/mysql
+    networks:
+      - chickie-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "chickie_user", "-pchickie_pass_2026"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  chickie-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: chickie-server
+    restart: unless-stopped
+    depends_on:
+      chickie-db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://chickie-db:3306/chickie_db?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: chickie_user
+      SPRING_DATASOURCE_PASSWORD: chickie_pass_2026
+      JWT_SECRET: 4c6869636b696553747564696f5365637265744b657932303236466f724a575441757468656e7469636174696f6e546f6b656e
+    ports:
+      - "8180:8080"
+    networks:
+      - chickie-network
+
+  chickie-crm:
+    build:
+      context: ./crm
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://chickie-studio-api.donglytravel.io.vn
+    container_name: chickie-crm
+    restart: unless-stopped
+    depends_on:
+      - chickie-server
+    ports:
+      - "3101:80"
+    networks:
+      - chickie-network
+
+  chickie-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://chickie-studio-api.donglytravel.io.vn
+    container_name: chickie-client
+    restart: unless-stopped
+    ports:
+      - "3100:3000"
+    networks:
+      - chickie-network
+
+volumes:
+  chickie_mysql_data:
+
+networks:
+  chickie-network:
+    driver: bridge

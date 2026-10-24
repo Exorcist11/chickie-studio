@@ -23,7 +23,8 @@ class ApiClient {
   }
 
   public async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiEnvelope<T>> {
-    const url = endpoint.startsWith("http") ? endpoint : endpoint;
+    const baseUrl = import.meta.env.VITE_API_URL || "";
+    const url = endpoint.startsWith("http") ? endpoint : `${baseUrl}${endpoint}`;
     const headers = new Headers(options.headers || {});
 
     if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
