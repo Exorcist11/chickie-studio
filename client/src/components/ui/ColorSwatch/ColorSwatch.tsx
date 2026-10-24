@@ -52,13 +52,14 @@ export const ColorSwatch = React.forwardRef<HTMLButtonElement, ColorSwatchProps>
         onClick={handleClick}
         title={name}
         className={cn(
-          "rounded-full transition-transform focus-visible:outline-none relative border border-line/80 shadow-xs cursor-pointer",
+          "rounded-full transition-transform focus-visible:outline-none relative border border-line/80 shadow-xs cursor-pointer bg-[var(--swatch-color)]",
           sizeClasses[size],
           selected && "ring-2 ring-burgundy ring-offset-2 scale-110",
           disabled && "opacity-40 cursor-not-allowed",
           className
         )}
-        style={{ backgroundColor: color }}
+        // Tuân thủ Quy chuẩn UI/UX 1.2: Sử dụng CSS Custom Property cho màu động runtime
+        style={{ "--swatch-color": color } as React.CSSProperties}
         {...props}
       />
     );

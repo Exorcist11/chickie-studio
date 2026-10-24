@@ -23,6 +23,7 @@ export default defineConfig({
         "**/*.d.ts",
         "**/index.ts",
         "**/dev/**",
+        "src/app/**",
         "vitest.config.ts",
         "vitest.setup.ts",
         "tailwind.config.ts",

@@ -108,20 +108,19 @@ export const Modal: React.FC<ModalProps> = ({
         )}
       >
         {/* Header */}
-        {(title || onClose) && (
-          <div className="flex items-center justify-between p-5 border-b border-line/60">
-            <div>
-              {title && (
-                <h3 id={titleId} className="font-serif text-lg font-medium text-ink">
-                  {title}
-                </h3>
-              )}
-              {description && (
-                <p id={descId} className="text-xs text-ink-muted mt-0.5">
-                  {description}
-                </p>
-              )}
-            </div>
+        <div className="flex items-center justify-between p-5 border-b border-line/60">
+          <div>
+            {title && (
+              <h3 id={titleId} className="font-serif text-lg font-medium text-ink">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p id={descId} className="text-xs text-ink-muted mt-0.5">
+                {description}
+              </p>
+            )}
+          </div>
 
             <button
               type="button"
@@ -132,7 +131,6 @@ export const Modal: React.FC<ModalProps> = ({
               <X className="w-5 h-5" />
             </button>
           </div>
-        )}
 
         {/* Body */}
         <div className="p-5 overflow-y-auto max-h-[70vh] text-ink">{children}</div>

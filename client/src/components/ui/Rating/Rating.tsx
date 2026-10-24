@@ -26,6 +26,7 @@ export const Rating: React.FC<RatingProps> = ({
 
   return (
     <div
+      role="img"
       className={cn("inline-flex items-center gap-1.5 select-none", className)}
       aria-label={`Đánh giá ${score} trên ${maxScore} sao${reviewCount ? ` với ${reviewCount} ${reviewLabel}` : ""}`}
       {...props}

@@ -1,0 +1,16 @@
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-ivory);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border-radius: var(--radius-pill);
+    &:hover {
+      background: var(--color-ink-muted);
+    }
+  }
+}

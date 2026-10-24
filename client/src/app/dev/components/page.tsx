@@ -1,0 +1,376 @@
+"use client";
+
+import * as React from "react";
+import { notFound } from "next/navigation";
+import {
+  Button,
+  Input,
+  Select,
+  Textarea,
+  DateRangeField,
+  Chip,
+  ChipGroup,
+  Badge,
+  Rating,
+  ColorSwatch,
+  ColorSwatchGroup,
+  SizeSelector,
+  Card,
+  ProductCard,
+  ServiceCard,
+  TestimonialCard,
+  SectionHeading,
+  Container,
+  Section,
+  Modal,
+  ConfirmModal,
+  Toast,
+  Skeleton,
+  EmptyState,
+  Spinner,
+  Logo,
+  Header,
+  Footer,
+  type OrderStatus,
+} from "@/components/ui";
+
+export default function DevComponentsPage() {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
+
+  const [chipVal, setChipVal] = React.useState<string | number>("all");
+  const [multiChips, setMultiChips] = React.useState<(string | number)[]>(["S"]);
+  const [selectedSize, setSelectedSize] = React.useState("M");
+  const [selectedColor, setSelectedColor] = React.useState("#641D2B");
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
+
+  const colors = [
+    { name: "Burgundy", hex: "#641D2B" },
+    { name: "Burgundy Light", hex: "#762538" },
+    { name: "Burgundy Dark", hex: "#4C1520" },
+    { name: "Gold", hex: "#B8914F" },
+    { name: "Rose Beige", hex: "#DCC8BD" },
+    { name: "Ivory", hex: "#F8F1E8" },
+    { name: "Warm White", hex: "#FFFCF8" },
+    { name: "Ink", hex: "#302528" },
+    { name: "Ink Muted", hex: "#6B5D60" },
+    { name: "Line", hex: "#EADFD6" },
+    { name: "Success", hex: "#4F7A5A" },
+    { name: "Warning", hex: "#B8791F" },
+    { name: "Danger", hex: "#B3362F" },
+    { name: "Info", hex: "#4A6A8A" },
+  ];
+
+  const orderStatuses: OrderStatus[] = [
+    "PENDING",
+    "CONFIRMED",
+    "DEPOSITED",
+    "DELIVERED",
+    "RETURNED",
+    "COMPLETED",
+    "CANCELLED",
+    "OVERDUE",
+  ];
+
+  return (
+    <div className="min-h-screen bg-warm-white pb-24 text-left">
+      <Header favoriteCount={2} />
+
+      <Container className="py-10 space-y-16">
+        {/* Intro */}
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-burgundy">
+            Developer Preview Only
+          </span>
+          <h1 className="font-serif text-4xl text-ink font-semibold mt-1">
+            Chickie Studio Design System Showcase
+          </h1>
+          <p className="text-ink-muted text-base mt-2">
+            Xem trước toàn bộ component UI dùng chung theo design system, token màu sắc, typography và các trạng thái.
+          </p>
+        </div>
+
+        {/* 1. Color Palette Tokens */}
+        <section className="space-y-4">
+          <SectionHeading title="1. Bảng Màu Sắc (Color Tokens)" description="Đọc từ moodboard Chickie Studio với màu chủ đạo Burgundy #641D2B" />
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+            {colors.map((c) => (
+              <div key={c.hex} className="p-3 bg-white rounded-card border border-line shadow-xs flex flex-col items-center">
+                <div
+                  className="w-12 h-12 rounded-full border border-line shadow-inner mb-2 bg-[var(--swatch-color)]"
+                  style={{ "--swatch-color": c.hex } as React.CSSProperties}
+                />
+                <span className="text-xs font-semibold text-ink text-center">{c.name}</span>
+                <span className="text-[11px] text-ink-muted uppercase font-mono">{c.hex}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 2. Typography Scale */}
+        <section className="space-y-4">
+          <SectionHeading title="2. Thang Chữ (Typography Scale)" description="Playfair Display cho Tiêu đề & Inter cho Nội dung" />
+          <div className="p-6 bg-white rounded-card border border-line space-y-4">
+            <div>
+              <span className="text-xs text-ink-muted">Display Hero (Playfair 500)</span>
+              <p className="font-serif text-4xl md:text-5xl text-ink font-medium">Tỏa sáng trong mọi khoảnh khắc</p>
+            </div>
+            <div>
+              <span className="text-xs text-ink-muted">Tagline Italic (Playfair Italic)</span>
+              <p className="font-serif italic text-2xl text-burgundy">More than just a dress</p>
+            </div>
+            <div>
+              <span className="text-xs text-ink-muted">Heading 1 & 2 (Playfair 500)</span>
+              <h2 className="font-serif text-2xl md:text-3xl text-ink font-medium">Bộ sưu tập áo dài kỷ yếu Hà Nội</h2>
+            </div>
+            <div>
+              <span className="text-xs text-ink-muted">Body Regular & Small (Inter 400)</span>
+              <p className="text-base text-ink leading-relaxed">
+                Chickie Studio chuyên cho thuê váy thiết kế, áo dài cao cấp và combo máy ảnh du lịch sắc nét tại Hà Nội.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Logo */}
+        <section className="space-y-4">
+          <SectionHeading title="3. Logo & Nhận Diện Thương Hiệu" description="Biến thể ngang, dọc và đơn sắc (mono)" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 bg-white rounded-card border border-line flex flex-col items-center justify-center min-h-[120px]">
+              <span className="text-xs text-ink-muted mb-3">Horizontal</span>
+              <Logo variant="horizontal" />
+            </div>
+            <div className="p-6 bg-white rounded-card border border-line flex flex-col items-center justify-center min-h-[120px]">
+              <span className="text-xs text-ink-muted mb-3">Vertical</span>
+              <Logo variant="vertical" />
+            </div>
+            <div className="p-6 bg-ink rounded-card border border-line flex flex-col items-center justify-center min-h-[120px]">
+              <span className="text-xs text-rose/60 mb-3">Mono (Nền tối)</span>
+              <Logo variant="mono" />
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Buttons */}
+        <section className="space-y-4">
+          <SectionHeading title="4. Button (Nút Bấm)" description="Các biến thể primary, secondary, tertiary, size md (cao 44), sm, loading, disabled" />
+          <div className="p-6 bg-white rounded-card border border-line flex flex-wrap items-center gap-4">
+            <Button variant="primary" size="md">Primary MD (44px)</Button>
+            <Button variant="secondary" size="md">Secondary MD</Button>
+            <Button variant="tertiary" size="md">Tertiary Link</Button>
+            <Button variant="primary" size="sm">Primary SM (36px)</Button>
+            <Button variant="primary" isLoading>Đang lưu...</Button>
+            <Button variant="primary" disabled>Bị vô hiệu hóa</Button>
+          </div>
+        </section>
+
+        {/* 5. Inputs & Form Controls */}
+        <section className="space-y-4">
+          <SectionHeading title="5. Form Controls" description="Input, Select, Textarea và DateRangeField cho đặt thuê" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white rounded-card border border-line">
+            <Input label="Họ và tên" placeholder="Nhập tên người thuê đồ" helperText="Ví dụ: Nguyễn Phương Anh" />
+            <Input label="Số điện thoại" placeholder="0987654321" error="Số điện thoại không đúng định dạng" />
+            <Select
+              label="Chọn loại trang phục"
+              options={[
+                { label: "Váy thiết kế dự tiệc", value: "party" },
+                { label: "Áo dài cách tân", value: "aodai" },
+                { label: "Combo máy ảnh Sony", value: "camera" },
+              ]}
+            />
+            <Textarea label="Ghi chú số đo" placeholder="Nhập chiều cao, cân nặng, yêu cầu riêng..." />
+            <div className="md:col-span-2">
+              <DateRangeField
+                label="Khoảng thời gian đặt thuê đồ"
+                startLabel="Ngày nhận đồ"
+                endLabel="Ngày trả đồ"
+                helperText="Cộng thêm 1 ngày đệm giặt ủi tự động"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Chips & Badges */}
+        <section className="space-y-4">
+          <SectionHeading title="6. Chip, Status Badges & Rating" description="Lọc sản phẩm, trạng thái đơn theo bảng màu chuẩn và đánh giá sao vàng" />
+          <div className="p-6 bg-white rounded-card border border-line space-y-6">
+            <div>
+              <span className="text-xs text-ink-muted block mb-2">Chip Filter (Đơn chọn & Đa chọn):</span>
+              <ChipGroup
+                options={[
+                  { label: "Tất cả", value: "all" },
+                  { label: "Mới nhất", value: "new" },
+                  { label: "Váy dạ hội", value: "evening" },
+                  { label: "Áo dài", value: "aodai" },
+                  { label: "Vest nữ", value: "suit" },
+                ]}
+                value={chipVal}
+                onChange={setChipVal}
+              />
+            </div>
+
+            <div>
+              <span className="text-xs text-ink-muted block mb-2">Multi-Select Chip Group (Chọn nhiều size):</span>
+              <ChipGroup
+                options={[
+                  { label: "Size XS", value: "XS" },
+                  { label: "Size S", value: "S" },
+                  { label: "Size M", value: "M" },
+                  { label: "Size L", value: "L" },
+                ]}
+                value={multiChips}
+                multiple
+                onChange={setMultiChips}
+              />
+            </div>
+
+            <div>
+              <span className="text-xs text-ink-muted block mb-2">Order Status Badges (Luôn có chữ + chấm màu):</span>
+              <div className="flex flex-wrap gap-2.5 items-center">
+                {orderStatuses.map((st) => (
+                  <Badge key={st} status={st} />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <span className="text-xs text-ink-muted block mb-2">Rating Component:</span>
+              <Rating score={4.9} reviewCount={128} size="md" />
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Color Swatch & Size Selector */}
+        <section className="space-y-4">
+          <SectionHeading title="7. Color Swatch & Size Selector" description="Chọn màu sắc và kích cỡ có trạng thái hết hàng" />
+          <div className="p-6 bg-white rounded-card border border-line grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ColorSwatchGroup
+              colors={[
+                { name: "Đỏ Burgundy", hex: "#641D2B" },
+                { name: "Trắng Ngọc Trai", hex: "#FFFFFF" },
+                { name: "Hồng Nude", hex: "#DCC8BD" },
+                { name: "Đen Dạ Tiệc", hex: "#302528" },
+              ]}
+              selectedColor={selectedColor}
+              onSelectColor={setSelectedColor}
+              showName
+            />
+
+            <SizeSelector
+              sizes={[
+                { value: "XS", disabled: false },
+                { value: "S", disabled: false },
+                { value: "M", disabled: false },
+                { value: "L", disabled: true },
+                { value: "XL", disabled: true },
+              ]}
+              value={selectedSize}
+              onChange={setSelectedSize}
+              sizeGuideAction="Bảng hướng dẫn chọn size"
+            />
+          </div>
+        </section>
+
+        {/* 8. Cards */}
+        <section className="space-y-4">
+          <SectionHeading title="8. Cards (Thẻ Sản Phẩm, Dịch Vụ & Đánh Giá)" description="Card bo 16, bóng shadow-card, ảnh 3:4 và nút tim toggle" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ProductCard
+              id="p1"
+              name="Đầm maxi voan xòe tiểu thư dáng dài chụp ngoại cảnh"
+              slug="dam-maxi-voan-xoe"
+              imageUrl="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&auto=format&fit=crop"
+              price={180000}
+              rating={4.9}
+              reviewCount={42}
+              colors={[
+                { name: "Trắng", hex: "#FFFFFF" },
+                { name: "Đỏ", hex: "#641D2B" },
+              ]}
+            />
+
+            <ServiceCard
+              title="Thuê máy ảnh chụp kỷ yếu"
+              description="Thiết bị hiện đại Sony, Canon ống kính chân dung xóa phông sắc nét."
+              imageUrl="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop"
+              href="/cameras"
+            />
+
+            <TestimonialCard
+              quote="Váy tại Chickie Studio form siêu tôn dáng, chất lụa mềm mại. Chụp ảnh kỷ yếu ai cũng khen!"
+              authorName="Nguyễn Thu Trang"
+              authorRole="Khách thuê váy kỷ yếu"
+              rating={5}
+            />
+          </div>
+        </section>
+
+        {/* 9. Feedback & Modals */}
+        <section className="space-y-4">
+          <SectionHeading title="9. Phản Hồi & Hộp Thoại (Modal, Toast, Spinner, Empty)" description="Modal có focus trap đóng bằng Esc, Toast 4 trạng thái" />
+          <div className="p-6 bg-white rounded-card border border-line space-y-6">
+            <div className="flex flex-wrap items-center gap-4">
+              <Button onClick={() => setIsModalOpen(true)}>Mở Modal xem thử</Button>
+              <Button variant="secondary" onClick={() => setIsConfirmOpen(true)}>Mở ConfirmModal</Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Toast variant="success" title="Đặt cọc thành công" message="Tiệm đã nhận được tiền cọc giữ đồ của bạn." />
+              <Toast variant="warning" title="Sắp hết hạn" message="Vui lòng hoàn tất đặt cọc trước 15:00." />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <EmptyState
+                title="Giỏ đồ đang trống"
+                description="Bạn chưa chọn mẫu trang phục hoặc máy ảnh nào."
+                action={<Button size="sm">Khám phá ngay</Button>}
+              />
+
+              <div className="space-y-3 p-6 bg-ivory rounded-card">
+                <span className="text-xs text-ink-muted">Skeleton loading placeholders:</span>
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-1/2" />
+                <div className="pt-2 flex items-center gap-3">
+                  <Spinner size="sm" />
+                  <Spinner size="md" />
+                  <Spinner size="lg" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </Container>
+
+      {/* Modals demo */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Bảng Quy Đổi Kích Cỡ Váy (Size Guide)"
+        description="Số đo chuẩn áp dụng cho toàn bộ váy thiết kế Chickie Studio"
+        footer={<Button onClick={() => setIsModalOpen(false)}>Đã hiểu</Button>}
+      >
+        <div className="text-sm space-y-3 text-ink-muted">
+          <p>• <strong>Size S</strong>: Ngực 82-86cm, Eo 62-66cm, Mông 86-90cm (Phù hợp 42-48kg)</p>
+          <p>• <strong>Size M</strong>: Ngực 86-90cm, Eo 66-70cm, Mông 90-94cm (Phù hợp 48-54kg)</p>
+          <p>• <strong>Size L</strong>: Ngực 90-94cm, Eo 70-74cm, Mông 94-98cm (Phù hợp 54-60kg)</p>
+        </div>
+      </Modal>
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={() => setIsConfirmOpen(false)}
+        title="Xác nhận hủy đơn giữ lịch"
+        content="Sau khi hủy, thời gian giữ đồ sẽ được mở lại cho các khách hàng khác. Bạn có chắc chắn muốn hủy không?"
+        confirmText="Đồng ý hủy"
+        cancelText="Giữ lại đơn"
+        variant="danger"
+      />
+
+      <Footer />
+    </div>
+  );
+}
