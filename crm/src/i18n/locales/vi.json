@@ -59,5 +59,26 @@
     "customers": "Khách hàng",
     "reports": "Báo cáo",
     "settings": "Cài đặt"
+  },
+  "auth": {
+    "loginTitle": "Đăng Nhập Quản Trị Chickie Studio",
+    "loginSubtitle": "Vui lòng nhập thông tin tài khoản để tiếp tục",
+    "usernameLabel": "Tên đăng nhập hoặc Email",
+    "usernamePlaceholder": "Nhập username hoặc email...",
+    "passwordLabel": "Mật khẩu",
+    "passwordPlaceholder": "Nhập mật khẩu...",
+    "loginButton": "Đăng Nhập",
+    "loginSuccess": "Đăng nhập thành công!",
+    "invalidCredentials": "Tên đăng nhập hoặc mật khẩu không chính xác",
+    "accountLocked": "Tài khoản của bạn đã bị khóa",
+    "sessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+    "logoutSuccess": "Đã đăng xuất an toàn.",
+    "logout": "Đăng xuất"
+  },
+  "permission": {
+    "accessDeniedTitle": "Truy Cập Bị Từ Chối",
+    "accessDeniedMessage": "Bạn không có quyền truy cập vào chức năng hoặc trang này.",
+    "backHome": "Về trang chủ"
   }
 }
+

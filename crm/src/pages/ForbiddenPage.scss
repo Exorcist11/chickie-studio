@@ -1,0 +1,31 @@
+.forbidden-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--color-warm-white, #fffcf8);
+
+  &__card {
+    max-width: 28rem;
+    width: 100%;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 10px 25px -5px rgba(48, 37, 40, 0.08);
+    border: 1px solid var(--color-line, #eadfd6);
+  }
+
+  &__icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 9999px;
+    background-color: rgba(100, 29, 43, 0.08);
+    color: var(--color-burgundy, #641d2b);
+  }
+}

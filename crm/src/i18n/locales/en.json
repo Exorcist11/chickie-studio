@@ -59,5 +59,26 @@
     "customers": "Customers",
     "reports": "Reports",
     "settings": "Settings"
+  },
+  "auth": {
+    "loginTitle": "Chickie Studio Admin Portal",
+    "loginSubtitle": "Please sign in to continue",
+    "usernameLabel": "Username or Email",
+    "usernamePlaceholder": "Enter username or email...",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter password...",
+    "loginButton": "Sign In",
+    "loginSuccess": "Signed in successfully!",
+    "invalidCredentials": "Invalid username or password",
+    "accountLocked": "Your account has been locked",
+    "sessionExpired": "Session expired. Please sign in again.",
+    "logoutSuccess": "Signed out successfully.",
+    "logout": "Sign Out"
+  },
+  "permission": {
+    "accessDeniedTitle": "Access Denied",
+    "accessDeniedMessage": "You do not have permission to access this page or feature.",
+    "backHome": "Back to Home"
   }
 }
+

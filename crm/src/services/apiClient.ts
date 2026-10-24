@@ -1,0 +1,112 @@
+import { ApiEnvelope, TokenResponseData } from "../types/auth";
+
+class ApiClient {
+  private token: string | null = null;
+  private isRefreshing = false;
+  private refreshSubscribers: Array<(token: string) => void> = [];
+
+  public setToken(token: string | null): void {
+    this.token = token;
+  }
+
+  public getToken(): string | null {
+    return this.token;
+  }
+
+  private onTokenRefreshed(newToken: string): void {
+    this.refreshSubscribers.forEach((callback) => callback(newToken));
+    this.refreshSubscribers = [];
+  }
+
+  private addRefreshSubscriber(callback: (token: string) => void): void {
+    this.refreshSubscribers.push(callback);
+  }
+
+  public async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiEnvelope<T>> {
+    const url = endpoint.startsWith("http") ? endpoint : endpoint;
+    const headers = new Headers(options.headers || {});
+
+    if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    if (this.token && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${this.token}`);
+    }
+
+    const config: RequestInit = {
+      ...options,
+      headers,
+      credentials: "include",
+    };
+
+    let response = await fetch(url, config);
+
+    // Xử lý 401 Unauthorized -> Tự động silent refresh
+    if (response.status === 401 && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/refresh")) {
+      if (!this.isRefreshing) {
+        this.isRefreshing = true;
+
+        try {
+          const refreshRes = await fetch("/api/public/auth/refresh", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          });
+
+          if (!refreshRes.ok) {
+            this.setToken(null);
+            this.isRefreshing = false;
+            throw new Error("SESSION_EXPIRED");
+          }
+
+          const refreshData: ApiEnvelope<TokenResponseData> = await refreshRes.json();
+          const newToken = refreshData.data.accessToken;
+          this.setToken(newToken);
+          this.isRefreshing = false;
+          this.onTokenRefreshed(newToken);
+        } catch (error) {
+          this.isRefreshing = false;
+          this.setToken(null);
+          this.refreshSubscribers = [];
+          throw error;
+        }
+      }
+
+      // Đợi refresh hoàn tất và replay request
+      const retryToken = await new Promise<string>((resolve) => {
+        this.addRefreshSubscriber((token) => resolve(token));
+      });
+
+      headers.set("Authorization", `Bearer ${retryToken}`);
+      response = await fetch(url, { ...config, headers });
+    }
+
+    if (!response.ok) {
+      let errorMessage = `HTTP Error ${response.status}`;
+      try {
+        const errorJson = await response.json();
+        errorMessage = errorJson.message || errorMessage;
+      } catch {
+        // Fallback to status text
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  }
+
+  public get<T>(endpoint: string, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    return this.request<T>(endpoint, { ...options, method: "GET" });
+  }
+
+  public post<T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "POST",
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }
+}
+
+export const apiClient = new ApiClient();
