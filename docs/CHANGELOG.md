@@ -7,6 +7,31 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Backend Tính Năng Quản Lý Sản Phẩm, Biến Thể & Thư Viện Ảnh (CAT-002 - 🚧 IN_PROGRESS: BE DONE)**:
+  - **Flyway Migration `V5__create_products_and_variants.sql`**:
+    - Tạo bảng `products` (mã sản phẩm duy nhất, slug, giá thuê, tiền cọc, chất liệu, dịp, liên kết category).
+    - Tạo bảng `product_variants` (kích cỡ, màu sắc, mã SKU duy nhất, ràng buộc foreign key cascade).
+    - Tạo bảng `product_images` (URL ảnh, cờ thumbnail, thứ tự hiển thị, cascade delete).
+    - Đầy đủ index tối ưu tìm kiếm theo category, trạng thái và sản phẩm.
+  - **Domain Entities & Utilities**:
+    - `Product` (extends `BaseEntity`), `ProductVariant`, `ProductImage`, `ProductStatus` (`ACTIVE`, `INACTIVE`, `ARCHIVED`).
+    - `SlugUtils` trong `common/util` hỗ trợ chuẩn hóa slug tiếng Việt, xử lý chữ đ/Đ và loại bỏ dấu trùng lặp.
+  - **DTOs & MapStruct Mapper**:
+    - `CreateProductRequest`, `UpdateProductRequest` với Bean Validation chặt chẽ (`@Positive`, `@NotEmpty`, `@NotBlank`).
+    - `ProductDetailResponse`, `ProductListResponse`, `ProductVariantResponse`, `ProductImageResponse`.
+    - `ProductMapper` tự động trích xuất thumbnail, đếm biến thể không gây N+1 query.
+  - **Tầng Dịch Vụ Nghiệp Vụ (`ProductServiceImpl`)**:
+    - Xử lý nghiệp vụ: Tự sinh mã sản phẩm nếu trống, sinh slug từ tên, sinh SKU theo chuẩn `{CODE}-{SIZE}-{COLOR}`.
+    - Đảm bảo quy tắc nghiệp vụ BR-01..BR-03: Bắt buộc có biến thể và ảnh, tự động gán ảnh đầu tiên làm thumbnail nếu chưa chọn, chống trùng lặp slug/mã sản phẩm/SKU.
+    - Giao dịch an toàn với `@Transactional`.
+  - **REST API Endpoints**:
+    - `AdminProductController` (`/api/admin/products`): CRUD sản phẩm, phân quyền `@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")`.
+    - `PublicProductController` (`/api/public/products`): Xem danh mục sản phẩm công khai và chi tiết theo ID hoặc Slug.
+  - **Kiểm thử tự động & Coverage**:
+    - 29 unit tests và controller tests mới ([ProductServiceTest.java](file:///e:/chickie-studio/server/src/test/java/com/chickiestudio/product/service/ProductServiceTest.java), [ProductControllerTest.java](file:///e:/chickie-studio/server/src/test/java/com/chickiestudio/product/controller/ProductControllerTest.java), [ProductMapperTest.java](file:///e:/chickie-studio/server/src/test/java/com/chickiestudio/product/mapper/ProductMapperTest.java), [SlugUtilsTest.java](file:///e:/chickie-studio/server/src/test/java/com/chickiestudio/common/util/SlugUtilsTest.java)).
+    - Toàn bộ Backend đạt **102/102 tests pass (100%)**.
+    - JaCoCo Line Coverage: `ProductServiceImpl` đạt **98.3%**, `AdminProductController` đạt **100%**, `PublicProductController` đạt **100%**, `ProductMapper` đạt **100%**.
+
 - **Triển Khai Bộ TanStack (TanStack Query + TanStack Form) Cho Dự Án CRM (TAN-001 - ✅ DONE)**:
   - **Cấu hình TanStack Query tập trung**:
     - Khởi tạo `QueryClient` chuẩn hóa tại [src/lib/queryClient.ts](file:///e:/chickie-studio/crm/src/lib/queryClient.ts) với `staleTime: 5 phút`, `retry: 1`, `mutations.retry: 0`.

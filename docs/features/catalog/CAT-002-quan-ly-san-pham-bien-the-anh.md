@@ -7,9 +7,9 @@
 | **Module** | CAT (Catalog) |
 | **Phạm vi** | CRM, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | 🚧 IN_PROGRESS (BE DONE, FE pending) |
 | **Người phụ trách** | Fullstack Dev |
-| **Ngày bắt đầu** | - |
+| **Ngày bắt đầu** | 2026-10-24 |
 | **Ngày hoàn thành** | - |
 | **Phụ thuộc** | `CAT-001` |
 
@@ -148,3 +148,4 @@ CREATE TABLE `product_images` (
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
+| 2026-10-24 | Backend Dev | Hoàn thành Backend: Flyway V5, Entities, Repositories, DTOs, ProductMapper, ProductService, AdminProductController, PublicProductController, 29 unit & controller tests (coverage > 98%) | 🚧 IN_PROGRESS |
