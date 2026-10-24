@@ -82,4 +82,17 @@ describe("Modal component (CRM)", () => {
     fireEvent.keyDown(window, { key: "Escape" });
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
+
+  it("renders with drawer variant correctly", () => {
+    const handleClose = vi.fn();
+
+    render(
+      <Modal open={true} onClose={handleClose} variant="drawer" title="Drawer Modal">
+        <p>Drawer Content</p>
+      </Modal>
+    );
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveClass("crm-modal--drawer");
+  });
 });

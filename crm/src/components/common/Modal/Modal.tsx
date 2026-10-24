@@ -12,6 +12,7 @@ export interface ModalProps {
   headerExtra?: React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  variant?: "modal" | "drawer";
   maxWidth?: "sm" | "md" | "lg" | "xl" | "full";
   className?: string;
   bodyClassName?: string;
@@ -34,6 +35,7 @@ export const Modal: React.FC<ModalProps> = ({
   headerExtra,
   children,
   footer,
+  variant = "modal",
   maxWidth = "md",
   className,
   bodyClassName,
@@ -80,7 +82,7 @@ export const Modal: React.FC<ModalProps> = ({
       aria-modal="true"
       aria-labelledby={title ? ariaLabelledBy : undefined}
       aria-describedby={ariaDescribedBy}
-      className="crm-modal"
+      className={cn("crm-modal", variant === "drawer" && "crm-modal--drawer")}
       onClick={(e) => {
         if (closeOnOverlayClick && e.target === e.currentTarget) {
           onClose();
@@ -92,6 +94,7 @@ export const Modal: React.FC<ModalProps> = ({
         className={cn(
           "crm-modal__card",
           `crm-modal__card--${maxWidth}`,
+          variant === "drawer" && "crm-modal__card--drawer",
           className
         )}
         onClick={(e) => e.stopPropagation()}

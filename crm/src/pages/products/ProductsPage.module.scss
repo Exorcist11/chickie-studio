@@ -1,71 +1,116 @@
 .productsPage {
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__productInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  &__productName {
+    font-weight: 600;
+    color: var(--foreground, #0f172a);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  &__productSlug {
+    font-size: 0.75rem;
+    color: var(--muted-foreground, #64748b);
+  }
+
+  &__categoryBadge {
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+
   &__thumbnail {
-    width: 44px;
-    height: 44px;
-    border-radius: 0.375rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 0.5rem;
     object-fit: cover;
     background-color: var(--accent, #f1f5f9);
     border: 1px solid var(--border, #e2e8f0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.08);
+    }
   }
 
   &__noThumb {
-    width: 44px;
-    height: 44px;
-    border-radius: 0.375rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--accent, #f1f5f9);
+    background-color: var(--accent, #f8fafc);
     color: var(--muted-foreground, #94a3b8);
-    border: 1px solid var(--border, #e2e8f0);
+    border: 1px dashed var(--border, #cbd5e1);
   }
 
   &__code {
-    font-family: monospace;
-    font-size: 0.8125rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.75rem;
     background-color: var(--accent, #f1f5f9);
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
     color: var(--foreground, #0f172a);
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+  }
+
+  &__price {
+    font-weight: 700;
+    color: var(--color-burgundy, #800020);
+    font-size: 0.9375rem;
+  }
+
+  &__deposit {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground, #64748b);
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.375rem;
   }
 
   &__actionBtn {
-    padding: 0.375rem;
-    border-radius: 0.25rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 0.375rem;
     color: var(--muted-foreground, #64748b);
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.18s ease;
 
     &:hover {
       background-color: var(--accent, #f1f5f9);
       color: var(--foreground, #0f172a);
+      border-color: var(--border, #e2e8f0);
     }
 
     &--delete:hover {
       color: #ef4444;
       background-color: #fee2e2;
+      border-color: #fca5a5;
     }
-  }
-
-  &__price {
-    font-weight: 600;
-    color: #0284c7;
   }
 }

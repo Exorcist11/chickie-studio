@@ -30,6 +30,13 @@ vi.mock("../../services/category.service", () => ({
   },
 }));
 
+vi.mock("../../services/upload.service", () => ({
+  uploadService: {
+    uploadImage: vi.fn().mockResolvedValue("/uploads/images/dress.jpg"),
+    uploadImages: vi.fn().mockResolvedValue(["/uploads/images/dress.jpg"]),
+  },
+}));
+
 const renderWithProviders = (ui: React.ReactElement) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -136,18 +143,16 @@ describe("ProductsPage", () => {
       "Váy Thiết Kế Đỏ"
     );
 
-    // Switch to pricing tab
-    await user.click(screen.getByText("Giá & Trạng thái"));
+    // Type pricing directly (all-in-one view)
     await user.type(screen.getByPlaceholderText("350000"), "400000");
     await user.type(screen.getByPlaceholderText("500000"), "600000");
 
-    // Switch to images tab & add image
-    await user.click(screen.getByText(/Thư viện ảnh/));
-    await user.type(
-      screen.getByPlaceholderText("https://example.com/image.jpg"),
-      "https://example.com/dress.jpg"
-    );
-    await user.click(screen.getByText("Thêm ảnh"));
+    // Upload image from machine
+    const file = new File(["dummy content"], "dress.jpg", { type: "image/jpeg" });
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      await user.upload(fileInput, file);
+    }
 
     // Submit form
     await user.click(screen.getByText("Lưu thay đổi"));

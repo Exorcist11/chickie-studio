@@ -120,18 +120,22 @@ class ApiClient {
   }
 
   public post<T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    const formattedBody =
+      body instanceof FormData ? body : body ? JSON.stringify(body) : undefined;
     return this.request<T>(endpoint, {
       ...options,
       method: "POST",
-      body: body ? JSON.stringify(body) : undefined,
+      body: formattedBody,
     });
   }
 
   public put<T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    const formattedBody =
+      body instanceof FormData ? body : body ? JSON.stringify(body) : undefined;
     return this.request<T>(endpoint, {
       ...options,
       method: "PUT",
-      body: body ? JSON.stringify(body) : undefined,
+      body: formattedBody,
     });
   }
 

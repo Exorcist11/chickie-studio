@@ -156,9 +156,9 @@ export const ProductsPage: React.FC = () => {
       dataIndex: "name",
       key: "name",
       render: (val, record) => (
-        <div>
-          <div style={{ fontWeight: 600, color: "#0f172a" }}>{val}</div>
-          <small style={{ color: "#64748b" }}>{record.slug}</small>
+        <div className={styles.productsPage__productInfo}>
+          <span className={styles.productsPage__productName}>{val}</span>
+          <span className={styles.productsPage__productSlug}>{record.slug}</span>
         </div>
       ),
     },
@@ -167,7 +167,7 @@ export const ProductsPage: React.FC = () => {
       dataIndex: "categoryName",
       key: "categoryName",
       render: (val) => (
-        <Badge variant="outline" style={{ fontWeight: 500 }}>
+        <Badge variant="outline" className={styles.productsPage__categoryBadge}>
           {val}
         </Badge>
       ),
@@ -188,10 +188,13 @@ export const ProductsPage: React.FC = () => {
       title: t("product.depositPrice"),
       dataIndex: "depositPrice",
       key: "depositPrice",
-      render: (val) =>
-        new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
-          Number(val)
-        ),
+      render: (val) => (
+        <span className={styles.productsPage__deposit}>
+          {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
+            Number(val)
+          )}
+        </span>
+      ),
     },
     {
       title: t("product.variantCount"),
@@ -263,7 +266,7 @@ export const ProductsPage: React.FC = () => {
         subtitle={t("product.subtitle")}
         actions={
           <Button onClick={handleOpenAddModal}>
-            <Plus size={16} style={{ marginRight: 6 }} />
+            <Plus size={16} className="mr-1.5" />
             {t("product.addProduct")}
           </Button>
         }

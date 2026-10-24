@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Image as ImageIcon } from "lucide-react";
 import { Modal } from "../../../../components/common/Modal";
 import { Button } from "../../../../components/ui/Button";
 import { Badge } from "../../../../components/ui/Badge";
@@ -33,10 +34,11 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
       maxWidth="lg"
     >
       <div className={styles.productViewModal}>
+        {/* Header Section */}
         <div className={styles.productViewModal__header}>
-          <div>
+          <div className={styles.productViewModal__headerMeta}>
             <h3 className={styles.productViewModal__title}>{product.name}</h3>
-            <span className={styles.productViewModal__code}>{product.productCode}</span>
+            <span className={styles.productViewModal__codeBadge}>{product.productCode}</span>
           </div>
           <Badge
             variant={
@@ -55,6 +57,7 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
           </Badge>
         </div>
 
+        {/* Luxury Split View */}
         <div className={styles.productViewModal__grid}>
           {/* Gallery Column */}
           <div className={styles.productViewModal__gallery}>
@@ -62,8 +65,9 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
               {currentImg ? (
                 <img src={currentImg} alt={product.name} />
               ) : (
-                <div style={{ display: "grid", placeItems: "center", height: "100%", color: "#94a3b8" }}>
-                  Chưa có ảnh
+                <div className={styles.productViewModal__noImage}>
+                  <ImageIcon size={32} />
+                  <span>Chưa có ảnh</span>
                 </div>
               )}
             </div>
@@ -76,6 +80,9 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
                       selectedImgIndex === idx ? styles["productViewModal__thumbItem--active"] : ""
                     }`}
                     onClick={() => setSelectedImgIndex(idx)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Xem ảnh ${idx + 1}`}
                   >
                     <img src={img.imageUrl} alt="" />
                   </div>
@@ -85,58 +92,58 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
           </div>
 
           {/* Details Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div className={styles.productViewModal__infoList}>
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.category")}</span>
-                <span className={styles.productViewModal__value}>{product.categoryName}</span>
-              </div>
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.slug")}</span>
-                <span className={styles.productViewModal__value}>{product.slug}</span>
-              </div>
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.rentalPrice")}</span>
-                <span className={styles.productViewModal__value} style={{ color: "#0284c7" }}>
+          <div className={styles.productViewModal__content}>
+            {/* Price Box */}
+            <div className={styles.productViewModal__priceCard}>
+              <div className={styles.productViewModal__priceBlock}>
+                <span className={styles.productViewModal__priceLabel}>{t("product.rentalPrice")}</span>
+                <span className={styles.productViewModal__rentalPriceVal}>
                   {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
                     product.rentalPrice
                   )}
                 </span>
               </div>
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.depositPrice")}</span>
-                <span className={styles.productViewModal__value}>
+              <div className={styles.productViewModal__priceBlock}>
+                <span className={styles.productViewModal__priceLabel}>{t("product.depositPrice")}</span>
+                <span className={styles.productViewModal__depositPriceVal}>
                   {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
                     product.depositPrice
                   )}
                 </span>
               </div>
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.material")}</span>
-                <span className={styles.productViewModal__value}>
-                  {product.material || "—"}
-                </span>
+            </div>
+
+            {/* Attributes Grid */}
+            <div className={styles.productViewModal__attributesGrid}>
+              <div className={styles.productViewModal__attrItem}>
+                <span className={styles.productViewModal__attrLabel}>{t("product.category")}</span>
+                <span className={styles.productViewModal__attrVal}>{product.categoryName}</span>
               </div>
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.occasion")}</span>
-                <span className={styles.productViewModal__value}>
-                  {product.occasion || "—"}
-                </span>
+              <div className={styles.productViewModal__attrItem}>
+                <span className={styles.productViewModal__attrLabel}>{t("product.slug")}</span>
+                <span className={styles.productViewModal__attrVal}>{product.slug}</span>
+              </div>
+              <div className={styles.productViewModal__attrItem}>
+                <span className={styles.productViewModal__attrLabel}>{t("product.material")}</span>
+                <span className={styles.productViewModal__attrVal}>{product.material || "—"}</span>
+              </div>
+              <div className={styles.productViewModal__attrItem}>
+                <span className={styles.productViewModal__attrLabel}>{t("product.occasion")}</span>
+                <span className={styles.productViewModal__attrVal}>{product.occasion || "—"}</span>
               </div>
             </div>
 
+            {/* Description */}
             {product.description && (
-              <div className={styles.productViewModal__infoItem}>
-                <span className={styles.productViewModal__label}>{t("product.description")}</span>
-                <p style={{ margin: "4px 0 0", color: "#475569", fontSize: "0.875rem" }}>
-                  {product.description}
-                </p>
+              <div className={styles.productViewModal__description}>
+                <span className={styles.productViewModal__attrLabel}>{t("product.description")}</span>
+                <p className={styles.productViewModal__descText}>{product.description}</p>
               </div>
             )}
 
             {/* Variants Table */}
-            <div>
-              <span className={styles.productViewModal__label}>
+            <div className={styles.productViewModal__variantsSection}>
+              <span className={styles.productViewModal__attrLabel}>
                 {t("product.variants")} ({product.variants?.length || 0})
               </span>
               <table className={styles.productViewModal__variantsTable}>
@@ -152,7 +159,7 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
                     <tr key={i}>
                       <td><strong>{v.size}</strong></td>
                       <td>{v.color}</td>
-                      <td><code>{v.sku}</code></td>
+                      <td><code className={styles.productViewModal__skuPill}>{v.sku}</code></td>
                     </tr>
                   ))}
                 </tbody>
@@ -161,9 +168,10 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
           </div>
         </div>
 
+        {/* Footer Action */}
         <div className={styles.productViewModal__actions}>
           <Button variant="primary" onClick={onClose}>
-            Đóng
+            {t("common.close", "Đóng")}
           </Button>
         </div>
       </div>

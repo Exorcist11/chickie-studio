@@ -5,9 +5,36 @@
   @apply fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm;
   background-color: rgba(48, 37, 40, 0.6);
 
+  &--drawer {
+    @apply items-stretch justify-end p-0;
+  }
+
   &__card {
     @apply bg-white rounded-xl border border-line w-full overflow-hidden shadow-2xl relative flex flex-col;
     animation: crmModalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &--drawer {
+      height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+      border-top-left-radius: 1.25rem;
+      border-bottom-left-radius: 1.25rem;
+      border-top: 0;
+      border-bottom: 0;
+      border-right: 0;
+      box-shadow: -12px 0 40px -10px rgba(48, 37, 40, 0.25);
+      animation: crmDrawerSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+      .crm-modal__body {
+        max-height: none;
+        flex: 1 1 auto;
+      }
+
+      @media (max-width: 768px) {
+        max-width: 100vw !important;
+        border-radius: 0;
+      }
+    }
 
     &--sm {
       max-width: 30rem; // 480px
@@ -22,7 +49,7 @@
     }
 
     &--xl {
-      max-width: 64rem; // 1024px
+      max-width: 58rem; // 928px
     }
 
     &--full {
@@ -81,5 +108,16 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes crmDrawerSlideIn {
+  from {
+    opacity: 0.5;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
