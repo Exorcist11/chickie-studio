@@ -26,11 +26,11 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 ## 2. Tính Năng Đang Thực Hiện & Tắc Nghẽn (Active & Blocked)
 
-> Cụm tính năng AUTH (AUTH-001, AUTH-002, AUTH-003) đã hoàn thành xuất sắc 100% cả Backend & CRM Frontend. Hệ thống sẵn sàng bước sang cụm tính năng tiếp theo.
+> Cụm tính năng AUTH (AUTH-001, AUTH-002, AUTH-003) và Catalog cơ bản (CAT-001, CAT-002) đã hoàn thành xuất sắc 100% cả Backend & CRM Frontend. Hệ thống sẵn sàng bước sang các tính năng tiếp theo (`CAT-003`, `CAT-005` hoặc `BOK-001`).
 
 | ID | Tên tính năng | Phạm vi | Người phụ trách | Trạng thái | Lý do / Ghi chú |
 |---|---|---|---|---|---|
-| `CAT-002` | Quản lý sản phẩm, biến thể & hình ảnh | CRM, SERVER | Fullstack Dev | 🚧 IN_PROGRESS | Backend hoàn thành 100% (Flyway V5, API, Service, Tests 100% pass), chờ triển khai UI CRM |
+| - | - | - | - | - | Hiện không có tính năng nào bị tắc nghẽn |
 
 ---
 
@@ -40,16 +40,16 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
-| **CAT** | Danh mục & Sản phẩm | 8 | 3 | 3 | 1 | 1 | 12.5% |
+| **CAT** | Danh mục & Sản phẩm | 8 | 3 | 3 | 0 | 2 | 25.0% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **12** | **1** | **6** | **12.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **12** | **0** | **7** | **14.0%** |
 
-*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 13 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 12 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -82,7 +82,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
 | `CAT-001` | Quản lý danh mục sản phẩm | CRM, SERVER, CLIENT | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [CAT-001](features/catalog/CAT-001-quan-ly-danh-muc.md) |
-| `CAT-002` | Quản lý sản phẩm, biến thể (Size/Màu) & ảnh | CRM, SERVER | P0 | 🚧 IN_PROGRESS | Fullstack Dev | 2026-10-24 | - | [CAT-002](features/catalog/CAT-002-quan-ly-san-pham-bien-the-anh.md) |
+| `CAT-002` | Quản lý sản phẩm, biến thể (Size/Màu) & ảnh | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [CAT-002](features/catalog/CAT-002-quan-ly-san-pham-bien-the-anh.md) |
 | `CAT-003` | Quản lý món đồ thực tế & trạng thái vòng đời | CRM, SERVER | P0 | 📝 SPEC | Backend Lead | - | - | [CAT-003](features/catalog/CAT-003-quan-ly-mon-do-thuc-te-trang-thai.md) |
 | `CAT-004` | Quản lý gói combo (váy + máy ảnh) | CRM, SERVER | P1 | ⬜ TODO | - | - | - | - |
 | `CAT-005` | Danh sách sản phẩm & bộ lọc đa chiều Client | CLIENT, SERVER | P0 | 📝 SPEC | Frontend Lead | - | - | [CAT-005](features/catalog/CAT-005-hien-thi-san-pham-bo-loc-client.md) |

@@ -8,6 +8,7 @@ import { LoginPage } from "./pages/auth/LoginPage";
 import { ForbiddenPage } from "./pages/ForbiddenPage";
 import { DashboardHome } from "./pages/DashboardHome";
 import { CategoriesPage } from "./pages/categories/CategoriesPage";
+import { ProductsPage } from "./pages/products/ProductsPage";
 import { MainDashboardLayout } from "./layouts/MainDashboardLayout";
 import { DevComponentsPage } from "./pages/DevComponentsPage";
 import "./i18n";
@@ -30,7 +31,7 @@ export const App: React.FC = () => {
             <Route element={<MainDashboardLayout />}>
               <Route path="/" element={<DashboardHome />} />
               <Route path="/orders" element={<DashboardHome />} />
-              <Route path="/products" element={<DashboardHome />} />
+              <Route path="/products" element={<ProductsPage />} />
               <Route path="/customers" element={<DashboardHome />} />
 
               {/* Tuyến đường chỉ dành riêng cho Admin (AUTH-002, CAT-001) */}

@@ -1,0 +1,232 @@
+import React from "react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ProductsPage } from "./ProductsPage";
+import { productService } from "../../services/product.service";
+import { categoryService } from "../../services/category.service";
+import {
+  PageResult,
+  ProductDetailResponse,
+  ProductListResponse,
+} from "../../types/product";
+import { Category } from "../../types/category";
+import "../../i18n";
+
+vi.mock("../../services/product.service", () => ({
+  productService: {
+    getProducts: vi.fn(),
+    getProductById: vi.fn(),
+    createProduct: vi.fn(),
+    updateProduct: vi.fn(),
+    deleteProduct: vi.fn(),
+  },
+}));
+
+vi.mock("../../services/category.service", () => ({
+  categoryService: {
+    getAllCategories: vi.fn(),
+  },
+}));
+
+const renderWithProviders = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+    },
+  });
+  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+};
+
+describe("ProductsPage", () => {
+  const mockCategories: Category[] = [
+    {
+      id: 1,
+      name: "Váy Dạ Hội",
+      slug: "vay-da-hoi",
+      displayOrder: 1,
+      isActive: true,
+      createdAt: "2026-10-24T10:00:00Z",
+      updatedAt: "2026-10-24T10:00:00Z",
+    },
+  ];
+
+  const mockProductList: ProductListResponse = {
+    id: 1,
+    categoryId: 1,
+    categoryName: "Váy Dạ Hội",
+    productCode: "PRD-LUA-01",
+    name: "Váy Lụa Trắng Cổ Yếm",
+    slug: "vay-lua-trang-co-yem",
+    rentalPrice: 350000,
+    depositPrice: 500000,
+    status: "ACTIVE",
+    variantCount: 1,
+    thumbnailUrl: "https://example.com/thumb.jpg",
+    createdAt: "2026-10-24T10:00:00Z",
+  };
+
+  const mockPageResult: PageResult<ProductListResponse> = {
+    content: [mockProductList],
+    totalElements: 1,
+    totalPages: 1,
+    size: 20,
+    number: 0,
+    first: true,
+    last: true,
+    empty: false,
+  };
+
+  const mockProductDetail: ProductDetailResponse = {
+    id: 1,
+    categoryId: 1,
+    categoryName: "Váy Dạ Hội",
+    productCode: "PRD-LUA-01",
+    name: "Váy Lụa Trắng Cổ Yếm",
+    slug: "vay-lua-trang-co-yem",
+    description: "Váy lụa mềm mại",
+    material: "Lụa tơ tằm",
+    occasion: "Dự tiệc",
+    rentalPrice: 350000,
+    depositPrice: 500000,
+    status: "ACTIVE",
+    variants: [{ id: 10, size: "S", color: "Trắng", sku: "PRD-LUA-01-S-TRAN" }],
+    images: [{ id: 100, imageUrl: "https://example.com/thumb.jpg", isThumbnail: true }],
+    createdAt: "2026-10-24T10:00:00Z",
+    updatedAt: "2026-10-24T10:00:00Z",
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(categoryService.getAllCategories).mockResolvedValue(mockCategories);
+    vi.mocked(productService.getProducts).mockResolvedValue(mockPageResult);
+    vi.mocked(productService.getProductById).mockResolvedValue(mockProductDetail);
+    vi.mocked(productService.createProduct).mockResolvedValue(mockProductDetail);
+    vi.mocked(productService.updateProduct).mockResolvedValue(mockProductDetail);
+    vi.mocked(productService.deleteProduct).mockResolvedValue();
+  });
+
+  it("renders page header and product row in table", async () => {
+    renderWithProviders(<ProductsPage />);
+
+    expect(screen.getByRole("heading", { name: "Quản Lý Sản Phẩm" })).toBeInTheDocument();
+    expect(screen.getByText("Thêm sản phẩm")).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByText("Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
+      expect(screen.getByText("PRD-LUA-01")).toBeInTheDocument();
+    });
+  });
+
+  it("opens add modal and creates new product successfully", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<ProductsPage />);
+
+    await user.click(screen.getByText("Thêm sản phẩm"));
+
+    // Modal opens
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText("Ví dụ: Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
+    });
+
+    // Enter name
+    await user.type(
+      screen.getByPlaceholderText("Ví dụ: Váy Lụa Trắng Cổ Yếm"),
+      "Váy Thiết Kế Đỏ"
+    );
+
+    // Switch to pricing tab
+    await user.click(screen.getByText("Giá & Trạng thái"));
+    await user.type(screen.getByPlaceholderText("350000"), "400000");
+    await user.type(screen.getByPlaceholderText("500000"), "600000");
+
+    // Switch to images tab & add image
+    await user.click(screen.getByText(/Thư viện ảnh/));
+    await user.type(
+      screen.getByPlaceholderText("https://example.com/image.jpg"),
+      "https://example.com/dress.jpg"
+    );
+    await user.click(screen.getByText("Thêm ảnh"));
+
+    // Submit form
+    await user.click(screen.getByText("Lưu thay đổi"));
+
+    await waitFor(() => {
+      expect(productService.createProduct).toHaveBeenCalled();
+    });
+  });
+
+  it("opens view modal when click on view action", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<ProductsPage />);
+
+    await waitFor(
+      () => {
+        expect(screen.getByText("Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+
+    const viewButtons = screen.getAllByLabelText("Xem chi tiết");
+    await user.click(viewButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Chi tiết sản phẩm")).toBeInTheDocument();
+      expect(screen.getByText("PRD-LUA-01-S-TRAN")).toBeInTheDocument();
+    });
+  });
+
+  it("opens edit modal, updates product", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<ProductsPage />);
+
+    await waitFor(
+      () => {
+        expect(screen.getByText("Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+
+    const editButtons = screen.getAllByLabelText("Chỉnh sửa");
+    await user.click(editButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Chỉnh sửa sản phẩm")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText("Lưu thay đổi"));
+
+    await waitFor(() => {
+      expect(productService.updateProduct).toHaveBeenCalled();
+    });
+  });
+
+  it("opens confirm delete modal and deletes product", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<ProductsPage />);
+
+    await waitFor(
+      () => {
+        expect(screen.getByText("Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+
+    const deleteButtons = screen.getAllByLabelText("Xóa");
+    await user.click(deleteButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Xác nhận xóa sản phẩm")).toBeInTheDocument();
+    });
+
+    // Query delete button specifically inside dialog
+    const dialog = screen.getByRole("dialog");
+    const modalDeleteBtn = within(dialog).getByRole("button", { name: "Xóa" });
+    await user.click(modalDeleteBtn);
+
+    await waitFor(() => {
+      expect(productService.deleteProduct).toHaveBeenCalledWith(1);
+    });
+  });
+});

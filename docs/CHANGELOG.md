@@ -7,7 +7,25 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
-- **Triển Khai Backend Tính Năng Quản Lý Sản Phẩm, Biến Thể & Thư Viện Ảnh (CAT-002 - 🚧 IN_PROGRESS: BE DONE)**:
+- **Triển Khai Hoàn Thiện Tính Năng Quản Lý Sản Phẩm, Biến Thể & Thư Viện Ảnh (CAT-002 - ✅ DONE)**:
+  - **CRM Frontend (`crm/`)**:
+    - **Types & Service API**:
+      - `ProductListResponse`, `ProductDetailResponse`, `CreateProductInput`, `UpdateProductInput`, `ProductStatus`, `PageResult` trong [src/types/product.ts](file:///e:/chickie-studio/crm/src/types/product.ts).
+      - `productService` trong [src/services/product.service.ts](file:///e:/chickie-studio/crm/src/services/product.service.ts) tích hợp đầy đủ: `getProducts` (hỗ trợ phân trang, tìm kiếm, lọc theo categoryId và status), `getProductById`, `createProduct`, `updateProduct`, `deleteProduct`.
+    - **TanStack Query Keys & Hooks**:
+      - `productKeys` factory và custom hooks (`useProductsQuery`, `useProductDetailQuery`, `useCreateProductMutation`, `useUpdateProductMutation`, `useDeleteProductMutation`) trong [src/hooks/queries/productKeys.ts](file:///e:/chickie-studio/crm/src/hooks/queries/productKeys.ts) với cơ chế tự động invalidate queries sau mutation.
+    - **Giao diện Quản Lý Sản Phẩm (BEM SCSS & shadcn/ui)**:
+      - `ProductsPage.tsx`: Header, thống kê tóm tắt, bộ lọc đa năng `FilterBar` (search keyword, category select, status select), bảng dữ liệu `DataTable` phân trang server-side, action buttons (xem, sửa, xóa với xác nhận an toàn).
+      - `ProductModal.tsx`: Modal tạo/sửa sản phẩm chia 4 Tabs trực quan: Thông tin cơ bản, Giá & Trạng thái, Biến thể Size/Màu linh hoạt (thêm/xóa biến thể động), Thư viện hình ảnh (hỗ trợ đặt ảnh đại diện thumbnail).
+      - `ProductViewModal.tsx`: Modal xem chi tiết sản phẩm với thông tin sản phẩm, danh sách biến thể và gallery ảnh thumbnail.
+      - SCSS module BEM chuẩn hoá: [ProductsPage.module.scss](file:///e:/chickie-studio/crm/src/pages/products/ProductsPage.module.scss), [ProductModal.module.scss](file:///e:/chickie-studio/crm/src/pages/products/components/ProductModal/ProductModal.module.scss), [ProductViewModal.module.scss](file:///e:/chickie-studio/crm/src/pages/products/components/ProductViewModal/ProductViewModal.module.scss) (tuyệt đối không inline CSS).
+    - **Đa ngôn ngữ (i18n)**:
+      - Bổ sung namespace `product` đầy đủ trong cả [vi.json](file:///e:/chickie-studio/crm/src/i18n/locales/vi.json) và [en.json](file:///e:/chickie-studio/crm/src/i18n/locales/en.json).
+    - **Routing & Fixes**:
+      - Đăng ký route `/products` trong [src/App.tsx](file:///e:/chickie-studio/crm/src/App.tsx).
+      - Khắc phục triệt để warning controlled/uncontrolled trong [Select.tsx](file:///e:/chickie-studio/crm/src/components/ui/Select/Select.tsx).
+    - **Kiểm thử tự động CRM**:
+      - 11 unit & integration tests ([product.service.test.ts](file:///e:/chickie-studio/crm/src/services/product.service.test.ts), [productKeys.test.ts](file:///e:/chickie-studio/crm/src/hooks/queries/productKeys.test.ts), [ProductsPage.test.tsx](file:///e:/chickie-studio/crm/src/pages/products/ProductsPage.test.tsx)). Toàn bộ CRM đạt **41 test files, 165 tests pass 100%**, coverage đạt ngưỡng quy định $\ge 80\%$.
   - **Flyway Migration `V5__create_products_and_variants.sql`**:
     - Tạo bảng `products` (mã sản phẩm duy nhất, slug, giá thuê, tiền cọc, chất liệu, dịp, liên kết category).
     - Tạo bảng `product_variants` (kích cỡ, màu sắc, mã SKU duy nhất, ràng buộc foreign key cascade).

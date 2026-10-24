@@ -83,7 +83,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             required={required}
             disabled={disabled}
             value={value}
-            defaultValue={defaultValue ?? (placeholder ? "" : undefined)}
+            defaultValue={value !== undefined ? undefined : (defaultValue ?? (placeholder ? "" : undefined))}
             onChange={handleChange}
             aria-invalid={hasError}
             aria-describedby={describedBy}
