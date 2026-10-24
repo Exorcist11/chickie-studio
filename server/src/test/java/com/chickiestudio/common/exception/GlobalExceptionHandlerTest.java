@@ -91,6 +91,16 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("handleMaxUploadSizeExceeded_shouldReturn400")
+    void handleMaxUploadSizeExceeded_shouldReturn400() {
+        org.springframework.web.multipart.MaxUploadSizeExceededException ex =
+                new org.springframework.web.multipart.MaxUploadSizeExceededException(10485760L);
+        ResponseEntity<ApiResponse<Void>> response = handler.handleMaxUploadSizeExceeded(ex);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(400, response.getBody().code());
+    }
+
+    @Test
     @DisplayName("handleGenericException_shouldReturn500")
     void handleGenericException_shouldReturn500() {
         ResponseEntity<ApiResponse<Void>> response = handler.handleGenericException(new RuntimeException("Crash"));
