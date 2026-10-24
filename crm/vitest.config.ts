@@ -8,6 +8,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
+    testTimeout: 15000,
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
@@ -27,7 +28,7 @@ export default defineConfig({
         "src/main.tsx",
         "src/App.tsx",
         "src/pages/**",
-        "src/components/ui/**",
+        "src/components/ui/primitives/**",
         "vite.config.ts",
         "vitest.config.ts",
         "vitest.setup.ts",

@@ -19,8 +19,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@chickie/ui": ["../packages/ui/src/index.ts"],
-      "@chickie/ui/*": ["../packages/ui/src/*"]
+      "@chickie/ui": ["./src/components/ui"],
+      "@chickie/ui/*": ["./src/components/ui/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

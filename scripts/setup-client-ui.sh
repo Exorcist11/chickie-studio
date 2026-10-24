@@ -67,23 +67,22 @@ npm install -D \
   prettier-plugin-tailwindcss \
   eslint-config-prettier
 
-# 5. Liên kết gói UI dùng chung @chickie/ui
+# 5. Cấu hình thư viện UI nội bộ
 echo ""
-echo "⚙️ [3/5] Cấu hình workspace và liên kết package @chickie/ui..."
-echo "Kiến trúc 4 lớp: shadcn primitives được quản lý tập trung tại packages/ui/src/primitives."
-echo "Client import các component base, form, common qua package '@chickie/ui'."
-echo "Cấu hình transpilePackages và Tailwind @source đã sẵn sàng."
+echo "⚙️ [3/5] Cấu hình thư viện UI nội bộ tại src/components/ui..."
+echo "Kiến trúc bọc shadcn: primitives nằm tại src/components/ui/primitives."
+echo "Client import các component qua '@/components/ui'."
 
 # 6. Đồng bộ Design Tokens và Áp dụng Theme
 echo ""
 echo "🎨 [4/5] Áp dụng Chickie Design Tokens (Burgundy & Gold)..."
 npm run theme:apply
 
-# 7. Danh sách Component theo Kiến trúc 4 Lớp
+# 7. Danh sách Component theo Kiến trúc Bọc shadcn
 echo ""
 echo "🧩 [5/5] Kiểm tra danh mục component UI dùng chung..."
 echo "Kiến trúc bọc shadcn (ADR 0002):"
-echo "- Lớp 1 (primitives): Quản lý tại packages/ui/src/primitives (không export ra ngoài)."
+echo "- Lớp 1 (primitives): Quản lý tại src/components/ui/primitives."
 echo "- Lớp 2 (base): Button, TextField, Select, Modal, ConfirmModal, Drawer, Menu, Card, Badge..."
 echo "- Lớp 2b (form): FormTextField, FormSelect, FormDatePicker..."
 echo "- Lớp 3 (common): ProductCard, ServiceCard, TestimonialCard, SectionHeading, Header, Footer..."

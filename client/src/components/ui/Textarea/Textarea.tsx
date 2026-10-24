@@ -1,70 +1,129 @@
 import * as React from "react";
+import { Textarea as TextareaPrimitive } from "../primitives/textarea";
+import { Label as LabelPrimitive } from "../primitives/label";
 import { cn } from "@/lib/cn";
 
-export interface TextareaProps
+export interface TextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  /** Nhãn hiển thị cho vùng nhập văn bản */
   label?: string;
-  helperText?: string;
+  /** Văn bản gợi ý / hướng dẫn */
+  hint?: string;
+  /** Thông báo lỗi hiển thị */
   error?: string;
+  /** Bật hiển thị bộ đếm ký tự */
+  showCount?: boolean;
 }
 
-export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {
-      className,
-      label,
-      helperText,
-      error,
       id,
+      label,
+      hint,
+      error,
+      required,
       disabled,
+      className,
+      showCount,
+      maxLength,
+      value,
+      defaultValue,
+      onChange,
       rows = 3,
-      ...props
+      ...rest
     },
     ref
   ) => {
-    const generatedId = React.useId();
-    const textareaId = id || generatedId;
-    const helperId = `${textareaId}-helper`;
-    const errorId = `${textareaId}-error`;
+    const autoId = React.useId();
+    const textareaId = id ?? autoId;
     const hasError = Boolean(error);
+    const describedBy = hasError
+      ? `${textareaId}-error`
+      : hint
+        ? `${textareaId}-hint`
+        : undefined;
+
+    const [charCount, setCharCount] = React.useState<number>(() => {
+      if (typeof value === "string") return value.length;
+      if (typeof defaultValue === "string") return defaultValue.length;
+      return 0;
+    });
+
+    React.useEffect(() => {
+      if (typeof value === "string") {
+        setCharCount(value.length);
+      }
+    }, [value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setCharCount(e.target.value.length);
+      onChange?.(e);
+    };
 
     return (
       <div className="w-full flex flex-col gap-1.5 text-left">
-        {label && (
-          <label
-            htmlFor={textareaId}
-            className="text-sm font-medium text-ink select-none"
-          >
-            {label}
-            {props.required && <span className="text-danger ml-1" aria-hidden="true">*</span>}
-          </label>
-        )}
-        <textarea
+        <div className="flex items-center justify-between">
+          {label && (
+            <LabelPrimitive htmlFor={textareaId} className="cursor-pointer">
+              {label}
+              {required && (
+                <span aria-hidden="true" className="text-destructive ml-1">
+                  *
+                </span>
+              )}
+            </LabelPrimitive>
+          )}
+
+          {showCount && (
+            <span
+              className="text-xs text-muted-foreground ml-auto select-none"
+              aria-live="polite"
+              data-testid="textarea-count"
+            >
+              {charCount}
+              {maxLength ? `/${maxLength}` : ""}
+            </span>
+          )}
+        </div>
+
+        <TextareaPrimitive
           ref={ref}
           id={textareaId}
           rows={rows}
+          value={value}
+          defaultValue={defaultValue}
+          required={required}
           disabled={disabled}
+          maxLength={maxLength}
+          onChange={handleChange}
           aria-invalid={hasError}
-          aria-describedby={
-            hasError ? errorId : helperText ? helperId : undefined
-          }
+          aria-describedby={describedBy}
           className={cn(
-            "w-full px-3.5 py-2.5 rounded-btn bg-warm-white text-ink text-base md:text-sm",
-            "border border-line placeholder:text-ink-muted/60 transition-colors resize-y",
-            "focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/20",
-            "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-ivory/50",
-            hasError && "border-danger focus:border-danger focus:ring-danger/20 text-danger",
+            "min-h-[88px] px-3.5 py-2.5 rounded-btn bg-background text-foreground text-sm",
+            "border border-input placeholder:text-muted-foreground transition-colors resize-y",
+            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            hasError && "border-destructive focus-visible:ring-destructive",
             className
           )}
-          {...props}
+          {...rest}
         />
+
         {hasError ? (
-          <p id={errorId} className="text-xs text-danger font-medium mt-0.5">
+          <p
+            id={`${textareaId}-error`}
+            role="alert"
+            className="text-xs font-medium text-destructive mt-0.5"
+          >
             {error}
           </p>
-        ) : helperText ? (
-          <p id={helperId} className="text-xs text-ink-muted mt-0.5">
-            {helperText}
+        ) : hint ? (
+          <p
+            id={`${textareaId}-hint`}
+            className="text-xs text-muted-foreground mt-0.5"
+          >
+            {hint}
           </p>
         ) : null}
       </div>
@@ -72,4 +131,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   }
 );
 
-Textarea.displayName = "Textarea";
+TextArea.displayName = "TextArea";
+
+export const Textarea = TextArea;
+export type TextareaProps = TextAreaProps;

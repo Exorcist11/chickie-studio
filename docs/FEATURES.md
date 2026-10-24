@@ -55,11 +55,11 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 ## 4. Chi Tiết Tính Năng Theo Module
 
-### 4.0. Module UI (Kiến Trúc Component & Package @chickie/ui)
+### 4.0. Module UI (Bộ Component UI Chuẩn Hóa Trực Tiếp Trong Client & CRM)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec / docs |
 |---|---|---|---|---|---|---|---|---|
-| `UI-000` | UI-0: Nền tảng Monorepo Workspace, package `@chickie/ui`, primitives & base Button, ESLint boundary rules | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect | 2026-10-24 | 2026-10-24 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [ADR 0002](adr/0002-kien-truc-component-boc-shadcn-package-ui.md) |
-| `UI-001` | UI-1: Nhập liệu cơ bản (Button, TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Badge, Card, Spinner, Skeleton) | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect | 2026-10-24 | 2026-10-24 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
+| `UI-000` | UI-0: Nền tảng UI, primitives shadcn/ui bọc chuẩn, cấu hình alias nội bộ trong client & crm | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect | 2026-10-24 | 2026-10-24 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
+| `UI-001` | UI-1: Nhập liệu cơ bản (Button, TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Badge, Card, Spinner, Skeleton) tích hợp nội bộ client & crm | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect | 2026-10-24 | 2026-10-24 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
 | `UI-002` | UI-2: Lớp phủ (Modal, ConfirmModal, Drawer, Menu, Popover, Tooltip, notify) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
 | `UI-003` | UI-3: Ngày và form (DatePicker, DateRangePicker, bộ Form*, CurrencyField, PhoneField, ChipGroup, SizeSelector, ColorSwatchGroup) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
 | `UI-004` | UI-4: Hiển thị dữ liệu (Tabs, Accordion, Pagination, Breadcrumbs, EmptyState, ErrorState, Gallery, DataTable) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |

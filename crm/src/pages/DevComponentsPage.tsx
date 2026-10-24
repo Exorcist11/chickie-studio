@@ -47,7 +47,7 @@ import {
   CardFooter as ChickieCardFooter,
   Spinner as ChickieSpinner,
   Skeleton as ChickieSkeleton,
-} from "@chickie/ui";
+} from "../components/ui";
 
 interface SampleOrderRecord extends Record<string, unknown> {
   id: string;

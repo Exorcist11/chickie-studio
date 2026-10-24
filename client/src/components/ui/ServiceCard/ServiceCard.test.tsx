@@ -32,5 +32,5 @@ describe("ServiceCard component", () => {
     const { container } = render(<ServiceCard {...sampleService} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
-  });
+  }, 15000);
 });

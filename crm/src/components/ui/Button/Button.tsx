@@ -22,6 +22,7 @@ export const buttonVariants = cva(
       },
       size: {
         default: "min-h-[40px] px-4 py-2 text-sm",
+        md: "min-h-[40px] px-4 py-2 text-sm",
         sm: "min-h-[32px] px-3 py-1 text-xs",
         lg: "min-h-[48px] px-6 py-2.5 text-base",
         icon: "h-9 w-9 p-0",
@@ -39,6 +40,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   href?: string;
   isLoading?: boolean;
+  loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -51,6 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       href,
       isLoading = false,
+      loading,
       disabled,
       children,
       leftIcon,
@@ -59,7 +62,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const isDisabled = disabled || isLoading;
+    const isBusy = Boolean(isLoading || loading);
+    const isDisabled = disabled || isBusy;
 
     const content = (
       <>

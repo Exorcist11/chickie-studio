@@ -32,6 +32,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   href?: string;
   isLoading?: boolean;
+  loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -44,6 +45,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       href,
       isLoading = false,
+      loading,
       disabled,
       children,
       leftIcon,
@@ -52,11 +54,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const isDisabled = disabled || isLoading;
+    const isBusy = Boolean(isLoading || loading);
+    const isDisabled = disabled || isBusy;
 
     const content = (
       <>
-        {isLoading && (
+        {isBusy && (
           <svg
             className="animate-spin -ml-1 mr-2 h-4 w-4 text-current"
             xmlns="http://www.w3.org/2000/svg"
@@ -80,13 +83,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </svg>
         )}
-        {!isLoading && leftIcon && (
+        {!isBusy && leftIcon && (
           <span className="mr-2 inline-flex" aria-hidden="true">
             {leftIcon}
           </span>
         )}
         <span>{children}</span>
-        {!isLoading && rightIcon && (
+        {!isBusy && rightIcon && (
           <span className="ml-2 inline-flex" aria-hidden="true">
             {rightIcon}
           </span>

@@ -52,7 +52,7 @@ import {
   CardFooter as ChickieCardFooter,
   Spinner as ChickieSpinner,
   Skeleton as ChickieSkeleton,
-} from "@chickie/ui";
+} from "@/components/ui";
 
 export default function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") {

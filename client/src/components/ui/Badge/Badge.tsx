@@ -55,10 +55,28 @@ export const defaultStatusLabels: Record<OrderStatus, string> = {
   OVERDUE: "Quá hạn trả",
 };
 
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
-  status: OrderStatus;
+export type BadgeVariant =
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "success"
+  | "warning"
+  | "destructive"
+  | "outline";
+
+const variantStyles: Record<BadgeVariant, string> = {
+  primary: "bg-burgundy text-warm-white border-transparent",
+  secondary: "bg-ivory text-ink border-line",
+  accent: "bg-gold text-ink font-semibold border-transparent",
+  success: "bg-success/15 text-success border-success/30",
+  warning: "bg-warning/15 text-warning border-warning/30",
+  destructive: "bg-danger/15 text-danger border-danger/30",
+  outline: "bg-transparent text-ink border-line",
+};
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  status?: OrderStatus;
+  variant?: BadgeVariant;
   label?: string;
   showDot?: boolean;
 }
@@ -66,19 +84,30 @@ export interface BadgeProps
 export const Badge: React.FC<BadgeProps> = ({
   className,
   status,
+  variant,
   label,
-  showDot = true,
+  showDot,
   children,
   ...props
 }) => {
-  const text = children || label || defaultStatusLabels[status] || status;
+  const isStatus = Boolean(status);
+  const shouldShowDot = showDot ?? isStatus;
+  const text =
+    children ||
+    label ||
+    (status ? defaultStatusLabels[status] || status : undefined);
 
   return (
     <span
-      className={cn(badgeVariants({ status }), className)}
+      className={cn(
+        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-tag text-xs font-medium border select-none",
+        status && badgeVariants({ status }),
+        variant && variantStyles[variant],
+        className
+      )}
       {...props}
     >
-      {showDot && (
+      {shouldShowDot && status && (
         <span
           className={cn("w-1.5 h-1.5 rounded-full inline-block", dotColors[status])}
           aria-hidden="true"

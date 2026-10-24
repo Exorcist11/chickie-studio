@@ -11,10 +11,9 @@
               "@radix-ui/*",
               "radix-ui",
               "antd",
-              "@ant-design/*",
-              "@chickie/ui/src/*"
+              "@ant-design/*"
             ],
-            "message": "Chỉ import component từ \"@chickie/ui\". Cần component mới thì thêm vào lớp base."
+            "message": "Chỉ import component dùng chung từ \"@/components/ui\". Không import trực tiếp từ primitives bên ngoài."
           }
         ]
       }

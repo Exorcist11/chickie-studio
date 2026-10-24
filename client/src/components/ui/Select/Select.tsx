@@ -11,6 +11,7 @@ export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   helperText?: string;
+  hint?: string;
   error?: string;
   options?: SelectOption[];
 }
@@ -21,6 +22,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       className,
       label,
       helperText,
+      hint,
       error,
       options,
       children,
@@ -32,6 +34,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ) => {
     const generatedId = React.useId();
     const selectId = id || generatedId;
+    const effectiveHelper = hint || helperText;
     const helperId = `${selectId}-helper`;
     const errorId = `${selectId}-error`;
     const hasError = Boolean(error);
@@ -54,7 +57,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             disabled={disabled}
             aria-invalid={hasError}
             aria-describedby={
-              hasError ? errorId : helperText ? helperId : undefined
+              hasError ? errorId : effectiveHelper ? helperId : undefined
             }
             className={cn(
               "w-full min-h-[44px] px-3.5 py-2.5 pr-10 rounded-btn bg-warm-white text-ink text-base md:text-sm appearance-none",
@@ -98,9 +101,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <p id={errorId} className="text-xs text-danger font-medium mt-0.5">
             {error}
           </p>
-        ) : helperText ? (
+        ) : effectiveHelper ? (
           <p id={helperId} className="text-xs text-ink-muted mt-0.5">
-            {helperText}
+            {effectiveHelper}
           </p>
         ) : null}
       </div>

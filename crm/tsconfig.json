@@ -18,8 +18,8 @@
     "types": ["vite/client", "vitest/globals"],
     "paths": {
       "@/*": ["./src/*"],
-      "@chickie/ui": ["../packages/ui/src/index.ts"],
-      "@chickie/ui/*": ["../packages/ui/src/*"]
+      "@chickie/ui": ["./src/components/ui"],
+      "@chickie/ui/*": ["./src/components/ui/*"]
     }
   },
   "include": ["src", "vitest.setup.ts"],

@@ -7,29 +7,17 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
-- **Basic Input Components in Package @chickie/ui (UI-001 - ✅ DONE)**:
-  - **Triển khai 10 Primitives chuẩn shadcn/ui trong `packages/ui/src/primitives/`**:
-    - `input.tsx`, `label.tsx`, `textarea.tsx`, `select.tsx`, `checkbox.tsx`, `radio-group.tsx`, `switch.tsx`, `badge.tsx`, `card.tsx`, `skeleton.tsx`.
-    - Primitives hoàn toàn tự đóng gói, cô lập không export ra ngoài package (`exports: { ".": ... }`).
-  - **Triển khai toàn bộ Base Components trong `packages/ui/src/base/`**:
-    - `TextField`, `PasswordField` (toggle mắt ẩn/hiện có aria-label), `SearchField` (icon kính lúp + nút xóa `onClear`).
-    - `TextArea` (tự động đếm ký tự `maxLength` & `showCount`, label, hint, error alert).
-    - `Select` (custom chevron icon, options dropdown, accessible label và error).
-    - `Checkbox` (custom SVG indicator, label nối aria, aria-invalid, accessible focus ring).
-    - `RadioGroup` (hỗ trợ layout `vertical` | `horizontal`, radio card option có hint, keyboard navigation).
-    - `Switch` (chuẩn WAI-ARIA role="switch", aria-checked, animation trượt mượt mà, labelPosition left/right).
-    - `Badge` (7 biến thể ngữ nghĩa: `primary`, `secondary`, `accent`, `success`, `warning`, `destructive`, `outline`, size `sm` & `md`).
-    - `Card` (Compound Card: `Card`, `CardHeader`, `CardTitle` hỗ trợ prop `as` h1-h6, `CardDescription`, `CardContent`, `CardFooter`, biến thể `default`, `elevated`, `outline`, `ghost` và hover tương tác `interactive`).
-    - `Spinner` (vòng xoay SVG với `role="status"`, label ẩn cho trình đọc màn hình sr-only, sizes `xs` đến `xl`, 4 biến thể màu).
-    - `Skeleton` (hiệu ứng pulse WAI-ARIA role="status", presets hình dạng `text`, `circular`, `rectangular`, `card`, 0 inline styles).
+- **Chuyển Toàn Bộ UI Package Trực Tiếp Vào Client và CRM (UI-001 - ✅ DONE)**:
+  - **Tích hợp bộ component UI và primitives trực tiếp vào `client/src/components/ui/` và `crm/src/components/ui/`**:
+    - Primitives: `input.tsx`, `label.tsx`, `textarea.tsx`, `select.tsx`, `checkbox.tsx`, `radio-group.tsx`, `switch.tsx`, `badge.tsx`, `card.tsx`, `skeleton.tsx`, `button.tsx`.
+    - Base Components: `Button`, `TextField`, `PasswordField`, `SearchField`, `TextArea` (hoặc `Textarea`), `Select`, `Checkbox`, `RadioGroup`, `Switch`, `Badge`, `Card`, `Spinner`, `Skeleton`.
+  - **Dọn dẹp triệt để thư mục gốc (Root Cleanup)**:
+    - Xóa hoàn toàn thư mục `packages/ui` và các file `package.json`, `package-lock.json`, `node_modules` ở thư mục gốc monorepo.
+    - Cấu hình path alias `@chickie/ui` và `@chickie/ui/*` trỏ về `./src/components/ui` trong từng project (`tsconfig.json`, `vite.config.ts`), đảm bảo import đồng bộ mà không cần package ngoài.
   - **Kiểm thử tự động & Accessibility (WAI-ARIA)**:
-    - 11 test suites với 78 unit & a11y tests pass 100%.
-    - `vitest-axe` kiểm thử 0 vi phạm a11y trên toàn bộ 10 components.
-    - Độ bao phủ kiểm thử `@chickie/ui` đạt **99.94%** statements, **97.91%** branches, **100%** functions, **99.94%** lines.
-  - **Tích hợp & Trưng bày Showcase Dev**:
-    - Cập nhật trang `/dev/components` ở cả Client (Next.js) và CRM (Vite) hiển thị tương tác đầy đủ toàn bộ bộ nhập liệu và thẻ UI-1.
-    - Cập nhật catalog `docs/COMPONENTS.md` và tiến độ `docs/FEATURES.md`.
-    - Toàn bộ 245 tests pass trên toàn bộ monorepo workspaces, lint pass 0 errors, build production Next.js và Vite 100% thành công.
+    - Client: 31 test files, 134 tests pass 100%, coverage đạt **97.44%** lines, **90.30%** branches, 0 lỗi a11y (`vitest-axe`).
+    - CRM: 34 test files, 133 tests pass 100%, coverage đạt **96.58%** lines, **91.11%** branches, 0 lỗi a11y (`vitest-axe`).
+    - Lint và build production ở cả Client (Next.js) và CRM (Vite) thành công 100% với 0 errors.
 
 - **Component Architecture & Monorepo Package @chickie/ui (UI-000 - ✅ DONE)**:
   - **Khởi tạo kiến trúc 4 lớp (4-Tier Layered Architecture)**:

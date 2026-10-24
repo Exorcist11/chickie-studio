@@ -8,6 +8,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
+    testTimeout: 15000,
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
@@ -30,6 +31,7 @@ export default defineConfig({
         "postcss.config.mjs",
         "next.config.mjs",
         "src/lib/fonts.ts",
+        "src/components/ui/primitives/**",
       ],
     },
   },

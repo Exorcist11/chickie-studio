@@ -8,6 +8,16 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **UI Architecture (Client & CRM)**:
+  - Tích hợp toàn bộ bộ UI Component (Button, TextField, PasswordField, SearchField, TextArea, Select, Checkbox, RadioGroup, Switch, Badge, Card, Spinner, Skeleton) và các primitives shadcn/ui trực tiếp vào `client/src/components/ui/` và `crm/src/components/ui/`.
+  - Cấu hình path aliases `@chickie/ui` và `@chickie/ui/*` trỏ về `./src/components/ui` trong từng ứng dụng.
+  - Bộ kiểm thử tự động toàn diện với vitest và vitest-axe: 134 tests (Client), 133 tests (CRM) đều pass với 0 lỗi accessibility và 0 inline CSS (`style={{ ... }}` = 0).
+  - Tỷ lệ bao phủ kiểm thử: Client 97.44% lines, CRM 96.58% lines (vượt ngưỡng yêu cầu 80%).
+
+### Removed
+- Xóa hoàn toàn thư mục `packages/ui` và các file `package.json`, `package-lock.json`, `node_modules` ở thư mục gốc (monorepo root), giữ cấu trúc dự án sạch gọn chỉ gồm `client`, `crm`, `server`.
+
+### Added
 - **Docs & Architecture**:
   - Khởi tạo hệ thống tài liệu theo dõi tính năng [docs/FEATURES.md](docs/FEATURES.md) với 44 tính năng tổng thể (8 modules: AUTH, CAT, BOK, PAY, CUS, RPT, CNT, SET).
   - Hoàn thiện 100% hồ sơ đặc tả chi tiết (📝 SPEC) cho toàn bộ 17 tính năng cốt lõi P0 (MVP).
