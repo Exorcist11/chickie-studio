@@ -12,8 +12,10 @@ import {
   Footer,
 } from "@/components/ui";
 import { Sparkles, ArrowRight, ShieldCheck, CalendarCheck, Shirt, Camera } from "lucide-react";
+import { getPublicCategories } from "@/lib/api/category";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const categories = await getPublicCategories();
   const featuredProducts = [
     {
       id: "prod-1",
@@ -119,7 +121,39 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Categories / Services Grid */}
+      {/* Categories Grid */}
+      <Section className="bg-ivory/40 border-b border-line py-12">
+        <Container className="space-y-8">
+          <SectionHeading
+            title="Danh Mục Sản Phẩm"
+            description="Lựa chọn trang phục thiết kế và thiết bị máy ảnh theo nhu cầu"
+          />
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/products?category=${cat.slug}`}
+                className="group flex flex-col items-center text-center p-5 rounded-2xl bg-white border border-line shadow-xs hover:border-burgundy/40 hover:shadow-md transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-xl bg-ivory text-burgundy flex items-center justify-center mb-3 group-hover:bg-burgundy group-hover:text-warm-white transition-colors duration-300">
+                  <Shirt className="w-6 h-6" />
+                </div>
+                <h3 className="font-medium text-ink text-sm group-hover:text-burgundy transition-colors">
+                  {cat.name}
+                </h3>
+                {cat.description && (
+                  <p className="text-xs text-ink-muted line-clamp-1 mt-1">
+                    {cat.description}
+                  </p>
+                )}
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* Services Grid */}
       <Section className="bg-white border-b border-line">
         <Container className="space-y-10">
           <SectionHeading
