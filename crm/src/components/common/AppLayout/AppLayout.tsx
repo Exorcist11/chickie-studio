@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   ShoppingBag,
   Shirt,
+  Layers,
   Users,
   BarChart3,
   Settings,
@@ -39,6 +40,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const menuItems = [
     { key: "dashboard", icon: LayoutDashboard, label: t("menu.dashboard") },
     { key: "orders", icon: ShoppingBag, label: t("menu.orders") },
+    { key: "categories", icon: Layers, label: t("menu.categories") },
     { key: "products", icon: Shirt, label: t("menu.products") },
     { key: "customers", icon: Users, label: t("menu.customers") },
     { key: "reports", icon: BarChart3, label: t("menu.reports") },

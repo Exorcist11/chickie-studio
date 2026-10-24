@@ -90,7 +90,13 @@ class ApiClient {
       } catch {
         // Fallback to status text
       }
-      throw new Error(errorMessage);
+      const error = new Error(errorMessage) as Error & {
+        status?: number;
+        response?: { status: number; data: { message: string } };
+      };
+      error.status = response.status;
+      error.response = { status: response.status, data: { message: errorMessage } };
+      throw error;
     }
 
     return response.json();
@@ -106,6 +112,18 @@ class ApiClient {
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
     });
+  }
+
+  public put<T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "PUT",
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  public delete<T>(endpoint: string, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    return this.request<T>(endpoint, { ...options, method: "DELETE" });
   }
 }
 
