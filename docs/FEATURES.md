@@ -40,16 +40,16 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
-| **CAT** | Danh mục & Sản phẩm | 8 | 3 | 3 | 0 | 2 | 25.0% |
+| **CAT** | Danh mục & Sản phẩm | 8 | 3 | 2 | 0 | 3 | 37.5% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **12** | **0** | **7** | **14.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **11** | **0** | **8** | **16.0%** |
 
-*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 12 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-005 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -85,7 +85,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | `CAT-002` | Quản lý sản phẩm, biến thể (Size/Màu) & ảnh | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [CAT-002](features/catalog/CAT-002-quan-ly-san-pham-bien-the-anh.md) |
 | `CAT-003` | Quản lý món đồ thực tế & trạng thái vòng đời | CRM, SERVER | P0 | 📝 SPEC | Backend Lead | - | - | [CAT-003](features/catalog/CAT-003-quan-ly-mon-do-thuc-te-trang-thai.md) |
 | `CAT-004` | Quản lý gói combo (váy + máy ảnh) | CRM, SERVER | P1 | ⬜ TODO | - | - | - | - |
-| `CAT-005` | Danh sách sản phẩm & bộ lọc đa chiều Client | CLIENT, SERVER | P0 | 📝 SPEC | Frontend Lead | - | - | [CAT-005](features/catalog/CAT-005-hien-thi-san-pham-bo-loc-client.md) |
+| `CAT-005` | Danh sách sản phẩm & bộ lọc đa chiều Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [CAT-005](features/catalog/CAT-005-hien-thi-san-pham-bo-loc-client.md) |
 | `CAT-006` | Chi tiết sản phẩm & lịch trống (Availability) | CLIENT, SERVER | P0 | 📝 SPEC | Frontend Lead | - | - | [CAT-006](features/catalog/CAT-006-chi-tiet-san-pham-lich-trong-client.md) |
 | `CAT-007` | Gợi ý sản phẩm phụ kiện đi kèm | CLIENT | P1 | ⬜ TODO | - | - | - | - |
 | `CAT-008` | Hàng đợi giặt ủi và sửa chữa trang phục | CRM, SERVER | P1 | ⬜ TODO | - | - | - | - |

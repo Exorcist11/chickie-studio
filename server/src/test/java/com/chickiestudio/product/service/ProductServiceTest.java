@@ -376,6 +376,30 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Lấy danh sách sản phẩm theo CategoryType (COSTUME/CAMERA/PHOTOGRAPHY)")
+    void getProducts_withCategoryType_shouldCallRepository() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> page = new PageImpl<>(List.of(sampleProduct), pageable, 1);
+        ProductListResponse listResponse = ProductListResponse.builder()
+                .id(10L)
+                .name("Váy Lụa Trắng Cổ Yếm")
+                .slug("vay-lua-trang-co-yem")
+                .rentalPrice(new BigDecimal("350000.00"))
+                .depositPrice(new BigDecimal("500000.00"))
+                .status(ProductStatus.ACTIVE)
+                .build();
+
+        when(productRepository.searchProducts(null, com.chickiestudio.category.entity.CategoryType.CAMERA, ProductStatus.ACTIVE, null, pageable))
+                .thenReturn(page);
+        when(productMapper.toListResponse(sampleProduct)).thenReturn(listResponse);
+
+        Page<ProductListResponse> result = productService.getProducts(null, com.chickiestudio.category.entity.CategoryType.CAMERA, ProductStatus.ACTIVE, null, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
     @DisplayName("Xóa sản phẩm thành công")
     void deleteProduct_whenExists_shouldDelete() {
         when(productRepository.findById(10L)).thenReturn(Optional.of(sampleProduct));

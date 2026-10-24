@@ -5,11 +5,11 @@ import com.chickiestudio.user.entity.Role;
 import com.chickiestudio.user.entity.User;
 import com.chickiestudio.user.entity.UserStatus;
 import com.chickiestudio.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -28,8 +28,15 @@ class DataInitializerTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @InjectMocks
+    @Mock
+    private com.chickiestudio.product.repository.ProductRepository productRepository;
+
     private DataInitializer dataInitializer;
+
+    @BeforeEach
+    void setUp() {
+        dataInitializer = new DataInitializer(userRepository, categoryRepository, productRepository);
+    }
 
     @Test
     @DisplayName("run_whenUsersDoNotExist_shouldCreateAdminAndStaff")
@@ -37,6 +44,7 @@ class DataInitializerTest {
         when(userRepository.findByUsernameOrEmail("admin")).thenReturn(Optional.empty());
         when(userRepository.findByUsernameOrEmail("staff")).thenReturn(Optional.empty());
         when(categoryRepository.count()).thenReturn(5L);
+        when(productRepository.count()).thenReturn(10L);
 
         dataInitializer.run();
 
@@ -79,6 +87,7 @@ class DataInitializerTest {
         when(userRepository.findByUsernameOrEmail("admin")).thenReturn(Optional.of(legacyAdmin));
         when(userRepository.findByUsernameOrEmail("staff")).thenReturn(Optional.of(staff));
         when(categoryRepository.count()).thenReturn(5L);
+        when(productRepository.count()).thenReturn(10L);
 
         dataInitializer.run();
 
@@ -109,6 +118,7 @@ class DataInitializerTest {
         when(userRepository.findByUsernameOrEmail("admin")).thenReturn(Optional.of(customAdmin));
         when(userRepository.findByUsernameOrEmail("staff")).thenReturn(Optional.of(staff));
         when(categoryRepository.count()).thenReturn(5L);
+        when(productRepository.count()).thenReturn(10L);
 
         dataInitializer.run();
 
@@ -122,6 +132,7 @@ class DataInitializerTest {
         when(userRepository.findByUsernameOrEmail("admin")).thenReturn(Optional.empty());
         when(userRepository.findByUsernameOrEmail("staff")).thenReturn(Optional.empty());
         when(categoryRepository.count()).thenReturn(0L);
+        when(productRepository.count()).thenReturn(10L);
 
         dataInitializer.run();
 

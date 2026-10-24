@@ -3,6 +3,8 @@ package com.chickiestudio.category.entity;
 import com.chickiestudio.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,11 @@ public class Category extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 120)
     private String slug;
+
+    @Enumerated(jakarta.persistence.EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    @Builder.Default
+    private CategoryType type = CategoryType.COSTUME;
 
     @Column(columnDefinition = "TEXT")
     private String description;

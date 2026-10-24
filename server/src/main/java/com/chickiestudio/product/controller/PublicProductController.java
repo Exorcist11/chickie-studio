@@ -27,11 +27,13 @@ public class PublicProductController {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductListResponse>>> getActiveProducts(
             @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) com.chickiestudio.category.entity.CategoryType type,
             @RequestParam(required = false) String search,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<ProductListResponse> page = productService.getProductsForAdmin(
+        Page<ProductListResponse> page = productService.getProducts(
                 categoryId,
+                type,
                 ProductStatus.ACTIVE,
                 search,
                 pageable

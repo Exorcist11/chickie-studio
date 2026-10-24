@@ -31,6 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
         SELECT p FROM Product p
         JOIN FETCH p.category c
         WHERE (:categoryId IS NULL OR c.id = :categoryId)
+          AND (:categoryType IS NULL OR c.type = :categoryType)
           AND (:status IS NULL OR p.status = :status)
           AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))
                              OR LOWER(p.productCode) LIKE LOWER(CONCAT('%', :search, '%')))
@@ -38,14 +39,25 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
         countQuery = """
         SELECT COUNT(p) FROM Product p
         WHERE (:categoryId IS NULL OR p.category.id = :categoryId)
+          AND (:categoryType IS NULL OR p.category.type = :categoryType)
           AND (:status IS NULL OR p.status = :status)
           AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))
                              OR LOWER(p.productCode) LIKE LOWER(CONCAT('%', :search, '%')))
         """)
     Page<Product> searchProducts(
             @Param("categoryId") Long categoryId,
+            @Param("categoryType") com.chickiestudio.category.entity.CategoryType categoryType,
             @Param("status") ProductStatus status,
             @Param("search") String search,
             Pageable pageable
     );
+
+    default Page<Product> searchProducts(
+            Long categoryId,
+            ProductStatus status,
+            String search,
+            Pageable pageable
+    ) {
+        return searchProducts(categoryId, null, status, search, pageable);
+    }
 }

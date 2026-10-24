@@ -18,6 +18,14 @@ public interface ProductService {
 
     ProductDetailResponse getProductBySlug(String slug);
 
+    Page<ProductListResponse> getProducts(
+            Long categoryId,
+            com.chickiestudio.category.entity.CategoryType categoryType,
+            ProductStatus status,
+            String search,
+            Pageable pageable
+    );
+
     Page<ProductListResponse> getProductsForAdmin(
             Long categoryId,
             ProductStatus status,

@@ -202,10 +202,14 @@ class ProductControllerTest {
     @Test
     @DisplayName("Public API lấy danh sách sản phẩm không cần đăng nhập trả về 200")
     void getPublicProducts_unauthenticated_shouldReturn200() throws Exception {
-        when(productService.getProductsForAdmin(any(), any(), any(), any()))
+        when(productService.getProducts(any(), any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(List.of()));
 
         mockMvc.perform(get("/api/public/products"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(200));
+
+        mockMvc.perform(get("/api/public/products?type=CAMERA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200));
     }

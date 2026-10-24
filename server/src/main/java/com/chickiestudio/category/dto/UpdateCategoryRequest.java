@@ -14,8 +14,13 @@ public record UpdateCategoryRequest(
     @Pattern(regexp = "^[a-z0-9-]+$", message = "Slug chỉ chứa chữ thường, số và dấu gạch ngang (-)")
     String slug,
 
+    com.chickiestudio.category.entity.CategoryType type,
     String description,
     String iconUrl,
     Integer displayOrder,
     Boolean isActive
-) {}
+) {
+    public UpdateCategoryRequest(String name, String slug, String description, String iconUrl, Integer displayOrder, Boolean isActive) {
+        this(name, slug, com.chickiestudio.category.entity.CategoryType.COSTUME, description, iconUrl, displayOrder, isActive);
+    }
+}

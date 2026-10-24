@@ -152,15 +152,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductListResponse> getProducts(
+            Long categoryId,
+            com.chickiestudio.category.entity.CategoryType categoryType,
+            ProductStatus status,
+            String search,
+            Pageable pageable
+    ) {
+        String trimmedSearch = (search != null && !search.isBlank()) ? search.trim() : null;
+        Page<Product> productPage = (categoryType != null)
+                ? productRepository.searchProducts(categoryId, categoryType, status, trimmedSearch, pageable)
+                : productRepository.searchProducts(categoryId, status, trimmedSearch, pageable);
+        return productPage.map(productMapper::toListResponse);
+    }
+
+    @Override
     public Page<ProductListResponse> getProductsForAdmin(
             Long categoryId,
             ProductStatus status,
             String search,
             Pageable pageable
     ) {
-        String trimmedSearch = (search != null && !search.isBlank()) ? search.trim() : null;
-        Page<Product> productPage = productRepository.searchProducts(categoryId, status, trimmedSearch, pageable);
-        return productPage.map(productMapper::toListResponse);
+        return getProducts(categoryId, null, status, search, pageable);
     }
 
     @Override

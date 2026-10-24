@@ -62,6 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .name(request.name().trim())
                 .slug(cleanSlug)
+                .type(request.type() != null ? request.type() : com.chickiestudio.category.entity.CategoryType.COSTUME)
                 .description(request.description())
                 .iconUrl(request.iconUrl())
                 .displayOrder(request.displayOrder() != null ? request.displayOrder() : 0)
@@ -86,6 +87,9 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setName(request.name().trim());
         category.setSlug(cleanSlug);
+        if (request.type() != null) {
+            category.setType(request.type());
+        }
         category.setDescription(request.description());
         category.setIconUrl(request.iconUrl());
         if (request.displayOrder() != null) {
