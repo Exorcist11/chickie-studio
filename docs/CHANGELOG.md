@@ -7,6 +7,25 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Category Management Module (CAT-001 - ✅ DONE)**:
+  - **Server Spring Boot 3**:
+    - Tạo Flyway migration `V3__create_categories_table.sql` gồm bảng `categories` và seed 5 danh mục ban đầu.
+    - Xây dựng Entity `Category` kế thừa `BaseEntity`, `CategoryRepository` với kiểm tra trùng slug URL.
+    - Ánh xạ DTO qua MapStruct `CategoryMapper`, kiểm tra dữ liệu bằng Jakarta Validation (`@Pattern(regexp = "^[a-z0-9-]+$")`).
+    - Triển khai `CategoryServiceImpl` với cơ chế kiểm tra `ConflictException` khi trùng slug khi tạo và sửa.
+    - Cung cấp API Public `GET /api/public/categories` và API Admin bảo vệ bởi RBAC `@PreAuthorize("hasRole('ADMIN')")`: `GET`, `POST`, `PUT`, `DELETE /api/admin/categories`.
+    - Kiểm thử tự động Server: 65 tests pass 100%, JaCoCo coverage $\ge 80\%$ line và branch (`mvn verify` pass).
+  - **CRM Category Management**:
+    - Mở rộng `apiClient.ts` hỗ trợ phương thức `PUT` và `DELETE` kèm chuẩn hóa mã lỗi HTTP.
+    - Xây dựng màn hình quản lý danh mục `CategoriesPage.tsx` (`/categories`) tích hợp `DataTable`, `FilterBar`, `PageHeader`, `ConfirmModal`.
+    - Modal Thêm / Chỉnh sửa danh mục với Zod schema validation, tự động sinh slug từ tên tiếng Việt (slugify).
+    - Đồng bộ từ điển đa ngôn ngữ `vi.json` và `en.json` cho toàn bộ nhãn và thông báo danh mục.
+    - Kiểm thử tự động CRM: 26 test suites, 76 unit tests pass 100%, coverage đạt **94.21%** lines, **88.55%** branches, `tsc && vite build` hoàn thành trong 3.87s.
+  - **Client Dynamic Category Showcase**:
+    - Tích hợp hàm API `getPublicCategories()` kèm fallback dữ liệu an toàn khi SSR / SSG.
+    - Hiển thị danh mục nổi bật trực tiếp trên trang chủ Landing Page liên kết đến `/products?category=${slug}`.
+    - Kiểm thử tự động Client: 27 test suites, 91 unit & a11y tests pass 100%, Next.js static build 100% pass.
+
 - **Server Backend Architecture & CRM Authentication (AUTH-001, AUTH-002, AUTH-003 - ✅ DONE)**:
   - **Khởi tạo kiến trúc Backend Spring Boot 3**:
     - Thiết lập dự án Spring Boot 3.3.5 với Java 21 LTS, Spring Data JPA, Spring Security, Flyway Migration MySQL, MapStruct, JJWT 0.12 và JaCoCo.

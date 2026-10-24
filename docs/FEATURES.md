@@ -38,16 +38,16 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | **UI** | Design System & Bộ Component | 1 | 0 | 0 | 0 | 1 | 100% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
-| **CAT** | Danh mục & Sản phẩm | 8 | 3 | 5 | 0 | 0 | 0% |
+| **CAT** | Danh mục & Sản phẩm | 8 | 3 | 4 | 0 | 1 | 12.5% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **45** | **27** | **14** | **0** | **4** | **8.9%** |
+| **TỔNG CỘNG** | | **45** | **27** | **13** | **0** | **5** | **11.1%** |
 
-*(Lưu ý: UI-001 và AUTH-001/002/003 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 14 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-001, AUTH-001/002/003, CAT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, docs đầy đủ; 13 tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -73,7 +73,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ### 4.2. Module CAT (Danh Mục & Sản Phẩm)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
-| `CAT-001` | Quản lý danh mục sản phẩm | CRM, SERVER, CLIENT | P0 | 📝 SPEC | Fullstack Dev | - | - | [CAT-001](features/catalog/CAT-001-quan-ly-danh-muc.md) |
+| `CAT-001` | Quản lý danh mục sản phẩm | CRM, SERVER, CLIENT | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [CAT-001](features/catalog/CAT-001-quan-ly-danh-muc.md) |
 | `CAT-002` | Quản lý sản phẩm, biến thể (Size/Màu) & ảnh | CRM, SERVER | P0 | 📝 SPEC | Fullstack Dev | - | - | [CAT-002](features/catalog/CAT-002-quan-ly-san-pham-bien-the-anh.md) |
 | `CAT-003` | Quản lý món đồ thực tế & trạng thái vòng đời | CRM, SERVER | P0 | 📝 SPEC | Backend Lead | - | - | [CAT-003](features/catalog/CAT-003-quan-ly-mon-do-thuc-te-trang-thai.md) |
 | `CAT-004` | Quản lý gói combo (váy + máy ảnh) | CRM, SERVER | P1 | ⬜ TODO | - | - | - | - |
@@ -156,6 +156,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-24 | `CAT-001` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện V3 migration Flyway, API REST CRUD danh mục, trang CRM CategoriesPage DataTable + Zod modal, tích hợp Client grid, test coverage $\ge 88\%$ |
 | 2026-10-24 | `AUTH-001/002/003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện kiến trúc Server Spring Boot 3 + Flyway MySQL, JWT Auth, RBAC RoleGuard, UI Login CRM, test coverage Server & CRM $\ge 85\%$ |
 | 2026-10-24 | `UI-001` | ⬜ TODO $\rightarrow$ ✅ DONE | Senior Frontend Engineer | Hoàn thành toàn diện bộ component UI dùng chung cho Client & CRM, test coverage $\ge 95\%$, docs tại COMPONENTS.md |
 | 2026-10-24 | Toàn bộ 17 tính năng P0 | ⬜ TODO $\rightarrow$ 📝 SPEC | Tech Lead | Hoàn tất tài liệu đặc tả kỹ thuật chi tiết cho toàn bộ MVP P0 |

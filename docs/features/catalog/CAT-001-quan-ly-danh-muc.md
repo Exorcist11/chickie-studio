@@ -7,10 +7,10 @@
 | **Module** | CAT (Catalog) |
 | **Phạm vi** | CRM, SERVER, CLIENT |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Fullstack Dev |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Ngày bắt đầu** | 2026-10-24 |
+| **Ngày hoàn thành** | 2026-10-24 |
 | **Phụ thuộc** | `AUTH-001`, `AUTH-002` |
 
 ---
@@ -83,7 +83,7 @@ sequenceDiagram
 | `DELETE`| `/api/admin/categories/{id}` | `ROLE_ADMIN` | Không | `ApiResponse<Void>` | 400, 404 |
 
 ## 8. Thay Đổi Cơ Sở Dữ Liệu
-- **File Migration Flyway**: `V1_2__create_categories_table.sql`
+- **File Migration Flyway**: `V3__create_categories_table.sql`
 ```sql
 CREATE TABLE `categories` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -101,8 +101,8 @@ CREATE TABLE `categories` (
 ```
 
 ## 9. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1**: Thêm mới danh mục "Áo Dài Cách Tân", slug `ao-dai-cach-tan` lưu thành công và xuất hiện trên API public.
-- [ ] **Kịch bản 2**: Thêm danh mục trùng slug báo lỗi 409 ngay trên modal form.
+- [x] **Kịch bản 1**: Thêm mới danh mục "Áo Dài Cách Tân", slug `ao-dai-cach-tan` lưu thành công và xuất hiện trên API public.
+- [x] **Kịch bản 2**: Thêm danh mục trùng slug báo lỗi 409 ngay trên modal form.
 
 ## 10. Kế Hoạch Test
 - **Unit Test**: Test CategoryService tạo, cập nhật, kiểm tra slug trùng lặp.
@@ -111,13 +111,14 @@ CREATE TABLE `categories` (
 - **Mục tiêu Coverage**: $\ge 80\%$.
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Backend phân tầng Service-Repo-Controller, DTO MapStruct đầy đủ.
-- [ ] CRM dùng chung `DataTable` và Zod form.
-- [ ] i18n đầy đủ cho cả `vi.json` và `en.json`.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Backend phân tầng Service-Repo-Controller, DTO MapStruct đầy đủ.
+- [x] CRM dùng chung `DataTable` và Zod form.
+- [x] i18n đầy đủ cho cả `vi.json` và `en.json`.
+- [x] Test coverage $\ge 80\%$.
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-24 | Fullstack Dev | Triển khai hoàn chỉnh V3 Migration, API Spring Boot, CRM CategoriesPage, Client dynamic grid, test coverage $\ge 85\%$ | ✅ DONE |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
