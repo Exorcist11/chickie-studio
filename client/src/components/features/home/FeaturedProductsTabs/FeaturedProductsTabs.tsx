@@ -8,6 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { cn } from "@/lib/cn";
 import { ProductListItem } from "@/types/product";
 import { formatImageUrl } from "@/lib/api/product";
+import { resolveProductPillar } from "@/components/features/products/product-pillar.config";
 
 export interface CategoryFilterItem {
   key: string;
@@ -139,22 +140,26 @@ export const FeaturedProductsTabs: React.FC<FeaturedProductsTabsProps> = ({
 
         {/* 4-Column Generous Product Grid (Spacious & Premium) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-7">
-          {filteredProducts.map((p) => (
-            <ProductCard
-              key={p.id}
-              id={p.id}
-              name={p.name}
-              slug={p.slug}
-              imageUrl={formatImageUrl(p.thumbnailUrl)}
-              price={p.rentalPrice}
-              rating={5.0}
-              reviewCount={28}
-              colors={[
-                { name: "Tiêu chuẩn", hex: "#641D2B" },
-                { name: "Trắng", hex: "#FFFFFF" },
-              ]}
-            />
-          ))}
+          {filteredProducts.map((p) => {
+            const pillar = resolveProductPillar(p.type, p.categoryName);
+            return (
+              <ProductCard
+                key={p.id}
+                id={p.id}
+                name={p.name}
+                slug={p.slug}
+                pillar={pillar}
+                imageUrl={formatImageUrl(p.thumbnailUrl)}
+                price={p.rentalPrice}
+                rating={5.0}
+                reviewCount={28}
+                colors={[
+                  { name: "Tiêu chuẩn", hex: "#641D2B" },
+                  { name: "Trắng", hex: "#FFFFFF" },
+                ]}
+              />
+            );
+          })}
         </div>
 
         {/* Mobile View All button */}

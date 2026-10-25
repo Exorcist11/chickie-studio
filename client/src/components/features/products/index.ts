@@ -6,4 +6,5 @@ export * from "./AvailabilityCalendar";
 export * from "./StickyBottomCta";
 export * from "./BookingSuccessModal";
 export * from "./product-pillar.config";
+export * from "./ProductDetailView";
 

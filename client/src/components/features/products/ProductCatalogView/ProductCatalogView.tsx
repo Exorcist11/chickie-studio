@@ -644,12 +644,17 @@ export const ProductCatalogView: React.FC<ProductCatalogViewProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAndSortedProducts.map((p) => {
                 const pillarInfo = getProductPillarInfo(p);
+                const pillarType = p.type || (
+                  pillarInfo.badge.includes("Máy ảnh") ? "CAMERA" :
+                  pillarInfo.badge.includes("chụp") ? "PHOTOGRAPHY" : "COSTUME"
+                );
                 return (
                   <ProductCard
                     key={p.id}
                     id={p.id}
                     name={p.name}
                     slug={p.slug}
+                    pillar={pillarType}
                     badge={pillarInfo.badge}
                     perDayLabel={pillarInfo.perDayLabel}
                     imageUrl={formatImageUrl(p.thumbnailUrl)}

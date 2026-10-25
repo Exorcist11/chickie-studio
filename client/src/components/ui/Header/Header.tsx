@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Search, Heart, User, Menu, X, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { Logo } from "../Logo";
 import { Container } from "../Container";
@@ -38,21 +38,22 @@ export const Header: React.FC<HeaderProps> = ({
   className,
 }) => {
   const tNav = useTranslations("navigation");
+  const pathname = usePathname() || "/";
   const { start: startProgress } = useNavigationProgress();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [pendingHref, setPendingHref] = React.useState<string | null>(null);
 
-  // Reset pending state when activeHref or currentType changes
+  // Reset pending state when activeHref or currentType or pathname changes
   React.useEffect(() => {
     setPendingHref(null);
-  }, [activeHref, currentType]);
+  }, [activeHref, currentType, pathname]);
 
   const defaultNavItems: NavItem[] = React.useMemo(
     () => [
-      { label: tNav("costumes"), href: "/products?type=costume" },
-      { label: tNav("cameras"), href: "/products?type=camera" },
-      { label: tNav("photography"), href: "/products?type=photography" },
-      { label: tNav("lookbook"), href: "/products" },
+      { label: tNav("costumes"), href: "/thue-trang-phuc" },
+      { label: tNav("cameras"), href: "/thue-may-anh" },
+      { label: tNav("photography"), href: "/dich-vu-chup" },
+      { label: tNav("lookbook"), href: "/lookbook" },
       { label: tNav("tracking"), href: "/tra-cuu-don" },
     ],
     [tNav]
@@ -61,10 +62,10 @@ export const Header: React.FC<HeaderProps> = ({
   const defaultMobileNavItems: NavItem[] = React.useMemo(
     () => [
       { label: tNav("home"), href: "/" },
-      { label: tNav("costumes"), href: "/products?type=costume" },
-      { label: tNav("cameras"), href: "/products?type=camera" },
-      { label: tNav("photography"), href: "/products?type=photography" },
-      { label: tNav("lookbook"), href: "/products" },
+      { label: tNav("costumes"), href: "/thue-trang-phuc" },
+      { label: tNav("cameras"), href: "/thue-may-anh" },
+      { label: tNav("photography"), href: "/dich-vu-chup" },
+      { label: tNav("lookbook"), href: "/lookbook" },
       { label: tNav("tracking"), href: "/tra-cuu-don" },
       { label: tNav("contact"), href: "#footer-contact" },
     ],
@@ -73,25 +74,45 @@ export const Header: React.FC<HeaderProps> = ({
 
   const resolveActiveItems = React.useCallback(
     (navItemList: NavItem[]) => {
+      const normalizedPath = pathname.replace(/^\/(vi|en)/, "") || "/";
       return navItemList.map((item) => {
         let isActive = item.active;
         if (activeHref !== undefined) {
-          isActive = item.href === activeHref;
+          isActive =
+            item.href === activeHref ||
+            (activeHref.includes("camera") && item.href === "/thue-may-anh") ||
+            (activeHref.includes("costume") && item.href === "/thue-trang-phuc") ||
+            (activeHref.includes("photography") && item.href === "/dich-vu-chup");
         } else if (currentType !== undefined) {
           const type = currentType.toLowerCase();
-          if (type === "costume" && item.href.includes("type=costume")) isActive = true;
-          else if (type === "camera" && item.href.includes("type=camera")) isActive = true;
-          else if (type === "photography" && item.href.includes("type=photography")) isActive = true;
-          else if (!type && item.href === "/products") isActive = true;
-          else isActive = false;
+          if (type === "costume" && (item.href === "/thue-trang-phuc" || item.href.includes("costume"))) {
+            isActive = true;
+          } else if (type === "camera" && (item.href === "/thue-may-anh" || item.href.includes("camera"))) {
+            isActive = true;
+          } else if (type === "photography" && (item.href === "/dich-vu-chup" || item.href.includes("photography"))) {
+            isActive = true;
+          } else if ((!type || type === "lookbook") && (item.href === "/lookbook" || item.href === "/products")) {
+            isActive = true;
+          } else {
+            isActive = false;
+          }
+        } else {
+          // Automatic matching based on pathname (Supports dedicated routes and detail sub-paths!)
+          if (item.href === "/" && (normalizedPath === "/" || normalizedPath === "")) {
+            isActive = true;
+          } else if (item.href !== "/") {
+            isActive =
+              normalizedPath === item.href ||
+              normalizedPath.startsWith(item.href + "/");
+          }
         }
         return {
           ...item,
-          active: isActive,
+          active: Boolean(isActive),
         };
       });
     },
-    [activeHref, currentType]
+    [activeHref, currentType, pathname]
   );
 
   const desktopItems = React.useMemo(

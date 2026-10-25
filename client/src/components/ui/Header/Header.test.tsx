@@ -59,7 +59,7 @@ describe("Header component", () => {
     await user.click(openBtn);
     const dialog = screen.getByRole("dialog", { name: "Menu điều hướng di động" });
 
-    const link = dialog.querySelector("a[href='/products?type=costume']");
+    const link = dialog.querySelector("a[href='/thue-trang-phuc']");
     if (link) {
       await user.click(link);
     }

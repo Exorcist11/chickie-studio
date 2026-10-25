@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   resolveProductPillar,
+  getPillarBasePath,
   PILLAR_CONFIGS,
 } from "./product-pillar.config";
 
@@ -37,6 +38,13 @@ describe("product-pillar.config", () => {
       expect(config.relatedHeading.title).toBeTruthy();
       expect(config.depositBadge("500.000")).toContain("500.000");
     });
+  });
+
+  it("returns correct base path for each business pillar", () => {
+    expect(getPillarBasePath("CAMERA")).toBe("/thue-may-anh");
+    expect(getPillarBasePath("PHOTOGRAPHY")).toBe("/dich-vu-chup");
+    expect(getPillarBasePath("COSTUME")).toBe("/thue-trang-phuc");
+    expect(getPillarBasePath("UNKNOWN" as any)).toBe("/thue-trang-phuc");
   });
 });
 

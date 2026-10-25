@@ -12,6 +12,8 @@ export interface ProductCardProps {
   id: string | number;
   name: string;
   slug: string;
+  href?: string;
+  pillar?: "COSTUME" | "CAMERA" | "PHOTOGRAPHY" | string;
   imageUrl: string;
   imageAlt?: string;
   badge?: string;
@@ -29,6 +31,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   id: _id,
   name,
   slug,
+  href,
+  pillar,
   imageUrl,
   imageAlt,
   badge,
@@ -42,6 +46,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   className,
 }) => {
   const [favorite, setFavorite] = React.useState(isFavorite);
+
+  const targetHref = React.useMemo(() => {
+    if (href) return href;
+    const p = (pillar || "").toUpperCase();
+    if (p === "CAMERA") return `/thue-may-anh/${slug}`;
+    if (p === "PHOTOGRAPHY") return `/dich-vu-chup/${slug}`;
+    if (p === "COSTUME") return `/thue-trang-phuc/${slug}`;
+    return `/products/${slug}`;
+  }, [href, pillar, slug]);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -68,7 +81,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </span>
         )}
 
-        <Link href={`/products/${slug}`} className="block w-full h-full">
+        <Link href={targetHref} className="block w-full h-full">
           <Image
             src={imageUrl}
             alt={imageAlt || name}
@@ -118,7 +131,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Product Title (max 2 lines) */}
         <Link
-          href={`/products/${slug}`}
+          href={targetHref}
           className="text-sm font-medium text-ink line-clamp-2 hover:text-burgundy transition-colors min-h-[40px]"
           title={name}
         >

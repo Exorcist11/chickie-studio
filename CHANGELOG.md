@@ -8,6 +8,18 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Định Tuyến Chuyên Biệt Theo Ngành Nghề Kinh Doanh & Kích Hoạt Menu Tự Động (Phương Án A)**:
+  - Khai báo các semantic routes chuyên biệt trực tiếp cho 4 trụ cột kinh doanh cốt lõi thay vì dùng query params (`?type=...`):
+    - 👗 Thuê trang phục: `/thue-trang-phuc` (catalog) và `/thue-trang-phuc/[slug]` (chi tiết sản phẩm).
+    - 📷 Thuê máy ảnh: `/thue-may-anh` (catalog) và `/thue-may-anh/[slug]` (chi tiết sản phẩm).
+    - 📸 Dịch vụ chụp: `/dich-vu-chup` (catalog) và `/dich-vu-chup/[slug]` (chi tiết sản phẩm).
+    - ✨ Lookbook: `/lookbook` (catalog) và `/lookbook/[slug]` (chi tiết sản phẩm).
+  - Duy trì tính tương thích ngược hoàn toàn cho các đường dẫn cũ `/products` và `/products/[slug]`.
+  - Tách component tái sử dụng `ProductDetailView` (`src/components/features/products/ProductDetailView`) đồng bộ UI, breadcrumbs thông minh theo trụ cột, biểu mẫu đặt lịch, cam kết dịch vụ và danh sách sản phẩm liên quan.
+  - Tự động kích hoạt trạng thái active trên thanh Header khi người dùng duyệt danh mục hoặc xem chi tiết bất kỳ sản phẩm nào thuộc trụ cột tương ứng thông qua tiền tố đường dẫn `pathname.startsWith(item.href)`.
+  - Cập nhật `ProductCard` và `FeaturedProductsTabs` tự động điều hướng tới semantic route chuyên biệt theo loại sản phẩm (`CAMERA` -> `/thue-may-anh/...`, `COSTUME` -> `/thue-trang-phuc/...`, `PHOTOGRAPHY` -> `/dich-vu-chup/...`).
+  - Toàn bộ 90 bộ test files (447 unit tests) đạt pass 100%, TypeScript typecheck & ESLint pass 0 lỗi.
+
 - **Hạ Tầng Đa Ngôn Ngữ Song Ngữ Tiếng Việt / Tiếng Anh Cho Client (CNT-007 - ✅ DONE)**:
   - Tích hợp `next-intl` App Router với phân tầng đường dẫn `src/app/[locale]/` (`vi`/`en`).
   - Cấu hình middleware `src/middleware.ts` tự động điều hướng locale lạ về mặc định `/vi/...` và giữ nguyên tiền tố locale.

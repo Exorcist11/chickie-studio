@@ -104,6 +104,18 @@ export function resolveProductPillar(
   return "COSTUME";
 }
 
+export function getPillarBasePath(pillar: BusinessPillar): string {
+  switch (pillar) {
+    case "CAMERA":
+      return "/thue-may-anh";
+    case "PHOTOGRAPHY":
+      return "/dich-vu-chup";
+    case "COSTUME":
+    default:
+      return "/thue-trang-phuc";
+  }
+}
+
 export const PILLAR_CONFIGS: Record<BusinessPillar, PillarConfig> = {
   COSTUME: {
     pillar: "COSTUME",
