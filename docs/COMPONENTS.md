@@ -79,6 +79,20 @@ Bộ component trình bày và điều hướng dữ liệu chuẩn hóa, hỗ t
 | **Gallery** | `src/components/ui/Gallery/Gallery.tsx` | `images` (`{ src, alt, caption }[]`), `aspectRatio`, `thumbnailStrip`, `showLightbox`, `onIndexChange` | `<Gallery images={photos} aspectRatio="4/5" thumbnailStrip showLightbox />` | ✅ Pass ($\ge 98\%$ lines, axe a11y pass) |
 | **DataTable** | `src/components/ui/DataTable/DataTable.tsx` | `columns` (`{ key, header, render, align }[]`), `data`, `loading`, `emptyText`, `rowKey` | `<DataTable columns={cols} data={orders} rowKey="id" loading={isLoading} />` | ✅ Pass (100% lines, axe a11y pass) |
 
+### Bảng Component Common Nghiệp Vụ (Giai Đoạn UI-5)
+
+Bộ component nghiệp vụ chuyên biệt dùng chung giữa Client & CRM, hỗ trợ đầy đủ trạng thái đơn/đồ thuê, thẻ sản phẩm, tìm kiếm lọc, tải ảnh cọc và thẻ thống kê (0 inline CSS, WAI-ARIA Accessible):
+
+| Tên Component | Vị trí file trong client & crm | Props chính | Ví dụ sử dụng (1 dòng) | Trạng thái Test & Coverage |
+| :--- | :--- | :--- | :--- | :--- |
+| **StatusBadge** | `src/components/ui/StatusBadge/` | `type` ("order" \| "item"), `status` (`OrderStatus` \| `ItemStatus`), `size` ("sm" \| "md"), `showDot`, `label` | `<StatusBadge type="order" status="DELIVERED" />` | ✅ Pass (100% lines, axe a11y pass) |
+| **ProductCard** | `src/components/ui/ProductCard/` | `id`, `name`, `imageUrl`, `price`, `rating`, `colors`, `perDayLabel`, `onSelect`/`onEdit`/`onToggleFavorite` | `<ProductCard id="1" name="Váy Dạ Hội Lụa" price={450000} imageUrl="..." />` | ✅ Pass ($\ge 98\%$ lines, axe a11y pass) |
+| **SectionHeading** | `src/components/ui/SectionHeading/` | `title`, `description`, `action`, `level` ("h1" \| "h2" \| "h3") | `<SectionHeading title="Bộ sưu tập đầm" description="Các mẫu mới nhất" />` | ✅ Pass (100% lines, axe a11y pass) |
+| **Rating** | `src/components/ui/Rating/` | `score`, `maxScore`, `reviewCount`, `showCount`, `size` ("sm" \| "md"), `reviewLabel` | `<Rating score={4.9} reviewCount={24} size="md" />` | ✅ Pass (100% lines, axe a11y pass) |
+| **FilterBar** | `src/components/ui/FilterBar/` | `search`, `onSearchChange`, `categories`/`selectOptions`, `onCategoryChange`/`onFilterChange`, `onReset`, `extraActions` | `<FilterBar categories={cats} onCategoryChange={setCat} onReset={reset} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **ImageUploader** | `src/components/ui/ImageUploader/` | `fileList`, `onChange`, `maxCount`, `maxSizeMB`, `allowedTypes`, `label`, `hint` | `<ImageUploader fileList={files} onChange={setFiles} maxCount={4} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **StatCard** | `src/components/ui/StatCard/` | `title`, `value`, `prefix`, `suffix`, `trend` (`{ value, isPositive, description }`), `icon` | `<StatCard title="Lượt thuê" value="128" trend={{ value: 18.5, isPositive: true }} />` | ✅ Pass (100% lines, axe a11y pass) |
+
 ---
 
 ## 1. Client Components (`client/src/components/ui/`)

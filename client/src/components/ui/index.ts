@@ -44,6 +44,12 @@ export * from "./ErrorState";
 export * from "./Gallery";
 export * from "./DataTable";
 
+// Business Common Components (UI-005)
+export * from "./StatusBadge";
+export * from "./FilterBar";
+export * from "./ImageUploader";
+export * from "./StatCard";
+
 // Feedback & Overlays (UI-002)
 export * from "./Modal";
 export * from "./Drawer";

@@ -52,6 +52,9 @@ import {
   Breadcrumbs,
   Pagination,
   Gallery,
+  Rating,
+  SectionHeading,
+  ProductCard,
 } from "../components/ui";
 import {
   Button as ChickieUIButton,
@@ -808,6 +811,87 @@ export const DevComponentsPage: React.FC = () => {
                   onRetry={() => notify.warning("Đang kết nối lại máy chủ CRM...")}
                   className="p-4"
                 />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 10. Giai đoạn UI-5: Common Nghiệp Vụ (@chickie/ui) */}
+        <section className="bg-warm-white p-5 rounded-card border border-line space-y-6">
+          <div>
+            <h3 className="font-playfair text-lg font-semibold text-ink">
+              10. Giai đoạn UI-5: Common Nghiệp Vụ (@chickie/ui)
+            </h3>
+            <p className="text-sm text-ink-muted mt-1">
+              Component nghiệp vụ chuẩn hóa: Rating, SectionHeading, ProductCard, StatusBadge, FilterBar, ImageUploader, StatCard
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {/* SectionHeading */}
+            <div className="bg-white p-4 rounded-card border border-line">
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-3">
+                Tiêu đề phân đoạn (SectionHeading)
+              </span>
+              <SectionHeading
+                title="Quản lý bộ sưu tập đầm dạ hội"
+                description="Theo dõi danh mục, tình trạng thuê và giá niêm yết theo ngày của các mẫu thiết kế cao cấp"
+                action={<Button size="sm">Xuất báo cáo tồn</Button>}
+              />
+            </div>
+
+            {/* ProductCard & Rating */}
+            <div className="bg-white p-4 rounded-card border border-line space-y-3">
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Thẻ sản phẩm trang phục (ProductCard) & Đánh giá (Rating)
+              </span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <ProductCard
+                  id="1"
+                  name="Váy Nàng Thơ Lụa Tơ Tằm"
+                  code="CK-DR-2601"
+                  category="Dạ hội"
+                  imageUrl="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500"
+                  price={450000}
+                  statusBadge={<StatusBadge type="item" status="AVAILABLE" size="sm" />}
+                  rating={4.9}
+                  reviewCount={24}
+                  colors={[
+                    { name: "Burgundy", hex: "#641D2B" },
+                    { name: "Gold", hex: "#B8914F" },
+                  ]}
+                  onSelect={() => notify.info("Xem chi tiết đầm CK-DR-2601")}
+                  onEdit={() => notify.info("Chỉnh sửa đầm CK-DR-2601")}
+                />
+                <ProductCard
+                  id="2"
+                  name="Áo Dài Gấm Phượng Hoàng"
+                  code="CK-AD-1902"
+                  category="Áo dài"
+                  imageUrl="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500"
+                  price={350000}
+                  statusBadge={<StatusBadge type="item" status="RENTED" size="sm" />}
+                  rating={5.0}
+                  reviewCount={18}
+                  colors={[
+                    { name: "Rose Beige", hex: "#DCC8BD" },
+                  ]}
+                  onSelect={() => notify.info("Xem chi tiết áo dài CK-AD-1902")}
+                  onEdit={() => notify.info("Chỉnh sửa áo dài CK-AD-1902")}
+                />
+                <div className="flex flex-col justify-between p-4 bg-stone-50 rounded-card border border-line">
+                  <div className="space-y-3">
+                    <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block">
+                      Các mức đánh giá (Rating)
+                    </span>
+                    <Rating score={5.0} reviewCount={42} size="md" />
+                    <Rating score={4.5} reviewCount={16} size="sm" />
+                    <Rating score={3.8} showCount={false} size="sm" />
+                  </div>
+                  <div className="pt-4 border-t border-line text-xs text-ink-muted">
+                    Chuẩn WAI-ARIA Accessible role="img" kèm nhãn aria-label cho thiết bị trợ thính.
+                  </div>
+                </div>
               </div>
             </div>
           </div>

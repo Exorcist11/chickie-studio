@@ -38,7 +38,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Phân hệ / Module | Tên Module | Tổng số | TODO | SPEC | IN_PROGRESS | DONE | % Hoàn thành |
 |---|---|---|---|---|---|---|---|
-| **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 1 | 0 | 0 | 5 | 83.3% |
+| **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 0 | 0 | 0 | 6 | 100% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 0 | 0 | 5 | 62.5% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 0 | 0 | 5 | 50.0% |
@@ -47,9 +47,9 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 1 | 0 | 2 | 28.6% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **28** | **2** | **0** | **20** | **40.0%** |
+| **TỔNG CỘNG** | | **50** | **27** | **2** | **0** | **21** | **42.0%** |
 
-*(Lưu ý: UI-000, UI-001, UI-002, UI-003, UI-004, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-003, BOK-004, BOK-005, CNT-001, CNT-002 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, UI-002, UI-003, UI-004, UI-005, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-003, BOK-004, BOK-005, CNT-001, CNT-002 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -63,7 +63,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | `UI-002` | UI-2: Lớp phủ (Modal, ConfirmModal, Drawer, Menu, Popover, Tooltip, notify) | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect & UI/UX Specialist | 2026-10-25 | 2026-10-25 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
 | `UI-003` | UI-3: Ngày và form (DatePicker, DateRangePicker, bộ Form*, CurrencyField, PhoneField, ChipGroup, SizeSelector, ColorSwatchGroup) | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect & UI/UX Specialist | 2026-10-25 | 2026-10-25 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
 | `UI-004` | UI-4: Hiển thị dữ liệu (Tabs, Accordion, Pagination, Breadcrumbs, EmptyState, ErrorState, Gallery, DataTable) | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect & UI/UX Specialist | 2026-10-25 | 2026-10-25 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
-| `UI-005` | UI-5: Common nghiệp vụ (StatusBadge, ProductCard, SectionHeading, Rating, FilterBar, ImageUploader, StatCard) | CLIENT, CRM | P0 | ⬜ TODO | Frontend Dev | - | - | [UI_LIBRARIES.md](UI_LIBRARIES.md) |
+| `UI-005` | UI-5: Common nghiệp vụ (StatusBadge, ProductCard, SectionHeading, Rating, FilterBar, ImageUploader, StatCard) | CLIENT, CRM | P0 | ✅ DONE | Senior Frontend Architect & UI/UX Specialist | 2026-10-25 | 2026-10-25 | [UI_LIBRARIES.md](UI_LIBRARIES.md) / [COMPONENTS.md](COMPONENTS.md) |
 
 
 ---

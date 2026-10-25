@@ -7,6 +7,33 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Trọn Gói Bộ Component Common Nghiệp Vụ UI-5 (UI-005 - ✅ DONE)**:
+  - **Triển Khai & Chuẩn Hóa Bộ 7 Component Nghiệp Vụ Dùng Chung Cho Cả Client & CRM (@chickie/ui)**:
+    - **StatusBadge (`StatusBadge.tsx`)**:
+      - Hiển thị huy hiệu trạng thái đơn hàng (`OrderStatus`) & tình trạng đồ thuê (`ItemStatus`) với màu sắc ngữ nghĩa chuẩn token, chấm tròn trạng thái (*status dot*), chuẩn `role="status"`.
+    - **ProductCard (`ProductCard.tsx`)**:
+      - Thẻ sản phẩm trang phục cho thuê với ảnh tỷ lệ 3:4, danh mục, mã đầm, giá thuê theo ngày format VND, rating, bảng màu swatch, nút xem chi tiết và chỉnh sửa/yêu thích.
+    - **SectionHeading (`SectionHeading.tsx`)**:
+      - Khối tiêu đề phân đoạn hỗ trợ font thương hiệu Playfair, mô tả chi tiết và nút tác vụ hành động bên phải.
+    - **Rating (`Rating.tsx`)**:
+      - Đánh giá sao chuẩn WAI-ARIA `role="img"` với nhãn trợ năng đầy đủ, hiển thị số sao và số lượt đánh giá.
+    - **FilterBar (`FilterBar.tsx`)**:
+      - Thanh bộ lọc tìm kiếm nhanh kèm nút xóa từ khóa, danh sách danh mục dạng pill, chọn sắp xếp và nút đặt lại bộ lọc.
+    - **ImageUploader (`ImageUploader.tsx`)**:
+      - Vùng tải ảnh kéo thả với icon UploadCloud, preview thumbnail, lightbox phóng to ảnh toàn màn hình, nút xóa ảnh và kiểm tra giới hạn dung lượng/định dạng tệp.
+    - **StatCard (`StatCard.tsx`)**:
+      - Thẻ chỉ số thống kê với icon nổi bật, số liệu font Playfair/Serif lớn, tiền tố/hậu tố và chỉ báo tăng trưởng (TrendingUp/TrendingDown) có màu ngữ nghĩa.
+  - **Trang Trưng Bày Dev Components (`/dev/components`)**:
+    - Bổ sung Section 4e trên Client (`client/src/app/dev/components/page.tsx`).
+    - Bổ sung Section 10 trên CRM (`crm/src/pages/DevComponentsPage.tsx`).
+  - **Tiêu Chuẩn Kỹ Thuật (DoD)**:
+    - 0% inline CSS (`style={{ ... }}` = 0).
+    - 100% tests pass (Client: 81 suites, 398 tests; CRM: 76 suites, 303 tests).
+    - 0 vi phạm Accessibility (`vitest-axe` pass 100%).
+    - Linter & Typecheck: 0 errors, 0 warnings trên cả hai dự án.
+    - Build production: Client SSG 11/11 routes thành công; CRM Vite build thành công 100%.
+
+
 - **Triển Khai Trọn Gói Bộ Component Hiển Thị Dữ Liệu UI-4 (UI-004 - ✅ DONE)**:
   - **Triển Khai Bộ Component Data Display Dùng Chung Chuẩn Hóa Cho Cả Client & CRM (@chickie/ui)**:
     - **Tabs (`Tabs.tsx`)**:

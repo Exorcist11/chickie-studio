@@ -40,6 +40,15 @@ export * from "./ErrorState";
 export * from "./Gallery";
 export * from "./DataTable";
 
+// Business Common Components (UI-005)
+export { StatusBadge, type StatusBadgeProps, type ItemStatus } from "./StatusBadge";
+export * from "./FilterBar";
+export * from "./ImageUploader";
+export * from "./StatCard";
+export * from "./Rating";
+export * from "./SectionHeading";
+export * from "./ProductCard";
+
 // Feedback & Loading
 export * from "./Spinner";
 export * from "./Skeleton";

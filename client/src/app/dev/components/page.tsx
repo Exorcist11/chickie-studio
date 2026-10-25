@@ -53,6 +53,11 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
+  StatusBadge,
+  FilterBar,
+  ImageUploader,
+  type UploadedFile,
+  StatCard,
   Logo,
   Header,
   Footer,
@@ -101,6 +106,15 @@ export default function DevComponentsPage() {
   const [devDate, setDevDate] = React.useState("2026-10-25");
   const [devTab, setDevTab] = React.useState("info");
   const [devPage, setDevPage] = React.useState(2);
+  const [devFilterCat, setDevFilterCat] = React.useState('all');
+  const [devFilterSearch, setDevFilterSearch] = React.useState('');
+  const [devUploaderFiles, setDevUploaderFiles] = React.useState<UploadedFile[]>([
+    {
+      uid: '1',
+      name: 'vay-chup-anh.jpg',
+      url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300',
+    },
+  ]);
 
   const colors = [
     { name: "Burgundy", hex: "#641D2B" },
@@ -591,6 +605,85 @@ export default function DevComponentsPage() {
                   description="Phiên làm việc tạm thời gián đoạn. Vui lòng bấm thử lại."
                   onRetry={() => notify.info("Đang kết nối lại...")}
                   className="p-4"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4e. Giai Đoạn UI-5: Common Nghiệp Vụ (@chickie/ui) */}
+        <section className="space-y-4">
+          <SectionHeading
+            title="4e. Giai Đoạn UI-5: Common Nghiệp Vụ (StatusBadge, FilterBar, ImageUploader, StatCard)"
+            description="Component nghiệp vụ phục vụ quản lý đơn hàng, danh mục đồ thuê, tải ảnh cọc / phản hồi và thẻ chỉ số thống kê"
+          />
+          <div className="space-y-6 p-6 bg-white rounded-card border border-line">
+            {/* StatusBadge */}
+            <div>
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">StatusBadge (Trạng Thái Đơn & Đồ Thuê)</p>
+              <div className="flex flex-wrap gap-2.5 items-center">
+                <StatusBadge type="order" status="PENDING" />
+                <StatusBadge type="order" status="CONFIRMED" />
+                <StatusBadge type="order" status="DEPOSITED" />
+                <StatusBadge type="order" status="DELIVERED" />
+                <StatusBadge type="order" status="RETURNED" />
+                <StatusBadge type="order" status="COMPLETED" />
+                <StatusBadge type="order" status="OVERDUE" />
+                <StatusBadge type="item" status="AVAILABLE" />
+                <StatusBadge type="item" status="CLEANING" />
+                <StatusBadge type="item" status="REPAIRING" />
+              </div>
+            </div>
+
+            {/* FilterBar */}
+            <div>
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">FilterBar (Thanh Lọc Danh Mục & Tìm Kiếm)</p>
+              <FilterBar
+                search={devFilterSearch}
+                onSearchChange={setDevFilterSearch}
+                selectedCategory={devFilterCat}
+                onCategoryChange={setDevFilterCat}
+                categories={[
+                  { label: "Tất cả", value: "all" },
+                  { label: "Váy dạ hội", value: "evening" },
+                  { label: "Áo dài truyền thống", value: "aodai" },
+                  { label: "Váy công chúa", value: "princess" },
+                  { label: "Phụ kiện chụp ảnh", value: "accessories" },
+                ]}
+                sortOptions={[
+                  { label: "Mới nhất", value: "newest" },
+                  { label: "Giá thuê: Thấp đến cao", value: "price_asc" },
+                  { label: "Giá thuê: Cao đến thấp", value: "price_desc" },
+                ]}
+                onReset={() => {
+                  setDevFilterCat("all");
+                  setDevFilterSearch("");
+                  notify.info("Đã đặt lại bộ lọc");
+                }}
+              />
+            </div>
+
+            {/* StatCard & ImageUploader */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+              <StatCard
+                title="Tổng lượt thuê đồ trong tháng"
+                value="128"
+                suffix="lượt"
+                trend={{ value: 18.5, isPositive: true, description: "tăng so với tháng trước" }}
+              />
+              <StatCard
+                title="Tỷ lệ đồ hoàn trả đúng hạn"
+                value="96.8"
+                suffix="%"
+                trend={{ value: 2.1, isPositive: true, description: "đạt chỉ tiêu cao" }}
+              />
+              <div className="bg-ivory/40 p-4 rounded-card border border-line">
+                <ImageUploader
+                  label="Ảnh minh chứng cọc / hóa đơn"
+                  hint="Tối đa 4 ảnh, tối đa 5MB/ảnh"
+                  fileList={devUploaderFiles}
+                  onChange={setDevUploaderFiles}
+                  maxCount={4}
                 />
               </div>
             </div>
