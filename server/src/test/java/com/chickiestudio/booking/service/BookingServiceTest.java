@@ -2,11 +2,14 @@ package com.chickiestudio.booking.service;
 
 import com.chickiestudio.booking.dto.BookingResponse;
 import com.chickiestudio.booking.dto.CreateBookingRequest;
+import com.chickiestudio.booking.dto.UpdateBookingStatusRequest;
 import com.chickiestudio.booking.entity.Booking;
 import com.chickiestudio.booking.entity.BookingItem;
 import com.chickiestudio.booking.entity.BookingStatus;
+import com.chickiestudio.booking.entity.BookingStatusHistory;
 import com.chickiestudio.booking.repository.BookingItemRepository;
 import com.chickiestudio.booking.repository.BookingRepository;
+import com.chickiestudio.booking.repository.BookingStatusHistoryRepository;
 import com.chickiestudio.category.entity.Category;
 import com.chickiestudio.category.entity.CategoryType;
 import com.chickiestudio.common.exception.BadRequestException;
@@ -25,6 +28,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -54,6 +62,9 @@ class BookingServiceTest {
 
     @Mock
     private ProductItemRepository productItemRepository;
+
+    @Mock
+    private BookingStatusHistoryRepository bookingStatusHistoryRepository;
 
     @InjectMocks
     private BookingService bookingService;
@@ -237,5 +248,215 @@ class BookingServiceTest {
         assertThatThrownBy(() -> bookingService.getBookingByCode("INVALID-CODE"))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Không tìm thấy đơn đặt thuê");
+    }
+
+    @Test
+    @DisplayName("getBookingsForAdmin trả về danh sách phân trang thành công")
+    void getBookingsForAdmin_Success() {
+        Booking booking = Booking.builder()
+                .id(1L)
+                .bookingCode("BK20261025-ABCD")
+                .customerName("Trần Thu Hà")
+                .customerPhone("0987654321")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.PENDING)
+                .build();
+
+        Page<Booking> page = new PageImpl<>(List.of(booking), PageRequest.of(0, 20), 1);
+        when(bookingRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+
+        Page<BookingResponse> result = bookingService.getBookingsForAdmin(
+                BookingStatus.PENDING, "Trần", null, null, null, null, null, PageRequest.of(0, 20)
+        );
+
+        assertThat(result).isNotNull();
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent().get(0).getBookingCode()).isEqualTo("BK20261025-ABCD");
+    }
+
+    @Test
+    @DisplayName("getBookingById trả về chi tiết đơn thuê thành công")
+    void getBookingById_Success() {
+        Booking booking = Booking.builder()
+                .id(10L)
+                .bookingCode("BK20261025-1010")
+                .customerName("Lê Hoàng Nam")
+                .customerPhone("0912345678")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(1))
+                .status(BookingStatus.CONFIRMED)
+                .build();
+
+        when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
+
+        BookingResponse response = bookingService.getBookingById(10L);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getId()).isEqualTo(10L);
+        assertThat(response.getBookingCode()).isEqualTo("BK20261025-1010");
+    }
+
+    @Test
+    @DisplayName("getBookingById ném ResourceNotFoundException khi ID không tồn tại")
+    void getBookingById_NotFound_ThrowsException() {
+        when(bookingRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> bookingService.getBookingById(999L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Không tìm thấy đơn đặt thuê với ID: 999");
+    }
+
+    @Test
+    @DisplayName("updateBookingStatus hợp lệ từ PENDING sang CONFIRMED và lưu lịch sử")
+    void updateBookingStatus_PendingToConfirmed_Success() {
+        Booking booking = Booking.builder()
+                .id(1L)
+                .bookingCode("BK20261025-ABCD")
+                .customerName("Trần Thu Hà")
+                .customerPhone("0987654321")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.PENDING)
+                .build();
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UpdateBookingStatusRequest req = UpdateBookingStatusRequest.builder()
+                .status(BookingStatus.CONFIRMED)
+                .note("Đã liên hệ xác nhận")
+                .build();
+
+        BookingResponse response = bookingService.updateBookingStatus(1L, req, "staff1");
+
+        assertThat(response.getStatus()).isEqualTo(BookingStatus.CONFIRMED);
+        verify(bookingStatusHistoryRepository).save(any(BookingStatusHistory.class));
+    }
+
+    @Test
+    @DisplayName("updateBookingStatus từ DEPOSITED sang DELIVERED đồng bộ ProductItem sang RENTED")
+    void updateBookingStatus_DepositedToDelivered_SynchronizesProductItem() {
+        ProductItem physicalItem = ProductItem.builder()
+                .id(50L)
+                .itemCode("CK-ITEM-50")
+                .status(ProductItemStatus.AVAILABLE)
+                .build();
+
+        BookingItem bi = BookingItem.builder()
+                .id(100L)
+                .productItem(physicalItem)
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .build();
+
+        Booking booking = Booking.builder()
+                .id(2L)
+                .bookingCode("BK20261025-DELIV")
+                .customerName("Khách Hàng A")
+                .customerPhone("0900000001")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.DEPOSITED)
+                .items(new java.util.ArrayList<>(List.of(bi)))
+                .build();
+
+        when(bookingRepository.findById(2L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UpdateBookingStatusRequest req = UpdateBookingStatusRequest.builder()
+                .status(BookingStatus.DELIVERED)
+                .note("Giao đồ tại showroom")
+                .build();
+
+        BookingResponse response = bookingService.updateBookingStatus(2L, req, "admin");
+
+        assertThat(response.getStatus()).isEqualTo(BookingStatus.DELIVERED);
+        assertThat(physicalItem.getStatus()).isEqualTo(ProductItemStatus.RENTED);
+        verify(productItemRepository).save(physicalItem);
+    }
+
+    @Test
+    @DisplayName("updateBookingStatus từ DELIVERED sang RETURNED đồng bộ ProductItem sang LAUNDRY và tăng rentalCount")
+    void updateBookingStatus_DeliveredToReturned_SynchronizesProductItem() {
+        ProductItem physicalItem = ProductItem.builder()
+                .id(50L)
+                .itemCode("CK-ITEM-50")
+                .status(ProductItemStatus.RENTED)
+                .rentalCount(2)
+                .build();
+
+        BookingItem bi = BookingItem.builder()
+                .id(100L)
+                .productItem(physicalItem)
+                .rentalStartDate(LocalDate.now().minusDays(2))
+                .rentalEndDate(LocalDate.now())
+                .build();
+
+        Booking booking = Booking.builder()
+                .id(3L)
+                .bookingCode("BK20261025-RET")
+                .customerName("Khách Hàng B")
+                .customerPhone("0900000002")
+                .rentalStartDate(LocalDate.now().minusDays(2))
+                .rentalEndDate(LocalDate.now())
+                .status(BookingStatus.DELIVERED)
+                .items(new java.util.ArrayList<>(List.of(bi)))
+                .build();
+
+        when(bookingRepository.findById(3L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UpdateBookingStatusRequest req = UpdateBookingStatusRequest.builder()
+                .status(BookingStatus.RETURNED)
+                .note("Khách trả đồ đúng hạn")
+                .build();
+
+        BookingResponse response = bookingService.updateBookingStatus(3L, req, "staff1");
+
+        assertThat(response.getStatus()).isEqualTo(BookingStatus.RETURNED);
+        assertThat(physicalItem.getStatus()).isEqualTo(ProductItemStatus.LAUNDRY);
+        assertThat(physicalItem.getRentalCount()).isEqualTo(3);
+        verify(productItemRepository).save(physicalItem);
+    }
+
+    @Test
+    @DisplayName("updateBookingStatus sang CANCELLED khi không có lý do sẽ ném BadRequestException")
+    void updateBookingStatus_CancelledWithoutNote_ThrowsBadRequest() {
+        Booking booking = Booking.builder()
+                .id(4L)
+                .status(BookingStatus.PENDING)
+                .build();
+
+        when(bookingRepository.findById(4L)).thenReturn(Optional.of(booking));
+
+        UpdateBookingStatusRequest req = UpdateBookingStatusRequest.builder()
+                .status(BookingStatus.CANCELLED)
+                .note("   ")
+                .build();
+
+        assertThatThrownBy(() -> bookingService.updateBookingStatus(4L, req, "staff1"))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("Vui lòng cung cấp lý do khi hủy đơn thuê");
+    }
+
+    @Test
+    @DisplayName("updateBookingStatus khi vi phạm chuyển đổi State Machine sẽ ném BadRequestException")
+    void updateBookingStatus_InvalidTransition_ThrowsBadRequest() {
+        Booking booking = Booking.builder()
+                .id(5L)
+                .status(BookingStatus.PENDING)
+                .build();
+
+        when(bookingRepository.findById(5L)).thenReturn(Optional.of(booking));
+
+        UpdateBookingStatusRequest req = UpdateBookingStatusRequest.builder()
+                .status(BookingStatus.COMPLETED)
+                .note("Hoàn tất sớm")
+                .build();
+
+        assertThatThrownBy(() -> bookingService.updateBookingStatus(5L, req, "staff1"))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("Không thể chuyển đổi trạng thái đơn thuê từ PENDING sang COMPLETED");
     }
 }

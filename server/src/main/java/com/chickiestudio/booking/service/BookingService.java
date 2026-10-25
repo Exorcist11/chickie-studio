@@ -2,12 +2,17 @@ package com.chickiestudio.booking.service;
 
 import com.chickiestudio.booking.dto.BookingItemResponse;
 import com.chickiestudio.booking.dto.BookingResponse;
+import com.chickiestudio.booking.dto.BookingStatusHistoryResponse;
 import com.chickiestudio.booking.dto.CreateBookingRequest;
+import com.chickiestudio.booking.dto.UpdateBookingStatusRequest;
 import com.chickiestudio.booking.entity.Booking;
 import com.chickiestudio.booking.entity.BookingItem;
 import com.chickiestudio.booking.entity.BookingStatus;
+import com.chickiestudio.booking.entity.BookingStatusHistory;
 import com.chickiestudio.booking.repository.BookingItemRepository;
 import com.chickiestudio.booking.repository.BookingRepository;
+import com.chickiestudio.booking.repository.BookingSpecification;
+import com.chickiestudio.booking.repository.BookingStatusHistoryRepository;
 import com.chickiestudio.category.entity.CategoryType;
 import com.chickiestudio.common.exception.BadRequestException;
 import com.chickiestudio.common.exception.ConflictException;
@@ -20,6 +25,9 @@ import com.chickiestudio.product.repository.ProductItemRepository;
 import com.chickiestudio.product.repository.ProductVariantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +50,7 @@ public class BookingService {
     private final BookingItemRepository bookingItemRepository;
     private final ProductVariantRepository productVariantRepository;
     private final ProductItemRepository productItemRepository;
+    private final BookingStatusHistoryRepository bookingStatusHistoryRepository;
 
     @Transactional
     public BookingResponse createBooking(CreateBookingRequest request) {
@@ -190,10 +199,126 @@ public class BookingService {
 
         Booking savedBooking = bookingRepository.save(booking);
 
+        BookingStatusHistory initialHistory = BookingStatusHistory.builder()
+                .booking(savedBooking)
+                .fromStatus(null)
+                .toStatus(BookingStatus.PENDING)
+                .changedBy("CUSTOMER")
+                .note("Đơn đặt thuê tạo trực tuyến trên website")
+                .build();
+        bookingStatusHistoryRepository.save(initialHistory);
+
         log.info("Đã tạo thành công đơn đặt thuê {} cho khách hàng {} (Item #{})",
                 bookingCode, request.getCustomerName(), allocatedItem.getId());
 
         return mapToResponse(savedBooking, durationDays);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookingResponse> getBookingsForAdmin(
+            BookingStatus status,
+            String search,
+            LocalDate startDate,
+            LocalDate endDate,
+            Boolean todayDeliver,
+            Boolean todayReturn,
+            Boolean overdue,
+            Pageable pageable
+    ) {
+        Specification<Booking> spec = BookingSpecification.filterBookings(
+                status, search, startDate, endDate, todayDeliver, todayReturn, overdue
+        );
+        Page<Booking> page = bookingRepository.findAll(spec, pageable);
+        return page.map(b -> {
+            int durationDays = (int) ChronoUnit.DAYS.between(b.getRentalStartDate(), b.getRentalEndDate()) + 1;
+            if (durationDays < 1) durationDays = 1;
+            return mapToResponse(b, durationDays);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public BookingResponse getBookingById(Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn đặt thuê với ID: " + id));
+
+        int durationDays = (int) ChronoUnit.DAYS.between(booking.getRentalStartDate(), booking.getRentalEndDate()) + 1;
+        if (durationDays < 1) durationDays = 1;
+
+        return mapToResponse(booking, durationDays);
+    }
+
+    @Transactional
+    public BookingResponse updateBookingStatus(Long id, UpdateBookingStatusRequest request, String changedBy) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn đặt thuê với ID: " + id));
+
+        BookingStatus currentStatus = booking.getStatus();
+        BookingStatus targetStatus = request.getStatus();
+
+        if (!currentStatus.canTransitionTo(targetStatus)) {
+            throw new BadRequestException(String.format("Không thể chuyển đổi trạng thái đơn thuê từ %s sang %s", currentStatus, targetStatus));
+        }
+
+        if (targetStatus == BookingStatus.CANCELLED && (request.getNote() == null || request.getNote().trim().isEmpty())) {
+            throw new BadRequestException("Vui lòng cung cấp lý do khi hủy đơn thuê");
+        }
+
+        booking.setStatus(targetStatus);
+
+        // Đồng bộ trạng thái món đồ thực tế (ProductItem)
+        if (booking.getItems() != null) {
+            for (BookingItem bi : booking.getItems()) {
+                ProductItem item = bi.getProductItem();
+                if (item != null) {
+                    switch (targetStatus) {
+                        case DELIVERED -> {
+                            item.setStatus(ProductItemStatus.RENTED);
+                            productItemRepository.save(item);
+                            log.info("Món đồ #{} chuyển sang trạng thái RENTED", item.getItemCode());
+                        }
+                        case RETURNED -> {
+                            item.setStatus(ProductItemStatus.LAUNDRY);
+                            item.setRentalCount(item.getRentalCount() + 1);
+                            productItemRepository.save(item);
+                            log.info("Món đồ #{} chuyển sang trạng thái LAUNDRY, rentalCount={}", item.getItemCode(), item.getRentalCount());
+                        }
+                        case COMPLETED -> {
+                            if (item.getStatus() == ProductItemStatus.LAUNDRY || item.getStatus() == ProductItemStatus.RENTED) {
+                                item.setStatus(ProductItemStatus.AVAILABLE);
+                                productItemRepository.save(item);
+                                log.info("Món đồ #{} hoàn tất đơn và chuyển về AVAILABLE", item.getItemCode());
+                            }
+                        }
+                        case CANCELLED -> {
+                            if (item.getStatus() == ProductItemStatus.RENTED) {
+                                item.setStatus(ProductItemStatus.AVAILABLE);
+                                productItemRepository.save(item);
+                                log.info("Đơn hủy: Giải phóng món đồ #{} về AVAILABLE", item.getItemCode());
+                            }
+                        }
+                        default -> {}
+                    }
+                }
+            }
+        }
+
+        BookingStatusHistory history = BookingStatusHistory.builder()
+                .booking(booking)
+                .fromStatus(currentStatus)
+                .toStatus(targetStatus)
+                .changedBy(changedBy != null ? changedBy : "SYSTEM")
+                .note(request.getNote())
+                .build();
+        bookingStatusHistoryRepository.save(history);
+
+        Booking saved = bookingRepository.save(booking);
+        log.info("Cập nhật trạng thái đơn thuê ID {} ({}) từ {} sang {} bởi {}",
+                saved.getId(), saved.getBookingCode(), currentStatus, targetStatus, changedBy);
+
+        int durationDays = (int) ChronoUnit.DAYS.between(saved.getRentalStartDate(), saved.getRentalEndDate()) + 1;
+        if (durationDays < 1) durationDays = 1;
+
+        return mapToResponse(saved, durationDays);
     }
 
     @Transactional(readOnly = true)
@@ -247,6 +372,22 @@ public class BookingService {
             }
         }
 
+        List<BookingStatusHistoryResponse> historyResponses = new ArrayList<>();
+        if (booking.getId() != null) {
+            historyResponses = bookingStatusHistoryRepository
+                    .findByBookingIdOrderByCreatedAtDesc(booking.getId())
+                    .stream()
+                    .map(h -> BookingStatusHistoryResponse.builder()
+                            .id(h.getId())
+                            .fromStatus(h.getFromStatus())
+                            .toStatus(h.getToStatus())
+                            .changedBy(h.getChangedBy())
+                            .note(h.getNote())
+                            .createdAt(h.getCreatedAt())
+                            .build())
+                    .toList();
+        }
+
         BigDecimal totalAmount = (booking.getTotalRentalPrice() != null ? booking.getTotalRentalPrice() : BigDecimal.ZERO)
                 .add(booking.getTotalDepositPrice() != null ? booking.getTotalDepositPrice() : BigDecimal.ZERO);
 
@@ -267,6 +408,7 @@ public class BookingService {
                 .note(booking.getNote())
                 .createdAt(booking.getCreatedAt())
                 .items(itemResponses)
+                .statusHistories(historyResponses)
                 .build();
     }
 }

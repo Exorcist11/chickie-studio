@@ -37,4 +37,7 @@ public class BookingResponse {
 
     @Builder.Default
     private List<BookingItemResponse> items = new ArrayList<>();
+
+    @Builder.Default
+    private List<BookingStatusHistoryResponse> statusHistories = new ArrayList<>();
 }
