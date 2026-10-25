@@ -699,4 +699,71 @@ class BookingServiceTest {
                 .isInstanceOf(ConflictException.class)
                 .hasMessageContaining("đã kín lịch");
     }
+
+    // =========================================================================
+    // BOK-003: Quét Quá Hạn & State Machine Transition Tests
+    // =========================================================================
+
+    @Test
+    @DisplayName("BOK-003: markOverdueBookings - Quét và tự động chuyển các đơn DELIVERED quá hạn trả sang OVERDUE")
+    void markOverdueBookings_UpdatesOverdueBookings() {
+        LocalDate today = LocalDate.now();
+        Booking overdueBooking = Booking.builder()
+                .id(100L)
+                .bookingCode("BK20261020-OVER")
+                .status(BookingStatus.DELIVERED)
+                .rentalStartDate(today.minusDays(5))
+                .rentalEndDate(today.minusDays(1))
+                .build();
+
+        when(bookingRepository.findByStatusAndRentalEndDateBefore(BookingStatus.DELIVERED, today))
+                .thenReturn(List.of(overdueBooking));
+
+        int markedCount = bookingService.markOverdueBookings(today);
+
+        assertThat(markedCount).isEqualTo(1);
+        assertThat(overdueBooking.getStatus()).isEqualTo(BookingStatus.OVERDUE);
+        verify(bookingRepository).save(overdueBooking);
+        verify(bookingStatusHistoryRepository).save(any(BookingStatusHistory.class));
+    }
+
+    @Test
+    @DisplayName("BOK-003: markOverdueBookings - Không có đơn nào quá hạn trả về 0")
+    void markOverdueBookings_NoOverdue_ReturnsZero() {
+        LocalDate today = LocalDate.now();
+        when(bookingRepository.findByStatusAndRentalEndDateBefore(BookingStatus.DELIVERED, today))
+                .thenReturn(Collections.emptyList());
+
+        int markedCount = bookingService.markOverdueBookings(today);
+
+        assertThat(markedCount).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("BOK-003: updateBookingStatus trả về danh sách nextValidStatuses chính xác theo State Machine")
+    void updateBookingStatus_ReturnsNextValidStatuses() {
+        Booking booking = Booking.builder()
+                .id(10L)
+                .bookingCode("BK20261025-NEXT")
+                .customerName("Lê Hoàng Nam")
+                .customerPhone("0911223344")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.PENDING)
+                .build();
+
+        when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        UpdateBookingStatusRequest req = UpdateBookingStatusRequest.builder()
+                .status(BookingStatus.CONFIRMED)
+                .note("Đã gọi xác nhận đơn")
+                .build();
+
+        BookingResponse res = bookingService.updateBookingStatus(10L, req, "staff1");
+
+        assertThat(res.getStatus()).isEqualTo(BookingStatus.CONFIRMED);
+        assertThat(res.getNextValidStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.DEPOSITED, BookingStatus.CANCELLED);
+    }
 }

@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,5 +69,11 @@ public class AdminBookingController {
 
         BookingResponse response = bookingService.updateBookingStatus(id, request, username);
         return ResponseEntity.ok(ApiResponse.success("Cập nhật trạng thái đơn thuê thành công", response));
+    }
+
+    @PostMapping("/check-overdue")
+    public ResponseEntity<ApiResponse<Integer>> checkOverdueBookings() {
+        int markedCount = bookingService.markOverdueBookings(LocalDate.now());
+        return ResponseEntity.ok(ApiResponse.success("Kiểm tra và cập nhật đơn quá hạn thành công", markedCount));
     }
 }

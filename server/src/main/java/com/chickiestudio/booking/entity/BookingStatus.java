@@ -16,6 +16,23 @@ public enum BookingStatus {
     OVERDUE;
 
     /**
+     * Lấy tập hợp các trạng thái hợp lệ kế tiếp mà trạng thái hiện tại có thể chuyển sang (BOK-003).
+     *
+     * @return Set các trạng thái kế tiếp được phép chuyển đổi
+     */
+    public Set<BookingStatus> getValidNextStatuses() {
+        return switch (this) {
+            case PENDING -> Set.of(CONFIRMED, CANCELLED);
+            case CONFIRMED -> Set.of(DEPOSITED, CANCELLED);
+            case DEPOSITED -> Set.of(DELIVERED, CANCELLED);
+            case DELIVERED -> Set.of(RETURNED, OVERDUE);
+            case OVERDUE -> Set.of(RETURNED);
+            case RETURNED -> Set.of(COMPLETED);
+            case COMPLETED, CANCELLED -> Set.of();
+        };
+    }
+
+    /**
      * Kiểm tra tính hợp lệ của việc chuyển đổi trạng thái đơn thuê.
      *
      * @param targetStatus Trạng thái đích muốn chuyển sang
@@ -26,14 +43,6 @@ public enum BookingStatus {
             return true;
         }
 
-        return switch (this) {
-            case PENDING -> Set.of(CONFIRMED, CANCELLED).contains(targetStatus);
-            case CONFIRMED -> Set.of(DEPOSITED, CANCELLED).contains(targetStatus);
-            case DEPOSITED -> Set.of(DELIVERED, CANCELLED).contains(targetStatus);
-            case DELIVERED -> Set.of(RETURNED, OVERDUE).contains(targetStatus);
-            case OVERDUE -> Set.of(RETURNED).contains(targetStatus);
-            case RETURNED -> Set.of(COMPLETED).contains(targetStatus);
-            case COMPLETED, CANCELLED -> false;
-        };
+        return getValidNextStatuses().contains(targetStatus);
     }
 }

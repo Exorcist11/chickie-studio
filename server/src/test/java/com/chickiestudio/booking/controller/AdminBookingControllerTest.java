@@ -34,6 +34,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -194,5 +195,18 @@ class AdminBookingControllerTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Không thể chuyển đổi trạng thái đơn thuê từ PENDING sang COMPLETED"));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("POST /api/admin/bookings/check-overdue trả về 200 OK với số lượng đơn được đánh dấu quá hạn")
+    void checkOverdueBookings_Returns200() throws Exception {
+        when(bookingService.markOverdueBookings(any())).thenReturn(2);
+
+        mockMvc.perform(post("/api/admin/bookings/check-overdue"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.data").value(2))
+                .andExpect(jsonPath("$.message").value("Kiểm tra và cập nhật đơn quá hạn thành công"));
     }
 }

@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -312,6 +313,35 @@ public class BookingService {
         return mapToResponse(saved, durationDays);
     }
 
+    /**
+     * Tự động quét và cập nhật trạng thái các đơn thuê DELIVERED đã quá hạn ngày trả sang OVERDUE (BOK-003).
+     *
+     * @param currentDate Ngày hiện tại để đối chiếu (mặc định LocalDate.now())
+     * @return Số lượng đơn thuê đã được đánh dấu OVERDUE
+     */
+    @Transactional
+    public int markOverdueBookings(LocalDate currentDate) {
+        LocalDate dateToCheck = currentDate != null ? currentDate : LocalDate.now();
+        List<Booking> overdueBookings = bookingRepository.findByStatusAndRentalEndDateBefore(BookingStatus.DELIVERED, dateToCheck);
+        int count = 0;
+        for (Booking booking : overdueBookings) {
+            booking.setStatus(BookingStatus.OVERDUE);
+            BookingStatusHistory history = BookingStatusHistory.builder()
+                    .booking(booking)
+                    .fromStatus(BookingStatus.DELIVERED)
+                    .toStatus(BookingStatus.OVERDUE)
+                    .changedBy("SYSTEM")
+                    .note("Tự động đánh dấu quá hạn trả đồ (Ngày hẹn trả: " + booking.getRentalEndDate() + ")")
+                    .build();
+            bookingStatusHistoryRepository.save(history);
+            bookingRepository.save(booking);
+            count++;
+            log.warn("Đơn thuê {} ({}) đã quá ngày trả {}, tự động chuyển trạng thái OVERDUE",
+                    booking.getId(), booking.getBookingCode(), booking.getRentalEndDate());
+        }
+        return count;
+    }
+
     @Transactional(readOnly = true)
     public BookingResponse getBookingByCode(String bookingCode) {
         Booking booking = bookingRepository.findByBookingCode(bookingCode)
@@ -428,6 +458,10 @@ public class BookingService {
         BigDecimal totalAmount = (booking.getTotalRentalPrice() != null ? booking.getTotalRentalPrice() : BigDecimal.ZERO)
                 .add(booking.getTotalDepositPrice() != null ? booking.getTotalDepositPrice() : BigDecimal.ZERO);
 
+        List<BookingStatus> nextValidStatuses = booking.getStatus() != null
+                ? new ArrayList<>(booking.getStatus().getValidNextStatuses())
+                : Collections.emptyList();
+
         return BookingResponse.builder()
                 .id(booking.getId())
                 .bookingCode(booking.getBookingCode())
@@ -446,6 +480,7 @@ public class BookingService {
                 .createdAt(booking.getCreatedAt())
                 .items(itemResponses)
                 .statusHistories(historyResponses)
+                .nextValidStatuses(nextValidStatuses)
                 .build();
     }
 

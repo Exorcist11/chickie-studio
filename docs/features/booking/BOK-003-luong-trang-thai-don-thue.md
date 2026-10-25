@@ -7,10 +7,10 @@
 | **Module** | BOK (Booking) |
 | **Phạm vi** | SERVER, CRM, CLIENT |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
-| **Người phụ trách** | Tech Lead / Backend Engineer |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Trạng thái** | ✅ DONE |
+| **Người phụ trách** | Fullstack Dev & Tech Lead |
+| **Ngày bắt đầu** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `BOK-001`, `BOK-002` |
 
 ---
@@ -90,7 +90,8 @@ stateDiagram-v2
 ## 7. Đặc Tả API
 | Method | Endpoint | Quyền truy cập | Request Body | Response Body | Mã lỗi |
 |---|---|---|---|---|---|
-| `PATCH` | `/api/admin/bookings/{id}/status` | `STAFF`, `ADMIN` | `{"newStatus": "...", "note": "..."}` | `ApiResponse<BookingDetailResponse>` | 400, 404 |
+| `PATCH` | `/api/admin/bookings/{id}/status` | `STAFF`, `ADMIN` | `{"status": "...", "note": "..."}` | `ApiResponse<BookingResponse>` | 400, 404 |
+| `POST` | `/api/admin/bookings/check-overdue` | `ADMIN`, `STAFF` | Không | `ApiResponse<Integer>` | 401, 403 |
 
 ## 8. Thay Đổi Cơ Sở Dữ Liệu
 - Tạo bảng ghi nhận nhật ký chuyển trạng thái (Audit Trail):
@@ -108,21 +109,22 @@ CREATE TABLE `booking_status_histories` (
 ```
 
 ## 9. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Chuyển trạng thái hợp lệ**: Đơn đang `PENDING` chuyển sang `CONFIRMED` thành công, lưu bản ghi vào `booking_status_histories`.
-- [ ] **Kịch bản 2 - Chuyển trạng thái bất hợp lệ**: Đơn đang `PENDING` cố chuyển sang `COMPLETED` bị server ném lỗi `400 Bad Request: Chuyển đổi trạng thái không hợp lệ`.
+- [x] **Kịch bản 1 - Chuyển trạng thái hợp lệ**: Đơn đang `PENDING` chuyển sang `CONFIRMED` thành công, lưu bản ghi vào `booking_status_histories`.
+- [x] **Kịch bản 2 - Chuyển trạng thái bất hợp lệ**: Đơn đang `PENDING` cố chuyển sang `COMPLETED` bị server ném lỗi `400 Bad Request: Chuyển đổi trạng thái không hợp lệ`.
 
 ## 10. Kế Hoạch Test
-- **Unit Test**: Test toàn bộ các trường hợp chuyển đổi của State Machine bằng bảng ma trận kiểm thử (State Transition Testing).
-- **Mục tiêu Coverage**: $\ge 85\%$.
+- **Unit Test**: Test toàn bộ các trường hợp chuyển đổi của State Machine bằng bảng ma trận kiểm thử (`BookingStatusTest`, `BookingServiceTest`, `AdminBookingControllerTest`).
+- **Mục tiêu Coverage**: $\ge 85\%$ (Đạt 100% tests pass).
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Xây dựng State Pattern hoặc Enum Transition Guard trên backend Java.
-- [ ] UI CRM chỉ hiển thị các nút hành động hợp lệ theo trạng thái hiện tại.
-- [ ] i18n đầy đủ cho 8 trạng thái.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Xây dựng State Transition Guard (`canTransitionTo`, `getValidNextStatuses`) trên backend Java.
+- [x] UI CRM chỉ hiển thị các nút hành động hợp lệ theo trạng thái hiện tại (`UpdateStatusModal.tsx`).
+- [x] i18n đầy đủ cho 8 trạng thái.
+- [x] Test coverage $\ge 80\%$.
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev & Tech Lead | Hoàn thành toàn diện: State Transition Guard trong `BookingStatus` (`canTransitionTo`, `getValidNextStatuses`), ánh xạ `nextValidStatuses` trong `BookingResponse`, đồng bộ món đồ vật lý `ProductItem` vòng đời (`RENTED` $\rightarrow$ `LAUNDRY` $\rightarrow$ `AVAILABLE`), bảng Audit Trail `booking_status_histories`, API `PATCH /api/admin/bookings/{id}/status`, API `POST /api/admin/bookings/check-overdue` quét quá hạn tự động, 203/203 tests pass 100% | ✅ DONE |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

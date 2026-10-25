@@ -40,4 +40,7 @@ public class BookingResponse {
 
     @Builder.Default
     private List<BookingStatusHistoryResponse> statusHistories = new ArrayList<>();
+
+    @Builder.Default
+    private List<BookingStatus> nextValidStatuses = new ArrayList<>();
 }

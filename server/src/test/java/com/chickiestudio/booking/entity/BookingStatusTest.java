@@ -78,4 +78,29 @@ class BookingStatusTest {
             }
         }
     }
+
+    @Test
+    @DisplayName("getValidNextStatuses - Trả về chính xác tập hợp trạng thái kế tiếp được phép")
+    void testGetValidNextStatuses() {
+        assertThat(BookingStatus.PENDING.getValidNextStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.CONFIRMED, BookingStatus.CANCELLED);
+
+        assertThat(BookingStatus.CONFIRMED.getValidNextStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.DEPOSITED, BookingStatus.CANCELLED);
+
+        assertThat(BookingStatus.DEPOSITED.getValidNextStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.DELIVERED, BookingStatus.CANCELLED);
+
+        assertThat(BookingStatus.DELIVERED.getValidNextStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.RETURNED, BookingStatus.OVERDUE);
+
+        assertThat(BookingStatus.OVERDUE.getValidNextStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.RETURNED);
+
+        assertThat(BookingStatus.RETURNED.getValidNextStatuses())
+                .containsExactlyInAnyOrder(BookingStatus.COMPLETED);
+
+        assertThat(BookingStatus.COMPLETED.getValidNextStatuses()).isEmpty();
+        assertThat(BookingStatus.CANCELLED.getValidNextStatuses()).isEmpty();
+    }
 }

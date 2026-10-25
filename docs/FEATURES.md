@@ -41,15 +41,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 0 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 1 | 0 | 4 | 40.0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 0 | 0 | 5 | 50.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 2 | 0 | 1 | 14.3% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **4** | **0** | **15** | **30.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **3** | **0** | **16** | **32.0%** |
 
-*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-004, BOK-005, CNT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-003, BOK-004, BOK-005, CNT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -97,7 +97,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|---|
 | `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
 | `BOK-002` | Chống trùng lịch & Ngày đệm giặt ủi an toàn | SERVER | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-002](features/booking/BOK-002-chong-trung-lich-ngay-dem.md) |
-| `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | 📝 SPEC | Backend Engineer | - | - | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
+| `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
 | `BOK-005` | Tra cứu đơn bằng mã đơn và SĐT trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-005](features/booking/BOK-005-tra-cuu-don-ma-sdt-client.md) |
 | `BOK-006` | Lịch thuê dạng Calendar trực quan trên CRM | CRM | P1 | ⬜ TODO | - | - | - | - |
@@ -164,6 +164,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `BOK-003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện: State Transition Guard (canTransitionTo, getValidNextStatuses), đồng bộ vòng đời món đồ vật lý (RENTED -> LAUNDRY -> AVAILABLE), bảng Audit Trail booking_status_histories, API PATCH /api/admin/bookings/{id}/status, API POST /api/admin/bookings/check-overdue, 203/203 tests pass 100% |
 | 2026-10-25 | `BOK-002` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện: Khóa bi quan Pessimistic Write Lock findActiveItemsForUpdate trong ProductItemRepository ngăn chặn triệt để Race condition / trùng lịch; chuẩn hóa thuật toán tính bufferDays theo loại danh mục (1 ngày cho trang phục, 0 ngày cho máy ảnh/dịch vụ); kiểm tra giao thoa khoảng thời gian đối xứng; 198/198 tests pass 100% |
 | 2026-10-25 | `CNT-001` | 🚧 IN_PROGRESS $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Backend API GET /api/public/home/featured tổng hợp 6 khối nội dung; Client HomePage SSR kết nối API, bổ sung ProcessSteps (4 bước thuê đồ trực quan), FloatingContact (Hotline 1 chạm & Zalo chat), JSON-LD ClothingStore SEO, 273/273 unit tests & 16/16 Playwright tests pass 100% |
 | 2026-10-25 | `CNT-001` | 📝 SPEC $\rightarrow$ 🚧 IN_PROGRESS | Fullstack Dev | Hoàn thành toàn diện phần Backend: DTOs (HeroBannerDto, FeaturedServiceDto, RentalStepDto, TestimonialDto, HomeFeaturedResponse), HomeFeaturedService tổng hợp top categories & top products, PublicHomeController endpoint GET /api/public/home/featured, 195/195 tests pass 100% |

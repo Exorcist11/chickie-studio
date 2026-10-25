@@ -7,6 +7,26 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **State Machine Quản Lý Vòng Đời Đơn Thuê & Tự Động Quét Quá Hạn (BOK-003 - ✅ DONE)**:
+  - **Hạ Tầng Backend Server (Spring Boot 3 + MySQL)**:
+    - **State Transition Guard (`BookingStatus.canTransitionTo` & `getValidNextStatuses`)**:
+      - Kiểm soát chặt chẽ ma trận chuyển đổi 8 trạng thái (`PENDING` $\rightarrow$ `CONFIRMED` $\rightarrow$ `DEPOSITED` $\rightarrow$ `DELIVERED` $\rightarrow$ `RETURNED` $\rightarrow$ `COMPLETED`, nhánh `OVERDUE` và `CANCELLED`).
+      - Ngăn chặn hoàn toàn việc nhảy cóc trạng thái bất hợp lệ (ném `BadRequestException (400)`).
+      - Bổ sung trường `nextValidStatuses` trong `BookingResponse` hỗ trợ frontend hiển thị chính xác các action hợp lệ.
+    - **Tự Động Đồng Bộ Vòng Đời Món Đồ Thực Tế (`ProductItem`)**:
+      - Khi đơn chuyển `DELIVERED`: Món đồ tự chuyển sang `RENTED`.
+      - Khi đơn chuyển `RETURNED`: Món đồ tự chuyển sang `LAUNDRY` và tự động tăng `rentalCount + 1`.
+      - Khi đơn chuyển `COMPLETED` hoặc `CANCELLED`: Món đồ được giải phóng về `AVAILABLE`.
+    - **Tự Động Quét & Đánh Dấu Quá Hạn (`markOverdueBookings`)**:
+      - Tầng Repo `findByStatusAndRentalEndDateBefore`: Lọc các đơn `DELIVERED` đã quá hạn trả.
+      - Chuyển trạng thái sang `OVERDUE`, ghi nhận lịch sử hệ thống `SYSTEM` với lý do rõ ràng.
+      - Endpoint RESTful `POST /api/admin/bookings/check-overdue` cho phép kích hoạt quét quá hạn.
+    - **Bảng Nhật Ký Kiểm Toán (Audit Trail)**:
+      - Lưu vết đầy đủ trong `booking_status_histories` (`from_status`, `to_status`, `changed_by`, `note`, `created_at`).
+    - **Kiểm thử tự động Server**:
+      - Bổ sung test cases ma trận chuyển đổi, quét quá hạn và danh sách trạng thái kế tiếp trong `BookingStatusTest`, `BookingServiceTest`, `AdminBookingControllerTest`.
+      - Toàn bộ **203/203 tests Server pass 100%**.
+
 - **Thuật Toán Chống Trùng Lịch & Ngày Đệm Giặt Ủi Concurrency Safe (BOK-002 - ✅ DONE)**:
   - **Hạ Tầng Backend Server (Spring Boot 3 + MySQL)**:
     - **Khóa bi quan Pessimistic Write Lock (`@Lock(LockModeType.PESSIMISTIC_WRITE)`)**:
