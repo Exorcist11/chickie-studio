@@ -49,6 +49,21 @@ Bộ component overlays & feedback chuẩn WAI-ARIA, Focus Trap, Escape handler,
 | **Tooltip** | `src/components/ui/Tooltip/Tooltip.tsx` | `content`, `children`, `placement`, `delayMs` (default 200ms) | `<Tooltip content="Gợi ý"><button>Icon</button></Tooltip>` | ✅ Pass (100% lines, 95% branches, axe pass) |
 | **Notify & Toaster** | `src/components/ui/Notify/` | `notify.success()`, `notify.error()`, `notify.warning()`, `notify.info()`, `<Toaster />` | `notify.success("Lưu thành công!", { title: "Hoàn tất" })` | ✅ Pass ($\ge 99\%$ lines, 92.3% branches, axe pass) |
 
+### Bảng Component Ngày Tháng & Form Chuyên Biệt (Giai Đoạn UI-3)
+
+Bộ component chuyên dụng phục vụ luồng đặt lịch thuê, nhập số tiền VND chuẩn định dạng dấu chấm phân cách hàng nghìn, số điện thoại Việt Nam đầu số nhà mạng và các field tích hợp `react-hook-form`:
+
+| Tên Component | Vị trí file trong client & crm | Props chính | Ví dụ sử dụng (1 dòng) | Trạng thái Test & Coverage |
+| :--- | :--- | :--- | :--- | :--- |
+| **CurrencyField** | `src/components/ui/CurrencyField/CurrencyField.tsx` | `value` (number), `onChange(val: number)`, `presets` (number[]), `min`, `max`, `suffix` ("₫"), `label`, `error` | `<CurrencyField label="Tiền cọc" value={deposit} onChange={setDeposit} presets={[200000, 500000]} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **PhoneField** | `src/components/ui/PhoneField/PhoneField.tsx` | `value` (chuỗi 10 số), `onChange(cleanPhone: string)`, `label`, `error`, `hint`, prefix quốc gia `+84` | `<PhoneField label="Số điện thoại" value={phone} onChange={setPhone} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **DatePicker** | `src/components/ui/DatePicker/DatePicker.tsx` | `value` ("YYYY-MM-DD"), `onChange(iso: string)`, `minDate`, `maxDate`, `disabledDates`, calendar popup WAI-ARIA grid | `<DatePicker label="Ngày bắt đầu" value={date} onChange={setDate} minDate="2026-10-25" />` | ✅ Pass (100% lines, axe a11y pass) |
+| **DateRangePicker** | `src/components/ui/DatePicker/` / `DateRangeField/` | Alias/wrapper chuẩn hóa `DateRangeField` cho chọn khoảng ngày thuê nhận - trả | `<DateRangePicker label="Thời gian thuê" startDate={s} endDate={e} onRangeChange={setRange} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **Chip / ChipGroup** | `src/components/ui/Chip/Chip.tsx` | `label`, `selected`, `onToggle`, `options`, `value`, `onChange`, `multiple` (lọc tag/combo) | `<ChipGroup options={pills} value={selectedPill} onChange={setSelectedPill} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **SizeSelector** | `src/components/ui/SizeSelector/SizeSelector.tsx` | `sizes` (string[] hoặc object), `value`, `onChange`, radio group buttons chuẩn hóa | `<SizeSelector sizes={["S", "M", "L"]} value={size} onChange={setSize} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **ColorSwatchGroup** | `src/components/ui/ColorSwatch/ColorSwatch.tsx` | `colors` (`{ name, value, inStock }[]`), `value`, `onChange`, dùng CSS variable `--swatch-color` (0 inline CSS) | `<ColorSwatchGroup colors={swatches} value={color} onChange={setColor} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **Form* Wrappers** | `src/components/ui/Form/FormComponents.tsx` | `FormTextField`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCurrencyField`, `FormPhoneField`, `FormDatePicker` kết nối `react-hook-form` | `<FormCurrencyField control={form.control} name="deposit" label="Tiền cọc" />` | ✅ Pass (100% lines, axe a11y pass) |
+
 ---
 
 ## 1. Client Components (`client/src/components/ui/`)

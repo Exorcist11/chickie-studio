@@ -8,6 +8,10 @@ import {
   Select,
   Textarea,
   DateRangeField,
+  CurrencyField,
+  PhoneField,
+  DatePicker,
+  DateRangePicker,
   Chip,
   ChipGroup,
   Badge,
@@ -79,6 +83,9 @@ export default function DevComponentsPage() {
   const [uiChecked, setUiChecked] = React.useState(true);
   const [uiRadio, setUiRadio] = React.useState("standard");
   const [uiSwitch, setUiSwitch] = React.useState(true);
+  const [devCurrency, setDevCurrency] = React.useState(350000);
+  const [devPhone, setDevPhone] = React.useState("0987654321");
+  const [devDate, setDevDate] = React.useState("2026-10-25");
 
   const colors = [
     { name: "Burgundy", hex: "#641D2B" },
@@ -422,6 +429,38 @@ export default function DevComponentsPage() {
           </div>
         </section>
 
+
+        {/* 4c. Giai Đoạn UI-3: Form & Ngày Tháng Chuyên Biệt (@chickie/ui) */}
+        <section className="space-y-4">
+          <SectionHeading
+            title="4c. Giai Đoạn UI-3: Ngày & Form Chuyên Biệt (CurrencyField, PhoneField, DatePicker)"
+            description="Component nhập tiền tệ VND có dấu chấm hàng nghìn, định dạng số điện thoại Việt Nam +84, bộ chọn ngày DatePicker popup WAI-ARIA"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-white rounded-card border border-line">
+            <CurrencyField
+              label="Tiền cọc giữ đồ (VND)"
+              value={devCurrency}
+              onChange={setDevCurrency}
+              quickPresets={[100000, 200000, 500000, 1000000]}
+              hint="Hỗ trợ nút chọn nhanh tiền cọc"
+              required
+            />
+            <PhoneField
+              label="Số điện thoại khách (VN)"
+              value={devPhone}
+              onChange={setDevPhone}
+              hint="Tự động chia cụm 0987 654 321"
+              required
+            />
+            <DatePicker
+              label="Ngày nhận đồ (DatePicker)"
+              value={devDate}
+              onChange={setDevDate}
+              hint="Chọn ngày từ lịch popup"
+              required
+            />
+          </div>
+        </section>
 
         {/* 5. Inputs & Form Controls */}
         <section className="space-y-4">

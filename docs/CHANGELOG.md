@@ -7,6 +7,40 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Bộ Component Ngày Tháng & Form Chuyên Biệt UI-3 (UI-003 - ✅ DONE)**:
+  - **Triển Khai Bộ Component Date & Form Chuyên Dụng (@chickie/ui)**:
+    - **CurrencyField (`CurrencyField.tsx`, `CurrencyField.utils.ts`)**:
+      - Nhập tiền tệ VND chuẩn với dấu chấm phân cách hàng nghìn (ví dụ: `1.500.000₫`), suffix đơn vị tiền tệ cố định hoặc tùy biến.
+      - Tự động lọc bỏ ký tự không phải số, ràng buộc khoảng giá trị tối thiểu/tối đa (`min`, `max`), kích hoạt sự kiện `onChange(number)` chuẩn số nguyên.
+      - Bổ sung thanh chọn nhanh (*quick presets*) các mốc cọc/thanh toán phổ biến (ví dụ: `200.000₫`, `500.000₫`, `1.000.000₫`, `2.000.000₫`).
+    - **PhoneField (`PhoneField.tsx`, `PhoneField.utils.ts`)**:
+      - Nhập số điện thoại Việt Nam tự động định dạng nhóm `0xxx xxx xxx` (10 số).
+      - Badge quốc gia cố định `+84` trực quan, helper tiện ích kiểm tra đầu số hợp lệ của các nhà mạng viễn thông Việt Nam (`isValidVietnamesePhone`).
+      - Sự kiện `onChange` luôn trả về chuỗi số sạch 10 chữ số để gửi trực tiếp lên API.
+    - **DatePicker (`DatePicker.tsx`, `DatePicker.utils.ts`)**:
+      - Bộ chọn ngày đơn với popup lịch chuẩn WAI-ARIA (`role="dialog"`, `role="grid"`, `aria-label`).
+      - Hiển thị ngày tháng theo định dạng quen thuộc Việt Nam `DD/MM/YYYY`, dữ liệu trả về chuẩn ISO `YYYY-MM-DD`.
+      - Hỗ trợ chuyển tháng/năm linh hoạt, nút chọn nhanh "Hôm nay", vô hiệu hóa các ngày ngoài khoảng `minDate` / `maxDate` hoặc danh sách `disabledDates`.
+    - **DateRangePicker (`DateRangeField.tsx` / `DatePicker/index.ts`)**:
+      - Chuẩn hóa alias/wrapper từ `DateRangeField` sẵn có, cung cấp giao diện nhất quán cho việc chọn khoảng ngày thuê nhận - trả đồ.
+    - **Chip / ChipGroup (`Chip.tsx`)**:
+      - Chuẩn hóa và đồng bộ sang CRM, hỗ trợ chế độ đơn chọn / đa chọn (*single / multiple select*), trạng thái `selected`, phím tương tác bàn phím chuẩn Accessibility.
+    - **SizeSelector (`SizeSelector.tsx`)**:
+      - Đồng bộ hóa sang CRM, nhóm nút chọn size trang phục chuẩn radio group accessible, hiển thị trực quan kích thước đã chọn và cảnh báo size hết đồ.
+    - **ColorSwatch / ColorSwatchGroup (`ColorSwatch.tsx`)**:
+      - Đồng bộ hóa sang CRM, hiển thị bảng mã màu với visual swatch dùng CSS Custom Property `--swatch-color` (đảm bảo 0% inline CSS), tooltip tên màu và dấu kiểm khi được chọn.
+    - **Bộ Wrapper Form Kết Nối `react-hook-form` (`Form/FormComponents.tsx`)**:
+      - Cung cấp trọn bộ wrapper cấp cao: `FormTextField`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCurrencyField`, `FormPhoneField`, `FormDatePicker`.
+      - Tự động kết nối `Controller`, lắng nghe sự kiện `onChange`/`onBlur`, hiển thị thông báo lỗi `error` từ `formState.errors` một cách tự động và chuẩn a11y `aria-invalid`.
+  - **Trang Trưng Bày Dev Showcase (`/dev/components`)**:
+    - Bổ sung Section 4c (Client) và Section 8 (CRM) trưng bày đầy đủ tương tác trực tiếp của `CurrencyField`, `PhoneField`, `DatePicker`, `DateRangePicker`, `ChipGroup`, `SizeSelector`, `ColorSwatchGroup`.
+  - **Kiểm Thử Tự Động & Tiêu Chuẩn Kỹ Thuật (DoD)**:
+    - 0% inline CSS (`style={{ ... }}` = 0), sử dụng hoàn toàn CSS variables và Tailwind classes.
+    - 100% tests kiểm thử a11y với `vitest-axe` đạt 0 vi phạm trên cả hai ứng dụng.
+    - Độ bao phủ kiểm thử (coverage) đạt $\ge 95\%$ trên toàn bộ component mới của UI-003.
+    - Client: 58 files test passed (285 tests passed), CRM: 66 files test passed (277 tests passed).
+    - Linter & Typecheck: 0 lỗi, 0 cảnh báo. Next.js & Vite build sản xuất pass 100%.
+
 - **Triển Khai Trọn Gói Bộ Component Lớp Phủ & Phản Hồi UI-2 (UI-002 - ✅ DONE)**:
   - **Triển Khai Bộ Component Overlays & Feedback Chuẩn Hóa (@chickie/ui)**:
     - **Drawer (`Drawer.tsx`)**:

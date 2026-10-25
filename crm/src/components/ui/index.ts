@@ -1,7 +1,7 @@
 // Button
 export * from "./Button";
 
-// Form Controls & Basic Input (UI-1)
+// Form Controls & Basic Input (UI-1 & UI-3)
 export * from "./Input";
 export * from "./TextField";
 export * from "./TextArea";
@@ -9,6 +9,14 @@ export * from "./Select";
 export * from "./Checkbox";
 export * from "./RadioGroup";
 export * from "./Switch";
+export * from "./CurrencyField";
+export * from "./PhoneField";
+export * from "./DatePicker";
+
+// Selection & Tags (UI-3)
+export * from "./Chip";
+export * from "./SizeSelector";
+export * from "./ColorSwatch";
 
 // Badges & Cards
 export * from "./Badge";

@@ -1,7 +1,7 @@
 // Button
 export * from "./Button";
 
-// Form Controls & Basic Input (UI-1)
+// Form Controls & Basic Input (UI-1 & UI-3)
 export * from "./Input";
 export * from "./TextField";
 export * from "./Select";
@@ -9,7 +9,12 @@ export * from "./Textarea";
 export * from "./Checkbox";
 export * from "./RadioGroup";
 export * from "./Switch";
+export * from "./CurrencyField";
+export * from "./PhoneField";
+export * from "./DatePicker";
 export * from "./DateRangeField";
+export { DateRangeField as DateRangePicker } from "./DateRangeField";
+export * from "./Form";
 export * from "./primitives/form";
 
 // Selection & Tags
@@ -29,6 +34,8 @@ export * from "./TestimonialCard";
 export * from "./SectionHeading";
 export * from "./Container";
 export * from "./Section";
+export * from "./Breadcrumbs";
+export * from "./Accordion";
 
 // Feedback & Overlays (UI-002)
 export * from "./Modal";

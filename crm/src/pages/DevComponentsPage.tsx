@@ -35,6 +35,12 @@ import {
   Popover,
   Tooltip,
   notify,
+  CurrencyField,
+  PhoneField,
+  DatePicker,
+  ChipGroup,
+  SizeSelector,
+  ColorSwatchGroup,
 } from "../components/ui";
 import {
   Button as ChickieUIButton,
@@ -75,6 +81,12 @@ export const DevComponentsPage: React.FC = () => {
   const [uiChecked, setUiChecked] = useState(true);
   const [uiRadio, setUiRadio] = useState("direct");
   const [uiSwitch, setUiSwitch] = useState(true);
+  const [crmDeposit, setCrmDeposit] = useState(500000);
+  const [crmPhone, setCrmPhone] = useState("0987654321");
+  const [crmDate, setCrmDate] = useState("2026-10-25");
+  const [crmSize, setCrmSize] = useState("M");
+  const [crmColor, setCrmColor] = useState("#641D2B");
+  const [crmChip, setCrmChip] = useState("dress");
 
   // Sample data for DataTable
   const sampleTableData: SampleOrderRecord[] = [
@@ -587,6 +599,85 @@ export const DevComponentsPage: React.FC = () => {
                 Gửi Notify Toast
               </Button>
             </Tooltip>
+          </div>
+        </section>
+
+        {/* 8. Giai đoạn UI-003: Ngày & Form Chuyên Biệt (CurrencyField, PhoneField, DatePicker, Chip, Size, Color) */}
+        <section className="bg-warm-white p-5 rounded-card border border-line space-y-4">
+          <div>
+            <h3 className="font-playfair text-lg font-semibold text-ink">
+              8. Giai đoạn UI-003: Ngày & Form Chuyên Biệt (Form Fields, DatePicker & Selection)
+            </h3>
+            <p className="text-sm text-ink-muted mt-1">
+              Bộ nhập liệu tiền tệ VND, số điện thoại VN, lịch DatePicker, ChipGroup, SizeSelector và ColorSwatchGroup.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white rounded-card border border-line">
+            <CurrencyField
+              label="Tiền cọc nhận trước (VND)"
+              value={crmDeposit}
+              onChange={setCrmDeposit}
+              quickPresets={[200000, 500000, 1000000]}
+              hint="Nút chọn nhanh số tiền cọc"
+              required
+            />
+            <PhoneField
+              label="Số điện thoại nhân viên / khách"
+              value={crmPhone}
+              onChange={setCrmPhone}
+              hint="Tự động định dạng đầu số VN"
+              required
+            />
+            <DatePicker
+              label="Ngày giao hàng dự kiến"
+              value={crmDate}
+              onChange={setCrmDate}
+              hint="Chọn từ lịch WAI-ARIA"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white rounded-card border border-line">
+            <div>
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Loại trang phục (ChipGroup)
+              </span>
+              <ChipGroup
+                options={[
+                  { label: "Váy dạ hội", value: "dress" },
+                  { label: "Áo dài", value: "aodai" },
+                  { label: "Máy ảnh", value: "camera" },
+                ]}
+                value={crmChip}
+                onChange={setCrmChip}
+              />
+            </div>
+
+            <div>
+              <SizeSelector
+                value={crmSize}
+                onChange={setCrmSize}
+                sizes={["S", "M", "L", "XL"]}
+              />
+            </div>
+
+            <div>
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Bảng màu trang phục (ColorSwatchGroup)
+              </span>
+              <ColorSwatchGroup
+                colors={[
+                  { name: "Burgundy", hex: "#641D2B" },
+                  { name: "Rose", hex: "#D48B97" },
+                  { name: "Gold", hex: "#D4AF37" },
+                  { name: "Ivory", hex: "#FDFBF7" },
+                ]}
+                selectedColor={crmColor}
+                onSelectColor={setCrmColor}
+                showName
+              />
+            </div>
           </div>
         </section>
       </div>
