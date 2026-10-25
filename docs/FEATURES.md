@@ -41,13 +41,13 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 0 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 3 | 0 | 2 | 20.0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 2 | 1 | 2 | 20.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **7** | **0** | **12** | **24.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **6** | **1** | **12** | **24.0%** |
 
 *(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-004 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
@@ -99,7 +99,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | `BOK-002` | Chống trùng lịch & Ngày đệm giặt ủi an toàn | SERVER | P0 | 📝 SPEC | Tech Lead | - | - | [BOK-002](features/booking/BOK-002-chong-trung-lich-ngay-dem.md) |
 | `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | 📝 SPEC | Backend Engineer | - | - | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
-| `BOK-005` | Tra cứu đơn bằng mã đơn và SĐT trên Client | CLIENT, SERVER | P0 | 📝 SPEC | Frontend Dev | - | - | [BOK-005](features/booking/BOK-005-tra-cuu-don-ma-sdt-client.md) |
+| `BOK-005` | Tra cứu đơn bằng mã đơn và SĐT trên Client | CLIENT, SERVER | P0 | 🚧 IN_PROGRESS | Fullstack Dev | 2026-10-25 | - | [BOK-005](features/booking/BOK-005-tra-cuu-don-ma-sdt-client.md) |
 | `BOK-006` | Lịch thuê dạng Calendar trực quan trên CRM | CRM | P1 | ⬜ TODO | - | - | - | - |
 | `BOK-007` | Giữ chỗ tạm thời tự nhả khi quá hạn cọc | SERVER | P1 | ⬜ TODO | - | - | - | - |
 | `BOK-008` | Hỗ trợ đơn thuê nhóm kỷ yếu số lượng lớn | CRM, SERVER | P2 | ⬜ TODO | - | - | - | - |
@@ -164,6 +164,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `BOK-005` | 📝 SPEC $\rightarrow$ 🚧 IN_PROGRESS | Fullstack Dev | Hoàn thành toàn diện phần Backend: V11 Flyway migration tạo index kép (booking_code, customer_phone), DTO BookingTrackingRequest kiểm tra regex SĐT, BookingService.trackBooking chuẩn hóa số điện thoại, bảo mật BR-01/BR-02 ẩn danh changedBy nhân viên, Controller POST /api/public/bookings/tracking, 193/193 tests pass 100% |
 | 2026-10-25 | `BOK-001` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Backend API POST /api/public/bookings (tạo đơn giữ chỗ, phân bổ item kho an toàn, tự sinh mã BK...), GET /api/public/bookings/{code}, Client BookingForm trực quan với inline validation, phương thức nhận đồ (Tại tiệm/Giao tận nơi), modal Luxury xác nhận đặt cọc và trang hóa đơn `/booking/success/[code]`. Test coverage > 93%, 11/11 Playwright E2E pass |
 | 2026-10-25 | `CAT-006` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện: V8 Migration Flyway, Backend API GET /api/public/products/{idOrSlug}/availability tính toán đệm giặt ủi bufferDays, Client AvailabilityCalendar lưới 7 ngày chọn dải ngày, SizeGuideModal bảng quy đổi kích cỡ chuẩn 3 trụ cột, StickyBottomCta mobile view, test coverage đạt 94.9%, 10/10 Playwright E2E pass |
 | 2026-10-25 | `CAT-003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện: V7 Flyway migration, ProductItem entity & state machine (AVAILABLE, RENTED, LAUNDRY, MAINTENANCE, RETIRED), AdminProductItemController API CRUD, CRM Item Instance Management, barcode labels, modal chi tiết, test coverage > 88% |

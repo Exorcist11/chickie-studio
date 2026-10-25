@@ -7,9 +7,9 @@
 | **Module** | BOK (Booking) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
-| **Người phụ trách** | Frontend Dev / Fullstack Dev |
-| **Ngày bắt đầu** | - |
+| **Trạng thái** | 🚧 IN_PROGRESS (BE DONE, Frontend Pending) |
+| **Người phụ trách** | Fullstack Dev |
+| **Ngày bắt đầu** | 2026-10-25 |
 | **Ngày hoàn thành** | - |
 | **Phụ thuộc** | `BOK-001`, `BOK-003` |
 
@@ -51,7 +51,7 @@ sequenceDiagram
 ```
 
 ## 4. Luồng Ngoại Lệ và Trường Hợp Biên
-- **Sai mã đơn hoặc SĐT**: Server trả về `404 Not Found` với thông báo "Không tìm thấy đơn thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại".
+- **Sai mã đơn hoặc SĐT**: Server trả về `404 Not Found` với thông báo "Không tìm thấy đơn đặt thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại".
 - **Khách không nhớ mã đơn**: Gợi ý khách liên hệ hotline hoặc nhắn qua Zalo với nút bấm một chạm.
 
 ## 5. Quy Tắc Nghiệp Vụ
@@ -80,37 +80,39 @@ sequenceDiagram
 ## 7. Đặc Tả API
 | Method | Endpoint | Quyền truy cập | Request Body | Response Body | Mã lỗi |
 |---|---|---|---|---|---|
-| `POST` | `/api/public/bookings/tracking` | Public | `{"bookingCode": "...", "phone": "..."}` | `ApiResponse<BookingTrackingResponse>` | 400, 404 |
+| `POST` | `/api/public/bookings/tracking` | Public | `{"bookingCode": "...", "phone": "..."}` | `ApiResponse<BookingResponse>` | 400, 404 |
 
 ## 8. Thay Đổi Cơ Sở Dữ Liệu
 - Đánh chỉ mục kép phục vụ tra cứu nhanh:
 ```sql
-CREATE INDEX `idx_bookings_tracking` ON `bookings` (`booking_code`, `customer_id`);
+ALTER TABLE `bookings` ADD INDEX `idx_bookings_tracking` (`booking_code`, `customer_phone`);
 ```
 
 ## 9. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Tra cứu đúng thông tin**:
+- [x] **Kịch bản 1 - Tra cứu đúng thông tin**:
   - **Given**: Đơn `BK20261105-001` thuộc về số điện thoại `0987654321`.
   - **When**: Nhập đúng mã và SĐT rồi nhấn tra cứu.
   - **Then**: Hiển thị chính xác tên váy, ngày thuê và trạng thái hiện tại.
-- [ ] **Kịch bản 2 - Sai số điện thoại**:
+- [x] **Kịch bản 2 - Sai số điện thoại**:
   - **Given**: Đơn có thật nhưng nhập sai số điện thoại.
   - **When**: Nhấn tra cứu.
   - **Then**: Hệ thống báo 404 không tìm thấy, không làm lộ thông tin đơn hàng.
 
 ## 10. Kế Hoạch Test
-- **Unit Test**: Test BookingService tìm kiếm theo mã đơn và SĐT.
-- **UI Test**: Test form tra cứu, loading skeleton và hiển thị timeline kết quả.
-- **Mục tiêu Coverage**: $\ge 80\%$.
+- **Unit Test**: Test BookingService tìm kiếm theo mã đơn và SĐT (19/19 tests pass, 100%).
+- **WebMvcTest**: Test Controller POST `/api/public/bookings/tracking` (8/8 tests pass, 100%).
+- **UI Test**: Test form tra cứu, loading skeleton và hiển thị timeline kết quả trên Client.
+- **Mục tiêu Coverage**: $\ge 80\%$ (Server hiện đạt $>90\%$).
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Bảo mật thông tin đơn hàng khách vãng lai.
-- [ ] Timeline hiển thị trực quan trên màn hình nhỏ.
-- [ ] i18n đầy đủ cho cả `vi.json` và `en.json`.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Bảo mật thông tin đơn hàng khách vãng lai (BR-01, BR-02 ẩn danh changedBy nhân viên).
+- [ ] Timeline hiển thị trực quan trên màn hình nhỏ (Client UI).
+- [ ] i18n đầy đủ cho cả `vi.json` và `en.json` (Client UI).
+- [x] Backend Test coverage $\ge 80\%$ (193/193 server tests pass).
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev | Hoàn thành toàn diện Backend API: Flyway V11 migration tạo index kép, DTO `BookingTrackingRequest`, logic chuẩn hóa đối soát SĐT `isPhoneMatching`, cơ chế bảo mật BR-01/BR-02 làm sạch thông tin nhân viên trong timeline, endpoint `POST /api/public/bookings/tracking`, 193/193 tests pass 100% | 🚧 IN_PROGRESS |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

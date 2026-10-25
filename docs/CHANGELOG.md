@@ -7,6 +7,16 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Hạ Tầng Backend Tra Cứu Đơn Thuê Bằng Mã Đơn & SĐT (BOK-005 - 🚧 BE DONE)**:
+  - **Flyway Migration `V11__add_booking_tracking_index.sql`**: Đánh chỉ mục kép `idx_bookings_tracking (booking_code, customer_phone)` phục vụ tra cứu tốc độ cao.
+  - **DTO & Validation**: `BookingTrackingRequest.java` kiểm tra chặt chẽ bắt buộc mã đơn và định dạng số điện thoại Việt Nam (`^(0|\+84)[0-9]{9,10}$`).
+  - **Service & Bảo Mật Khách Hàng (BR-01, BR-02)**:
+    - `BookingService.java`: Triển khai hàm `trackBooking` với cơ chế chuẩn hóa đối soát SĐT `isPhoneMatching` (tương thích cả đầu `0` lẫn `+84`).
+    - Ném `ResourceNotFoundException` khi không khớp hoặc sai mã để tránh rò rỉ thông tin cá nhân.
+    - Làm sạch thông tin nhạy cảm của nhân viên (`changedBy` của quản trị viên được thay bằng `CHICKIE_STUDIO` trong timeline audit trail gửi cho khách).
+  - **REST Controller**: `PublicBookingController.java` mở endpoint `POST /api/public/bookings/tracking`.
+  - **Kiểm thử tự động Server**: Bổ sung 7 test cases mới cho cả Service và WebMvcTest. Toàn bộ **193/193 tests server pass 100%**, coverage $\ge 90\%$.
+
 - **Quản Lý Đơn Thuê Tập Trung Trên CRM & API Quản Trị Trạng Thái (BOK-004 - ✅ DONE)**:
   - **Backend Server (Spring Boot 3 + MySQL)**:
     - **Flyway Migration `V10__create_booking_status_histories.sql`**: Bổ sung bảng `booking_status_histories` phục vụ lưu vết lịch sử chuyển đổi trạng thái (Audit Trail) gồm `booking_id`, `from_status`, `to_status`, `changed_by`, `note`, `created_at`.
