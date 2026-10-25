@@ -16,14 +16,14 @@
 ---
 
 ## 1. Mục Tiêu và Giá Trị Mang Lại
-Cho phép khách hàng vãng lai (không cần đăng nhập tài khoản) tự tra cứu tình trạng đơn thuê của mình bất kỳ lúc nào: xem đơn đã được duyệt chưa, tiệm đã nhận được tiền cọc chưa, ngày giờ cần đến lấy váy và hướng dẫn trả đồ. Giảm thiểu 80% tin nhắn hỏi han thủ công qua fanpage/Zalo.
+Cho phép khách hàng vãng lai (không cần đăng nhập tài khoản) tự tra cứu tình trạng đơn thuê của mình bất kỳ lúc nào: xem đơn đã được duyệt chưa, tiệm đã nhận được tiền cọc chưa, ngày giờ cần đến lấy váy và hướng dẫn trả đồ. Giảm thiểu 80% tin nhắn hỏi han thủ công. Khách hàng nhận được đường link tra cứu nhanh đính kèm trực tiếp trong Email xác nhận đặt lịch (`SET-003`).
 
 ## 2. Người Dùng Liên Quan
-- [x] **Khách hàng**: Tự kiểm tra tiến độ đơn, lấy thông tin tài khoản chuyển khoản cọc nếu lỡ quên.
+- [x] **Khách hàng**: Tự kiểm tra tiến độ đơn, lấy thông tin tài khoản chuyển khoản cọc nếu lỡ quên qua web hoặc link từ email.
 
 ## 3. Luồng Chính (Happy Path)
-1. Khách hàng truy cập vào trang `/tra-cuu-don` trên website Chickie Studio.
-2. Nhập Mã đơn (ví dụ: `BK20261105-012`) và Số điện thoại đã dùng để đặt đồ.
+1. Khách hàng truy cập vào trang `/tra-cuu-don` trên website Chickie Studio (hoặc click vào link từ Email xác nhận đặt đơn `https://chickiestudio.vn/tra-cuu-don?code=...&phone=...`).
+2. Nhập Mã đơn (ví dụ: `BK20261105-012`) và Số điện thoại đã dùng để đặt đồ (tự động điền nếu truy cập từ link email).
 3. Nhấn "Tra cứu đơn hàng".
 4. Client gọi `POST /api/public/bookings/tracking` với `bookingCode` và `phone`.
 5. Server kiểm tra cặp `(booking_code, phone)` trong DB:

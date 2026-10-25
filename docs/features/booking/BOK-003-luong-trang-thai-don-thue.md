@@ -39,14 +39,16 @@ stateDiagram-v2
 ```
 
 ### Chi Tiết Từng Trạng Thái:
-1. **`PENDING` (Chờ xử lý)**: Đơn mới tạo trên website khách, chờ nhân viên check hoặc khách chuyển khoản cọc.
-2. **`CONFIRMED` (Đã xác nhận)**: Shop đã liên hệ khách qua Zalo/Điện thoại chốt mẫu váy và ngày giờ.
-3. **`DEPOSITED` (Đã đặt cọc)**: Tiền cọc đã vào tài khoản shop, đơn chắc chắn được giữ lịch 100%.
-4. **`DELIVERED` (Đang thuê / Đã giao)**: Khách đã nhận váy/máy ảnh rời khỏi cửa hàng.
+1. **`PENDING` (Chờ xử lý)**: Đơn mới tạo trên website khách. Hệ thống tự động gửi Email xác nhận đặt đơn và hướng dẫn chuyển khoản cọc (`SET-003`).
+2. **`CONFIRMED` (Đã xác nhận)**: Shop đã liên hệ khách qua Điện thoại/Email chốt mẫu váy và ngày giờ.
+3. **`DEPOSITED` (Đã đặt cọc)**: Tiền cọc đã vào tài khoản shop, đơn chắc chắn được giữ lịch 100%. Tự động gửi Email xác nhận nhận cọc thành công.
+4. **`DELIVERED` (Đang thuê / Đã giao)**: Khách đã nhận váy/máy ảnh rời khỏi cửa hàng. Tự động gửi Email biên bản bàn giao và nhắc ngày hẹn trả.
 5. **`RETURNED` (Đã trả đồ)**: Khách mang đồ hoàn trả tại quầy, nhân viên tiếp nhận và treo vào khu giặt kiểm tra.
-6. **`COMPLETED` (Hoàn tất)**: Đồ nguyên vẹn, nhân viên hoàn cọc thành công, kết thúc đơn.
-7. **`CANCELLED` (Đã hủy)**: Đơn bị hủy; toàn bộ lịch đồ được giải phóng ngay lập tức.
-8. **`OVERDUE` (Quá hạn trả)**: Hệ thống tự động đánh dấu khi ngày hiện tại vượt quá `rental_end_date` mà đơn vẫn ở trạng thái `DELIVERED`.
+6. **`COMPLETED` (Hoàn tất)**: Đồ nguyên vẹn, nhân viên hoàn cọc thành công, kết thúc đơn. Tự động gửi Email quyết toán hoàn cọc và lời cảm ơn.
+7. **`CANCELLED` (Đã hủy)**: Đơn bị hủy (quá hạn cọc 60 phút hoặc khách báo hủy); toàn bộ lịch đồ được giải phóng ngay lập tức. Tự động gửi Email thông báo hủy đơn.
+8. **`OVERDUE` (Quá hạn trả)**: Hệ thống tự động đánh dấu khi ngày hiện tại vượt quá `rental_end_date` mà đơn vẫn ở trạng thái `DELIVERED`. Gửi Email cảnh báo quá hạn.
+
+*(Lưu ý: Mọi thông báo tự động nói trên đều gửi qua kênh Email, chưa thực hiện gửi qua Zalo hay SMS)*.
 
 ---
 
@@ -68,6 +70,7 @@ stateDiagram-v2
 - **BR-01**: Cấm tuyệt đối việc nhảy cóc trạng thái (ví dụ: đang `PENDING` nhảy thẳng sang `DELIVERED` mà chưa qua bước xác nhận cọc).
 - **BR-02**: Khi đơn chuyển sang `CANCELLED`, hệ thống tự động giải phóng toàn bộ món đồ thực tế (`product_items`) liên kết với đơn đó.
 - **BR-03**: Khi đơn chuyển sang `RETURNED`, trạng thái của món đồ thực tế tự động chuyển sang `LAUNDRY` (`CAT-003`).
+- **BR-04**: Các mốc chuyển đổi trạng thái quan trọng (`PENDING`, `DEPOSITED`, `COMPLETED`, `CANCELLED`) kích hoạt gửi thông báo tự động qua **Email** (`SET-003`). Chưa thực hiện thông báo qua Zalo hay SMS.
 
 ## 6. Giao Diện & Đa Ngôn Ngữ (UI & i18n)
 - **Màn hình**: Steps tracker trên trang tra cứu đơn Client; Badge màu sắc trên CRM DataTable.

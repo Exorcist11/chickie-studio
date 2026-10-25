@@ -84,6 +84,7 @@ sequenceDiagram
     loop Với từng đơn quá hạn
         Job->>DB: UPDATE bookings SET status = 'CANCELLED', note = 'Hệ thống tự động hủy do quá hạn cọc'
         Job->>DB: INSERT INTO booking_status_histories (action='AUTO_CANCEL_EXPIRED_HOLD', changed_by='SYSTEM')
+        Job-)Server: Kích hoạt gửi Email thông báo hết hạn giữ chỗ (booking-expired.html - SET-003)
     end
     DB-->>Job: Hoàn tất giải phóng slot kho đồ
 ```
@@ -102,12 +103,13 @@ sequenceDiagram
 
 ## 5. Quy Tắc Nghiệp Vụ (Business Rules)
 
-- **BR-01 (Thời gian giữ chỗ mặc định)**: Mặc định thời gian giữ chỗ là **120 phút (2 giờ)** kể từ lúc khách tạo đơn thành công trên Client.
+- **BR-01 (Thời gian giữ chỗ mặc định)**: Mặc định thời gian giữ chỗ là **120 phút (2 giờ)** kể từ lúc khách tạo đơn thành công trên Client (hoặc cấu hình động 60 - 120 phút).
 - **BR-02 (Cấu hình linh hoạt qua biến môi trường/setting)**:
   `app.booking.hold-duration-minutes=120` (hoặc cấu hình động trong bảng `shop_settings`).
 - **BR-03 (Giải phóng tức thì cho lịch khả dụng)**: Ngay khi đơn chuyển sang `CANCELLED`, API tính toán lịch trống `ProductAvailabilityService` (`CAT-006`) lập tức coi dải ngày đó là trống, khách hàng khác có thể đặt ngay mà không cần chờ xóa cache.
 - **BR-04 (Giới hạn số lần gia hạn)**: Mỗi đơn thuê chỉ cho phép nhân viên gia hạn cọc tối đa **3 lần**, mỗi lần không quá **120 phút** để tránh việc lạm dụng giữ chỗ vô thời hạn.
 - **BR-05 (Ghi nhận Audit Trail chuẩn xác)**: Mọi đơn bị hủy bởi Scheduler đều ghi nhận `changed_by = "SYSTEM"` và lý do rõ ràng `Hệ thống tự động hủy do quá hạn đặt cọc`.
+- **BR-06 (Thông báo hủy giữ chỗ qua Email)**: Khi đơn bị tự động hủy do hết hạn giữ chỗ, hệ thống tự động gửi Email thông báo (`booking-expired.html` theo `SET-003`) để khách hàng nắm được tình trạng và có link bấm đặt lại khi có nhu cầu. Chưa thực hiện thông báo qua Zalo hay SMS.
 
 ---
 

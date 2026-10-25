@@ -7,10 +7,10 @@
 | **Module** | CNT (Content & SEO) |
 | **Phạm vi** | CLIENT |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Frontend Lead / Senior Web Dev |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Ngày bắt đầu** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | Không |
 
 ---
@@ -67,27 +67,28 @@ src/i18n/messages/
 ```
 
 ## 7. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Chuyển đổi ngôn ngữ**:
+- [x] **Kịch bản 1 - Chuyển đổi ngôn ngữ**:
   - **Given**: Đang ở trang chi tiết váy `/vi/products/vay-lua-trang`.
   - **When**: Chọn ngôn ngữ English.
   - **Then**: Chuyển sang `/en/products/vay-lua-trang`, các nhãn đổi thành "Rental Price", "Rent Now", "Size Guide".
-- [ ] **Kịch bản 2 - Kiểm tra đồng bộ key tự động**:
+- [x] **Kịch bản 2 - Kiểm tra đồng bộ key tự động**:
   - **Given**: File test `i18n.test.ts`.
   - **When**: Chạy `npm run test`.
   - **Then**: Kiểm tra cấu trúc key của `vi.json` và `en.json` khớp nhau hoàn toàn, không thiếu key nào.
 
 ## 8. Kế Hoạch Test
-- **Unit Test**: Test script so sánh đệ quy toàn bộ keys giữa 2 file JSON ngôn ngữ.
-- **UI Test**: Test component `LanguageSwitcher` chuyển đổi locale và URL đúng.
-- **Mục tiêu Coverage**: $\ge 80\%$.
+- **Unit Test**: Test script so sánh đệ quy toàn bộ keys giữa 2 file JSON ngôn ngữ (`src/i18n/i18n.test.ts`), test cấu hình request (`src/i18n/request.test.ts`), test điều hướng middleware (`src/middleware.test.ts`), test component `LanguageSwitcher` (`src/components/ui/LanguageSwitcher/LanguageSwitcher.test.tsx`), test `I18nProvider` (`src/components/providers/I18nProvider.test.tsx`).
+- **UI Test**: Test Playwright E2E (`client/e2e/i18n.spec.ts`) kiểm tra chuyển đổi VI/EN trên Header & Footer, kiểm tra thuộc tính `html lang` và điều hướng locale không hợp lệ.
+- **Mục tiêu Coverage**: $\ge 80\%$ (Đạt: Lines 96.03%, Branches 84.69%).
 
 ## 9. Checklist Hoàn Thành (Definition of Done)
-- [ ] Cấu hình Next.js App Router với `[locale]` phân tầng chuẩn.
-- [ ] Đầy đủ bộ từ điển tiếng Việt và tiếng Anh ban đầu.
-- [ ] Test đối soát key tự động chạy trong CI/CD.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Cấu hình Next.js App Router với `[locale]` phân tầng chuẩn.
+- [x] Đầy đủ bộ từ điển tiếng Việt và tiếng Anh ban đầu.
+- [x] Test đối soát key tự động chạy trong CI/CD.
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 10. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
+| 2026-10-25 | Frontend Team | Triển khai next-intl, LanguageSwitcher, routing [locale], unit tests & Playwright E2E test | ✅ DONE |

@@ -19,6 +19,14 @@
   - **PHẢI** ghi nhận nội dung thay đổi vào `CHANGELOG.md` dưới mục `[Unreleased]` (hoặc phiên bản release tương ứng).
   - **PHẢI** ghi lại vào bảng "Lịch sử cập nhật trạng thái" ở cuối file `docs/FEATURES.md`.
 
+- **KHI CÓ THAY ĐỔI YÊU CẦU / ĐẶC TẢ TÍNH NĂNG (CHANGE REQUEST - CR)**:
+  - Nếu tài liệu đặc tả (spec, business rules, API, form fields, schema DB, UI flow) có sự thay đổi:
+    1. **PHẢI** rà soát toàn bộ các tính năng liên quan.
+    2. Mọi tính năng đã ở trạng thái `✅ DONE` mà bị ảnh hưởng bởi thay đổi mới **BẮT BUỘC PHẢI** chuyển trạng thái sang `🔄 REOPENED` (hoặc `Cần thực hiện lại`) trong `docs/FEATURES.md`, file spec tương ứng và `CHANGELOG.md`.
+    3. **PHẢI** bỏ tích các tiêu chí bị ảnh hưởng trong Checklist Hoàn Thành (Definition of Done) của spec để tiến hành kiểm tra, sửa code, cập nhật test tự động và nghiệm thu lại.
+    4. **TUYỆT ĐỐI CẤM** giữ nguyên trạng thái `✅ DONE` khi mã nguồn thực tế chưa đáp ứng phiên bản spec mới nhất.
+    5. **PHẢI** cập nhật lại số lượng trong **Bảng thống kê tiến độ tổng thể** của `docs/FEATURES.md`.
+
 ---
 
 ## 2. Quy Định Quản Lý Hồ Sơ Kiến Trúc (ADR)

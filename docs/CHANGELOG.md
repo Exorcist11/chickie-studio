@@ -7,6 +7,39 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Hạ Tầng Đa Ngôn Ngữ Song Ngữ Tiếng Việt / Tiếng Anh Cho Client (CNT-007 - ✅ DONE)**:
+  - **Tích Hợp `next-intl` App Router**:
+    - Phân tầng định tuyến theo locale: `src/app/[locale]/` hỗ trợ `vi` (mặc định) và `en`.
+    - Cấu hình middleware `src/middleware.ts` tự động điều hướng các locale không hợp lệ (ví dụ `/fr/...` $\rightarrow$ `/vi/...`) và giữ nguyên tiền tố locale.
+    - Tạo `I18nProvider` bọc `NextIntlClientProvider` với múi giờ chuẩn `Asia/Ho_Chi_Minh`.
+    - Tự động sinh thẻ alternate quốc tế hoá (`hreflang` / `alternates.languages`) trong `generateMetadata()` cho SEO chuẩn.
+  - **Component Chuyển Đổi Ngôn Ngữ (`LanguageSwitcher`)**:
+    - Thiết kế 2 biến thể `pill` (bo tròn có cờ VN/UK ở Header & Footer) và `compact` (dạng VI | EN).
+    - Hỗ trợ đổi locale mà vẫn giữ nguyên đường dẫn trang hiện tại (`pathname`).
+    - Tuân thủ chuẩn WAI-ARIA `role="radiogroup"` và `role="radio"`.
+  - **Bộ Từ Điển Song Ngữ Khớp 100% Keys**:
+    - Đồng bộ hoàn toàn `src/i18n/messages/vi.json` và `src/i18n/messages/en.json` cho toàn bộ các namespace: `common`, `navigation`, `home`, `product`, `booking`, `tracking`, `faq`, `contact`, `about`, `policy`, `errors`.
+  - **Kiểm Thử & Đảm Bảo Chất Lượng**:
+    - Unit test tự động đối soát parity đệ quy giữa `vi.json` và `en.json` (`src/i18n/i18n.test.ts`).
+    - Unit test cho cấu hình request (`src/i18n/request.test.ts`), middleware (`src/middleware.test.ts`), `I18nProvider` (`src/components/providers/I18nProvider.test.tsx`), và `LanguageSwitcher` (`src/components/ui/LanguageSwitcher/LanguageSwitcher.test.tsx`).
+    - 4 kịch bản kiểm thử E2E với Playwright (`client/e2e/i18n.spec.ts`) bao phủ chuyển đổi song ngữ trên Header/Footer và redirect locale không hợp lệ.
+    - Test coverage toàn bộ Client đạt 96.03% Lines (ngưỡng $\ge 80\%$).
+
+- **Đánh Dấu Thực Hiện Lại BOK-001 Theo Thay Đổi Yêu Cầu (BOK-001 - 🔄 REOPENED)**:
+  - Chuyển trạng thái tính năng `BOK-001` (Đặt thuê trên Client) từ `✅ DONE` $\rightarrow$ `🔄 REOPENED`.
+  - Cần thực hiện lại các hạng mục:
+    - Bổ sung trường Email trên Client `BookingForm.tsx`, cập nhật validation schema Zod.
+    - Cập nhật DTO `CreateBookingRequest` và API service `POST /api/public/bookings` tiếp nhận trường email.
+    - Kích hoạt sự kiện gửi Email xác nhận đặt đơn tự động kèm mã VietQR (`SET-003`).
+    - Cập nhật trang hóa đơn thành công `/booking/success/[code]` thông báo đã gửi email xác nhận.
+    - Bổ sung unit tests, integration tests và Playwright E2E tests bao phủ trường Email và luồng gửi email.
+
+- **Thay Đổi Yêu Cầu Kênh Thông Báo: Gửi Email Tự Động, Chưa Triển Khai Zalo/SMS (SET-003 & BOK-001 - 📝 SPEC)**:
+  - **Khách hàng đặt lịch thành công**: Hệ thống tự động gửi Email xác nhận đặt đơn (`booking-confirmation.html`) kèm mã đơn, chi tiết trang phục, số tiền cọc cần chuyển và mã VietQR động thanh toán 1 chạm.
+  - **Chuẩn hóa thông báo toàn bộ vòng đời đơn**: Các sự kiện xác nhận nhận cọc (`deposit-received.html`), nhắc hẹn lấy đồ (`pickup-reminder.html`), nhắc hẹn trả đồ (`return-reminder.html`), biên lai hoàn cọc (`return-completed.html`) và thông báo hủy đơn quá hạn giữ chỗ (`booking-expired.html`) đều được gửi qua **Email**.
+  - **Tạm hoãn kênh Zalo ZNS và SMS**: Hệ thống chưa triển khai gửi tin qua Zalo ZNS và SMS Brandname để tối ưu chi phí và nâng cao chất lượng trải nghiệm email trực quan.
+  - **Cập nhật đồng bộ các tài liệu đặc tả**: `SET-003`, `BOK-001`, `BOK-003`, `BOK-005`, `BOK-007`, `BOK-009`, `BOK-010`, `PAY-001`, `SET-001`.
+
 - **Triển Khai Trọn Gói Bộ Component Common Nghiệp Vụ UI-5 (UI-005 - ✅ DONE)**:
   - **Triển Khai & Chuẩn Hóa Bộ 7 Component Nghiệp Vụ Dùng Chung Cho Cả Client & CRM (@chickie/ui)**:
     - **StatusBadge (`StatusBadge.tsx`)**:

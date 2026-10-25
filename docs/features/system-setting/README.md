@@ -9,8 +9,8 @@ Thư mục lưu trữ toàn bộ các hồ sơ đặc tả kỹ thuật chi ti�
 | Mã ID | Tên Tính Năng | Phạm Vi | Ưu Tiên | Trạng Thái | Link Đặc Tả |
 |---|---|---|---|:---:|---|
 | `SET-001` | Cấu hình thông tin shop, số ngày đệm giặt ủi, tỉ lệ cọc | CRM, SERVER | P1 | 📝 SPEC | [SET-001](SET-001-cau-hinh-thong-tin-shop-tham-so.md) |
-| `SET-002` | Cấu hình nội dung banner & thông điệp trang chủ | CRM, SERVER | P2 | ⬜ TODO | - |
-| `SET-003` | Tích hợp gửi thông báo nhắc lịch qua Zalo ZNS / SMS | SERVER | P2 | ⬜ TODO | - |
+| `SET-002` | Cấu hình nội dung banner & thông điệp trang chủ | CRM, SERVER | P2 | 📝 SPEC | [SET-002](SET-002-cau-hinh-banner-thong-diep-trang-chu.md) |
+| `SET-003` | Hệ thống thông báo qua Email: Xác nhận đặt lịch, cọc & nhắc lịch thuê (Chưa triển khai Zalo/SMS) | SERVER, CRM | P1 | 📝 SPEC | [SET-003](SET-003-thong-bao-email-xac-nhan-va-nhac-lich.md) |
 
 ---
 

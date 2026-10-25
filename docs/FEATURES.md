@@ -26,11 +26,11 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 ## 2. Tính Năng Đang Thực Hiện & Tắc Nghẽn (Active & Blocked)
 
-> Cụm tính năng AUTH (AUTH-001, AUTH-002, AUTH-003) và Catalog cơ bản (CAT-001, CAT-002) đã hoàn thành xuất sắc 100% cả Backend & CRM Frontend. Hệ thống sẵn sàng bước sang các tính năng tiếp theo (`CAT-003`, `CAT-005` hoặc `BOK-001`).
+> Cụm tính năng BOK-001 được kích hoạt làm lại (🔄 REOPENED) do thay đổi yêu cầu: Bổ sung trường Email và kích hoạt tự động gửi Email xác nhận đặt đơn kèm mã VietQR (SET-003).
 
 | ID | Tên tính năng | Phạm vi | Người phụ trách | Trạng thái | Lý do / Ghi chú |
 |---|---|---|---|---|---|
-| - | - | - | - | - | Hiện không có tính năng nào bị tắc nghẽn |
+| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | Fullstack Dev & UI/UX Specialist | 🔄 REOPENED | Thay đổi yêu cầu: Thêm trường Email trên Form đặt thuê Client, cập nhật API và kích hoạt gửi Email xác nhận đơn kèm mã VietQR |
 
 ---
 
@@ -41,15 +41,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 0 | 0 | 0 | 6 | 100% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 0 | 1 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 0 | 3 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 5 | 0 | 5 | 50.0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 5 | 1 | 4 | 40.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 0 | 5 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 0 | 4 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 0 | 3 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 0 | 5 | 0 | 2 | 28.6% |
 | **SET** | Cấu hình hệ thống | 3 | 0 | 3 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **0** | **29** | **0** | **21** | **42.0%** |
+| **TỔNG CỘNG** | | **50** | **0** | **29** | **1** | **20** | **40.0%** |
 
-*(Lưu ý: UI-000, UI-001, UI-002, UI-003, UI-004, UI-005, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-003, BOK-004, BOK-005, CNT-001, CNT-002 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: 20 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; BOK-001 đang được đánh dấu 🔄 REOPENED để bổ sung Email và gửi mail xác nhận; 29 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -95,7 +95,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ### 4.3. Module BOK (Đặt Thuê & Chống Trùng Lịch)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
-| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
+| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | 🔄 REOPENED | Fullstack Dev | 2026-10-25 | - | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
 | `BOK-002` | Chống trùng lịch & Ngày đệm giặt ủi an toàn | SERVER | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-002](features/booking/BOK-002-chong-trung-lich-ngay-dem.md) |
 | `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
@@ -146,8 +146,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | `CNT-003` | Cấu hình SEO Metadata, Sitemap XML & Structured Data | CLIENT | P2 | 📝 SPEC | Frontend Lead & SEO Specialist | - | - | [CNT-003](features/content-seo/CNT-003-seo-metadata-sitemap-structured-data.md) |
 | `CNT-004` | Blog chia sẻ kinh nghiệm chụp ảnh & chọn đồ | CLIENT, CRM | P2 | 📝 SPEC | Fullstack Dev & UI/UX Specialist | - | - | [CNT-004](features/content-seo/CNT-004-blog-chia-se-kinh-nghiem.md) |
 | `CNT-005` | Lookbook bộ sưu tập ảnh phối đồ theo mùa | CLIENT, CRM | P2 | 📝 SPEC | Fullstack Dev & UI/UX Specialist | - | - | [CNT-005](features/content-seo/CNT-005-lookbook-bo-suu-tap-theo-mua.md) |
-| `CNT-006` | Thu thập và hiển thị đánh giá kèm ảnh của khách | CLIENT, CRM | P2 | 📝 SPEC | Fullstack Dev & UI/UX Specialist | - | - | [CNT-006](features/content-seo/CNT-006-thu-thap-hien-thi-danh-gia-khach.md) |
-| `CNT-007` | Hạ tầng đa ngôn ngữ vi/en cho website Client | CLIENT | P0 | 📝 SPEC | Frontend Lead | - | - | [CNT-007](features/content-seo/CNT-007-da-ngon-ngu-vi-en-client.md) |
+| `CNT-007` | Hạ tầng đa ngôn ngữ vi/en cho website Client | CLIENT | P0 | ✅ DONE | Frontend Lead | 2026-10-25 | 2026-10-25 | [CNT-007](features/content-seo/CNT-007-da-ngon-ngu-vi-en-client.md) |
 
 ---
 
@@ -156,7 +155,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|---|
 | `SET-001` | Cấu hình thông tin shop, số ngày đệm giặt ủi, tỉ lệ cọc | CRM, SERVER, CLIENT | P1 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [SET-001](features/system-setting/SET-001-cau-hinh-thong-tin-shop-tham-so.md) |
 | `SET-002` | Cấu hình nội dung banner & thông điệp trang chủ | CRM, SERVER, CLIENT | P2 | 📝 SPEC | Fullstack Dev & UI/UX Specialist | - | - | [SET-002](features/system-setting/SET-002-cau-hinh-banner-thong-diep-trang-chu.md) |
-| `SET-003` | Tích hợp gửi thông báo nhắc lịch qua Zalo ZNS / SMS | SERVER | P2 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [SET-003](features/system-setting/SET-003-thong-bao-nhac-lich-zalo-sms.md) |
+| `SET-003` | Hệ thống thông báo qua Email: Xác nhận đặt lịch, cọc & nhắc lịch thuê (Chưa triển khai Zalo/SMS) | SERVER, CRM | P1 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [SET-003](features/system-setting/SET-003-thong-bao-email-xac-nhan-va-nhac-lich.md) |
 
 ---
 
@@ -164,6 +163,8 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `BOK-001` | ✅ DONE $\rightarrow$ 🔄 REOPENED | Tech Lead & Fullstack Dev | Đánh dấu thực hiện lại do thay đổi yêu cầu: Bổ sung trường Email khách hàng trên Form đặt thuê Client, cập nhật Backend API/DTO và kích hoạt tự động gửi Email xác nhận đặt đơn (booking-confirmation.html) kèm mã VietQR (SET-003) |
+| 2026-10-25 | `SET-003, BOK-001` | Thay đổi yêu cầu (CR) | Tech Lead & Fullstack Dev | Thay đổi kênh thông báo: Khách đặt lịch thành công nhận Email xác nhận tự động; chuẩn hóa toàn bộ các thông báo vòng đời đơn (cọc, nhắc lịch, hoàn cọc, quá hạn) qua Email; tạm thời chưa triển khai Zalo ZNS và SMS. Cập nhật đồng bộ các spec SET-003, BOK-001, BOK-003, BOK-005, BOK-007, BOK-009, BOK-010, PAY-001, SET-001. |
 | 2026-10-25 | Toàn bộ 13 tính năng P1/P2 còn lại | ⬜ TODO $\rightarrow$ 📝 SPEC | Fullstack Dev, Tech Lead & UI/UX Specialist | Hoàn thành 100% hồ sơ đặc tả chi tiết cho toàn bộ 50 tính năng của dự án Chickie Studio: Gợi ý phụ kiện (CAT-007), Đơn kỷ yếu số lượng lớn (BOK-008), Biên bản bàn giao ảnh (BOK-009), Đặt lịch thử đồ (BOK-010), Mã giảm giá (CUS-003), Ưu đãi HSSV (CUS-004), Thống kê hiệu suất kho (RPT-003), SEO & Sitemap (CNT-003), Blog chia sẻ (CNT-004), Lookbook (CNT-005), Đánh giá feedback (CNT-006), Banner trang chủ (SET-002), Thông báo Zalo ZNS (SET-003) |
 | 2026-10-25 | `SET-001, CAT-004, CUS-002` | ⬜ TODO $\rightarrow$ 📝 SPEC | Fullstack Dev & Tech Lead | Hoàn thành 100% hồ sơ đặc tả toàn bộ các tính năng P1 (Vận hành cốt lõi): Cấu hình tham số động hệ thống (SET-001, Flyway V16), Quản lý gói combo ưu đãi váy + máy ảnh (CAT-004, Flyway V17), Ghi chú nội bộ & Blacklist phòng ngừa rủi ro (CUS-002, Flyway V18) |
 | 2026-10-25 | `CAT-008` | ⬜ TODO $\rightarrow$ 📝 SPEC | Fullstack Dev & Tech Lead | Hoàn thành hồ sơ đặc tả Hàng đợi giặt ủi và sửa chữa trang phục: Quy trình tiếp nhận sau hoàn trả, theo dõi gửi xưởng ngoài, cảnh báo nguy cơ trễ lịch thuê kế tiếp <48h, nghiệm thu chất lượng về AVAILABLE, Flyway V15 |

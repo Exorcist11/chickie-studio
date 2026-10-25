@@ -33,7 +33,7 @@
 ## 1. Mục Tiêu và Giá Trị Mang Lại
 - **Chấm dứt mọi tranh chấp "lỗi có từ trước hay do khách làm"**: Khi khách thuê váy lụa hoặc máy ảnh đắt tiền, nhân viên chụp nhanh 1 - 3 tấm ảnh hiện trạng lúc khách nhận đồ (mặt trước, tà váy, phụ kiện kèm theo) và lúc khách trả đồ.
 - **Ký nhận điện tử trực tiếp trên màn hình cảm ứng (E-Signature Pad)**: Khách hàng ký ngón tay/bút cảm ứng trên máy tính bảng tại quầy để xác nhận đã nhận đồ đúng mẫu, đúng size và nguyên vẹn.
-- **Biên nhận gửi qua Zalo / Email**: Khách nhận được biên bản bàn giao điện tử dạng PDF/link web, có thể mở xem lại bất kỳ lúc nào.
+- **Biên nhận gửi qua Email**: Khách nhận được biên bản bàn giao điện tử dạng link web/PDF gửi trực tiếp về Email (`SET-003`), có thể mở xem lại ảnh hiện trạng bất kỳ lúc nào. *(Lưu ý: Chưa triển khai gửi qua Zalo hay SMS)*.
 
 ---
 
@@ -63,7 +63,8 @@ sequenceDiagram
     API->>DB: Lưu ảnh hiện trạng, chữ ký điện tử, đổi đơn sang DELIVERED
     DB-->>API: Thành công
     API-->>CRM: 200 OK (Biên bản bàn giao số BB-001)
-    CRM-->>Staff: Xuất link biên bản gửi tin nhắn Zalo/SMS cho khách
+    API-)CRM: Kích hoạt gửi link biên bản qua Email cho khách hàng (SET-003)
+    CRM-->>Staff: Hiển thị hoàn tất bàn giao & đã gửi email xác nhận cho khách
 ```
 
 ---

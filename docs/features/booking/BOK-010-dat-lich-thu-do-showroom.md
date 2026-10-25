@@ -56,26 +56,28 @@ sequenceDiagram
     Customer->>Client: Bấm "Đặt Lịch Thử Đồ Miễn Phí"
     Client->>Customer: Hiển thị bộ chọn ngày & khung giờ (09:00, 10:00, 14:00, 18:00...)
     Customer->>Client: Chọn ngày mai lúc 18:00, chọn thử Váy Dạ Hội Đỏ + Áo Dài Lụa
-    Customer->>Client: Nhập Họ tên & SĐT -> Bấm "Xác nhận đặt lịch"
+    Customer->>Client: Nhập Họ tên, SĐT, Email -> Bấm "Xác nhận đặt lịch"
     Client->>API: POST /api/public/fitting-appointments
     API->>DB: Kiểm tra số lượng slot trống trong khung giờ (tối đa 4 khách/khung giờ)
     API->>DB: Lưu lịch hẹn trạng thái CONFIRMED
     DB-->>API: 201 Created
+    API-)API: Kích hoạt gửi Email xác nhận lịch hẹn (fitting-confirmation.html theo SET-003)
     API-->>Client: Trả về mã lịch hẹn FIT-xxx
-    Client-->>Customer: Hiển thị thông báo thành công và gửi tin nhắn Zalo/SMS xác nhận
+    Client-->>Customer: Hiển thị thông báo thành công & đã gửi Email xác nhận (chưa gửi Zalo/SMS)
 ```
 
 ---
 
 ## 4. Luồng Ngoại Lệ và Trường Hợp Biên
 - **Khung giờ đã kín chỗ**: Hệ thống đánh dấu slot màu xám "Đã kín", gợi ý các khung giờ gần nhất còn trống.
-- **Khách hủy lịch hẹn**: Khách có thể bấm hủy lịch qua link SMS/Zalo để nhả slot cho người khác.
+- **Khách hủy lịch hẹn**: Khách có thể bấm hủy lịch qua link trong Email xác nhận để nhả slot cho người khác.
 
 ---
 
 ## 5. Quy Tắc Nghiệp Vụ (Business Rules)
 - **BR-01**: Mỗi khung giờ (Time Slot) có thời lượng **45 phút**, tiếp nhận tối đa **4 lượt khách/slot** tương ứng với 4 phòng thử đồ của showroom.
 - **BR-02**: Đặt lịch thử đồ là hoàn toàn **miễn phí**, không yêu cầu đặt cọc tiền.
+- **BR-03**: Kênh thông báo xác nhận lịch hẹn là **Email** (`SET-003`), chưa thực hiện gửi thông báo qua Zalo hay SMS.
 
 ---
 

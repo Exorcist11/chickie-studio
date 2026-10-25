@@ -56,7 +56,7 @@
    - Mã tham chiếu ngân hàng / Nội dung sao kê (nếu chọn Chuyển khoản).
    - Ghi chú nội bộ.
 5. Nhân viên kiểm tra và bấm "Xác nhận thu tiền".
-6. Server lưu bản ghi vào bảng `payments`, cập nhật trạng thái đơn sang `DEPOSITED` (nếu đã đủ cọc) và ghi nhận Audit Trail `booking_status_histories`.
+6. Server lưu bản ghi vào bảng `payments`, cập nhật trạng thái đơn sang `DEPOSITED` (nếu đã đủ cọc), ghi nhận Audit Trail `booking_status_histories` và bất đồng bộ kích hoạt gửi **Email xác nhận nhận cọc thành công** (`deposit-received.html` theo `SET-003`) cho khách. *(Chưa gửi qua Zalo hay SMS)*.
 7. Giao diện CRM hiển thị thông báo thành công và cập nhật khối thanh toán (Đã cọc: 100%, Đã trả tiền thuê: 100%).
 
 ```mermaid
@@ -66,6 +66,7 @@ sequenceDiagram
     participant CRM as CRM Giao Diện
     participant API as Payment Controller API
     participant BookingSvc as Booking Service
+    participant Mailer as Email Service (SET-003)
     participant DB as MySQL DB
 
     Staff->>CRM: Mở đơn BK-001 -> Bấm "Thu tiền cọc"
@@ -76,9 +77,10 @@ sequenceDiagram
     API->>BookingSvc: Kiểm tra tổng cọc đã nộp >= tổng cọc đơn
     BookingSvc->>DB: UPDATE bookings SET status = 'DEPOSITED'
     BookingSvc->>DB: INSERT INTO booking_status_histories (action='PAYMENT_COLLECTED')
+    BookingSvc-)Mailer: Kích hoạt gửi Email báo nhận cọc (@Async)
     DB-->>API: Thành công
     API-->>CRM: 200 OK (PaymentResponse)
-    CRM-->>Staff: Cập nhật huy hiệu "Đã cọc", in biên lai điện tử
+    CRM-->>Staff: Cập nhật huy hiệu "Đã cọc", hiển thị đã gửi email cho khách
 ```
 
 ---

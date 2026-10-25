@@ -15,7 +15,7 @@ Tài liệu này áp dụng cho toàn bộ dự án **Chickie Studio**. Mọi AI
 
 ---
 
-## 2. Chín Nguyên Tắc Cốt Lõi Toàn Dự Án
+## 2. Mười Nguyên Tắc Cốt Lõi Toàn Dự Án
 
 1. **Code Clean & Rõ Nghĩa**: Đặt tên chuẩn, hàm ngắn một trách nhiệm, không magic number/string, không dead code. Comment tiếng Việt chỉ dành cho nghiệp vụ phức tạp.
 2. **Tái Sử Dụng Trước Khi Tạo Mới**: PHẢI tìm kiếm component, service, hàm tiện ích đã có trước khi viết mới. Nếu viết mới, PHẢI đặt đúng vị trí dùng chung quy định.
@@ -26,3 +26,4 @@ Tài liệu này áp dụng cho toàn bộ dự án **Chickie Studio**. Mọi AI
 7. **Conventional Commits**: Commit rõ ràng theo định dạng `<type>(<scope>): <mô tả>`, mỗi commit là một đơn vị thay đổi logic độc lập. KHÔNG ĐƯỢC commit khi lint/test chưa pass.
 8. **Bảo Mật & Cấu Hình**: KHÔNG ĐƯỢC hardcode secret, API key, token, URL, credential vào mã nguồn; PHẢI dùng biến môi trường.
 9. **Sửa Bug Luôn Đi Kèm Test**: Bắt buộc viết test tự động tái hiện bug trước (test fail), sau đó sửa code để test pass (regression test).
+10. **Quản Lý Thay Đổi Yêu Cầu & Reopen Task**: Khi có bất kỳ sự thay đổi nào trong tài liệu đặc tả (spec, business rules, API, form fields, schema DB, UI flow), mọi task/tính năng đã hoàn thành (`DONE`) bị ảnh hưởng BẮT BUỘC phải được đánh dấu chuyển trạng thái sang `REOPENED` (hoặc `Cần thực hiện lại`) trong hồ sơ spec chi tiết, `docs/FEATURES.md` và `CHANGELOG.md` để rà soát, viết lại test và lập trình lại. Tuyệt đối KHÔNG ĐƯỢC giữ trạng thái `DONE` khi mã nguồn thực tế chưa đáp ứng phiên bản spec mới nhất.

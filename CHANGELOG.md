@@ -22,7 +22,15 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
     - [docs/features/content-seo/CNT-005-lookbook-bo-suu-tap-theo-mua.md](docs/features/content-seo/CNT-005-lookbook-bo-suu-tap-theo-mua.md): Lookbook bộ sưu tập ảnh theo mùa kèm điểm ghim tương tác (Shoppable Hotspots), Flyway V26.
     - [docs/features/content-seo/CNT-006-thu-thap-hien-thi-danh-gia-khach.md](docs/features/content-seo/CNT-006-thu-thap-hien-thi-danh-gia-khach.md): Thu thập và kiểm duyệt đánh giá feedback kèm ảnh khách mặc thực tế, Flyway V27.
     - [docs/features/system-setting/SET-002-cau-hinh-banner-thong-diep-trang-chu.md](docs/features/system-setting/SET-002-cau-hinh-banner-thong-diep-trang-chu.md): Cấu hình banner trượt và thông điệp trang chủ Client, Flyway V28.
-    - [docs/features/system-setting/SET-003-thong-bao-nhac-lich-zalo-sms.md](docs/features/system-setting/SET-003-thong-bao-nhac-lich-zalo-sms.md): Tự động gửi tin nhắn thông báo nhắc lịch giao/trả qua Zalo ZNS và SMS Brandname, Flyway V29.
+    - [docs/features/system-setting/SET-003-thong-bao-email-xac-nhan-va-nhac-lich.md](docs/features/system-setting/SET-003-thong-bao-email-xac-nhan-va-nhac-lich.md): Hệ thống thông báo qua Email: Xác nhận đặt lịch, cọc & nhắc lịch thuê (Chưa triển khai Zalo/SMS), Flyway V29.
+
+### Changed
+- **Reopen BOK-001 For Implementation**: Đánh dấu tính năng `BOK-001` (Đặt thuê trên Client) chuyển trạng thái `✅ DONE` $\rightarrow$ `🔄 REOPENED` để thực hiện lại theo yêu cầu mới: Bổ sung trường Email trên giao diện đặt đồ Client (`BookingForm.tsx`), tiếp nhận email trên Backend API DTO và kích hoạt gửi email xác nhận đặt đơn tự động (`SET-003`).
+- **Notification Requirements Update (SET-003 & BOK-001)**:
+  - Thay đổi yêu cầu kênh thông báo: Khách hàng đặt lịch thành công trên Client sẽ nhận Email xác nhận đặt đơn tự động (`booking-confirmation.html`) kèm chi tiết đơn, hạn giữ chỗ 60 phút và mã VietQR thanh toán 1 chạm.
+  - Chuẩn hóa toàn bộ thông báo khách hàng xuyên suốt vòng đời đơn thuê (xác nhận cọc, nhắc lịch nhận đồ, nhắc lịch trả đồ, biên lai hoàn cọc, thông báo quá hạn giữ chỗ) qua kênh **Email** (Spring Boot Mail + Thymeleaf template).
+  - Tạm thời chưa triển khai gửi tin qua Zalo ZNS và SMS Brandname để tối ưu chi phí hạ tầng và đảm bảo khách hàng nhận email chuyên nghiệp, chứa đầy đủ hóa đơn HTML, bảng giá, chi tiết trang phục và mã VietQR.
+  - Cập nhật đồng bộ các tài liệu đặc tả liên quan: `SET-003`, `BOK-001`, `BOK-003`, `BOK-005`, `BOK-007`, `BOK-009`, `BOK-010`, `PAY-001`, `SET-001`.
 - **Core Operations P1 Specs (SET-001, CAT-004, CUS-002)**:
   - Hoàn tất 100% hồ sơ đặc tả kỹ thuật cho toàn bộ các tính năng vận hành cốt lõi P1 của dự án:
     - [docs/features/system-setting/SET-001-cau-hinh-thong-tin-shop-tham-so.md](docs/features/system-setting/SET-001-cau-hinh-thong-tin-shop-tham-so.md): Cấu hình thông tin cửa hàng, hotline, địa chỉ, giờ mở cửa, số ngày đệm giặt ủi `bufferDays`, tỷ lệ cọc % và thời gian giữ chỗ tạm thời, Flyway migration V16.

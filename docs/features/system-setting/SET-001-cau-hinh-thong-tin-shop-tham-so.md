@@ -61,6 +61,11 @@ flowchart TD
     D --> D1[Tỷ lệ tiền cọc tối thiểu: 50% hoặc 100%]
     D --> D2[Thời gian giữ chỗ chờ cọc holdDuration: Mặc định 120 phút]
     D --> D3[Tài khoản ngân hàng nhận VietQR mặc định]
+
+    A --> E[4. Kênh Thông Báo & Email]
+    E --> E1[Kênh gửi thông báo mặc định: EMAIL (Kích hoạt 100%)]
+    E --> E2[Kênh tạm hoãn / Chưa triển khai: ZALO_ZNS, SMS]
+    E --> E3[Cấu hình SMTP & Địa chỉ Email người gửi]
 ```
 
 ### 3.2. Sơ Đồ Trình Tự Cập Nhật Cấu Hình
@@ -118,6 +123,10 @@ sequenceDiagram
 - **Khối 3: Tham số thanh toán & Giữ chỗ**:
   - `Slider` / `NumberField`: Tỷ lệ cọc tối thiểu (`%`).
   - `NumberField`: Thời gian đếm ngược giữ chỗ tạm thời (`Phút`).
+- **Khối 4: Cấu hình thông báo khách hàng & Email (SET-003)**:
+  - `Select`: Kênh thông báo mặc định (Giá trị: `EMAIL`, các kênh Zalo/SMS hiển thị mờ kèm nhãn *"Chưa triển khai"*).
+  - `TextField`: Tên hiển thị người gửi Email (Mặc định: `Chickie Studio`).
+  - `TextField`: Địa chỉ Email gửi đi (Mặc định: `no-reply@chickiestudio.vn`).
 - **Thanh nút lưu dính đáy (Sticky Save Bar)**: Nút `[ Hủy thay đổi ]` và `[ Lưu Cấu Hình ]`.
 
 ### 6.2. Bộ Từ Điển Đa Ngôn Ngữ (`vi.json` / `en.json`)
@@ -233,7 +242,10 @@ INSERT INTO `system_settings` (`setting_key`, `setting_value`, `data_type`, `des
 ('rental.camera_buffer_days', '0', 'INTEGER', 'Số ngày đệm kiểm tra máy ảnh'),
 ('rental.max_days', '7', 'INTEGER', 'Số ngày thuê tối đa cho 1 lượt'),
 ('payment.deposit_rate_percent', '50', 'INTEGER', 'Tỷ lệ cọc mặc định (%)'),
-('booking.hold_duration_minutes', '120', 'INTEGER', 'Thời gian giữ chỗ tạm thời (phút)');
+('booking.hold_duration_minutes', '120', 'INTEGER', 'Thời gian giữ chỗ tạm thời (phút)'),
+('notification.default_channel', 'EMAIL', 'STRING', 'Kênh thông báo mặc định (EMAIL; hoãn ZALO/SMS)'),
+('notification.mail_sender_name', 'Chickie Studio', 'STRING', 'Tên thương hiệu hiển thị trên Email'),
+('notification.mail_sender_email', 'no-reply@chickiestudio.vn', 'STRING', 'Địa chỉ hòm thư gửi thông báo');
 ```
 
 ---
