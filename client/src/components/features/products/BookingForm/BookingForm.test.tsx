@@ -109,7 +109,7 @@ describe("BookingForm component", () => {
     });
 
     expect(screen.getByText("BK20261025-TEST")).toBeInTheDocument();
-    expect(screen.getByText(/Trần Hà My • 0988776655/i)).toBeInTheDocument();
+    expect(screen.getByText(/Trần Hà My - 0988776655/i)).toBeInTheDocument();
 
     // Close modal
     const closeBtn = screen.getByRole("button", { name: "Đóng" });
