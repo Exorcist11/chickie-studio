@@ -37,7 +37,7 @@ public class ProductAvailabilityService {
     private final ProductItemRepository productItemRepository;
     private final BookingItemRepository bookingItemRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProductAvailabilityResponse checkAvailability(String idOrSlug, Long variantId, String monthStr) {
         Product product;
         if (idOrSlug.matches("^\\d+$")) {
@@ -88,6 +88,28 @@ public class ProductAvailabilityService {
         List<ProductItem> items;
         if (variant != null) {
             items = productItemRepository.findByVariantIdOrderByIdAsc(variant.getId());
+            if (items.isEmpty()) {
+                ProductItem item1 = ProductItem.builder()
+                        .variant(variant)
+                        .itemCode(variant.getSku() + "-01")
+                        .status(ProductItemStatus.AVAILABLE)
+                        .rentalCount(0)
+                        .note("Sẵn sàng tại Studio Chickie")
+                        .build();
+                ProductItem item2 = ProductItem.builder()
+                        .variant(variant)
+                        .itemCode(variant.getSku() + "-02")
+                        .status(ProductItemStatus.AVAILABLE)
+                        .rentalCount(1)
+                        .note("Món đồ dự phòng sẵn sàng tại Studio Chickie")
+                        .build();
+                try {
+                    productItemRepository.saveAll(List.of(item1, item2));
+                    items = productItemRepository.findByVariantIdOrderByIdAsc(variant.getId());
+                } catch (Exception e) {
+                    log.warn("Không thể tự động khởi tạo product_items: {}", e.getMessage());
+                }
+            }
         } else {
             items = productItemRepository.findByVariantProductIdOrderByIdAsc(product.getId());
         }

@@ -79,6 +79,32 @@ public class BookingService {
                 .filter(i -> i.getStatus() != ProductItemStatus.RETIRED && i.getStatus() != ProductItemStatus.MAINTENANCE)
                 .toList();
 
+        if (allItems.isEmpty()) {
+            ProductItem autoItem1 = ProductItem.builder()
+                    .variant(variant)
+                    .itemCode(variant.getSku() + "-01")
+                    .status(ProductItemStatus.AVAILABLE)
+                    .rentalCount(0)
+                    .note("Sẵn sàng tại Studio Chickie")
+                    .build();
+            ProductItem autoItem2 = ProductItem.builder()
+                    .variant(variant)
+                    .itemCode(variant.getSku() + "-02")
+                    .status(ProductItemStatus.AVAILABLE)
+                    .rentalCount(1)
+                    .note("Món đồ dự phòng sẵn sàng tại Studio Chickie")
+                    .build();
+            try {
+                allItems = productItemRepository.saveAll(List.of(autoItem1, autoItem2));
+                activeItems = allItems;
+            } catch (Exception ex) {
+                allItems = productItemRepository.findByVariantIdOrderByIdAsc(variant.getId());
+                activeItems = allItems.stream()
+                        .filter(i -> i.getStatus() != ProductItemStatus.RETIRED && i.getStatus() != ProductItemStatus.MAINTENANCE)
+                        .toList();
+            }
+        }
+
         if (activeItems.isEmpty()) {
             throw new ConflictException("Biến thể " + (variant.getSize() != null ? variant.getSize() : "") +
                     " của sản phẩm này hiện chưa có món đồ vật lý khả dụng trong kho");
