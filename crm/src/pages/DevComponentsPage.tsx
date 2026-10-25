@@ -41,6 +41,17 @@ import {
   ChipGroup,
   SizeSelector,
   ColorSwatchGroup,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+  Breadcrumbs,
+  Pagination,
+  Gallery,
 } from "../components/ui";
 import {
   Button as ChickieUIButton,
@@ -87,6 +98,8 @@ export const DevComponentsPage: React.FC = () => {
   const [crmSize, setCrmSize] = useState("M");
   const [crmColor, setCrmColor] = useState("#641D2B");
   const [crmChip, setCrmChip] = useState("dress");
+  const [crmTab, setCrmTab] = useState("overview");
+  const [crmPage, setCrmPage] = useState(2);
 
   // Sample data for DataTable
   const sampleTableData: SampleOrderRecord[] = [
@@ -677,6 +690,125 @@ export const DevComponentsPage: React.FC = () => {
                 onSelectColor={setCrmColor}
                 showName
               />
+            </div>
+          </div>
+        </section>
+
+        {/* 9. Giai đoạn UI-004: Hiển Thị Dữ Liệu (@chickie/ui Data Display) */}
+        <section className="bg-warm-white p-5 rounded-card border border-line space-y-4">
+          <div>
+            <h3 className="font-playfair text-lg font-semibold text-ink">
+              9. Giai đoạn UI-004: Hiển Thị Dữ Liệu (Data Display)
+            </h3>
+            <p className="text-sm text-ink-muted mt-1">
+              Bộ Tabs, Accordion, Breadcrumbs, Pagination, Gallery, EmptyState, ErrorState và DataTable chuẩn shadcn/ui Standard.
+            </p>
+          </div>
+
+          <div className="space-y-6 p-4 bg-white rounded-card border border-line">
+            {/* Breadcrumbs */}
+            <div>
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Đường dẫn điều hướng (Breadcrumbs)
+              </span>
+              <Breadcrumbs
+                homeLabel="Bảng điều khiển"
+                homeHref="/dashboard"
+                items={[
+                  { label: "Quản lý sản phẩm", href: "/products" },
+                  { label: "Chi tiết trang phục #CK-2026-09" },
+                ]}
+              />
+            </div>
+
+            {/* Tabs */}
+            <div className="pt-2">
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Thanh chuyển Tab (Tabs - Pills & Underline)
+              </span>
+              <Tabs value={crmTab} onValueChange={setCrmTab} variant="pills">
+                <TabsList>
+                  <TabsTrigger value="overview">Tổng quan kho</TabsTrigger>
+                  <TabsTrigger value="history">Lịch sử mượn trả</TabsTrigger>
+                  <TabsTrigger value="maintenance">Bảo trì & Giặt ủi</TabsTrigger>
+                </TabsList>
+                <TabsContent value="overview" className="p-4 bg-stone-50 rounded-md mt-3">
+                  <p className="text-sm text-ink">Tổng số món đồ thực tế: 48 chiếc. Sẵn sàng cho thuê: 36 chiếc.</p>
+                </TabsContent>
+                <TabsContent value="history" className="p-4 bg-stone-50 rounded-md mt-3">
+                  <p className="text-sm text-ink">Đã phục vụ 124 lượt thuê trong tháng 10/2026. Tỷ lệ hoàn trả đúng hạn 98.4%.</p>
+                </TabsContent>
+                <TabsContent value="maintenance" className="p-4 bg-stone-50 rounded-md mt-3">
+                  <p className="text-sm text-ink">4 món đang trong quy trình đệm giặt hấp chuyên nghiệp. 1 món đang sửa đường may.</p>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            {/* Accordion */}
+            <div className="pt-2">
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Accordion (Thu phóng nội dung quản trị)
+              </span>
+              <Accordion type="single" collapsible defaultValue="acc-1">
+                <AccordionItem value="acc-1">
+                  <AccordionTrigger>Quy trình kiểm tra tình trạng đồ khi nhận lại từ khách</AccordionTrigger>
+                  <AccordionContent>
+                    1. Kiểm tra vết bẩn, rách sợi vải hoặc hư khóa kéo.<br />
+                    2. Đối chiếu mã barcode trên thẻ bài của món đồ.<br />
+                    3. Hoàn tiền cọc nếu đồ nguyên vẹn hoặc cấn trừ phí giặt tẩy theo quy định.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="acc-2">
+                  <AccordionTrigger>Chính sách phạt trả đồ trễ hạn (Overdue Fee)</AccordionTrigger>
+                  <AccordionContent>
+                    Phí trễ hạn tính bằng 50% giá thuê ngày đầu cho mỗi ngày trễ. Nếu sau 3 ngày không liên lạc được, hệ thống sẽ tự động trừ toàn bộ cọc.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+
+            {/* Gallery */}
+            <div className="pt-2">
+              <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                Gallery (Thư viện media hình ảnh)
+              </span>
+              <div className="max-w-md">
+                <Gallery
+                  items={[
+                    { src: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800", alt: "Ảnh sản phẩm 1" },
+                    { src: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=800", alt: "Ảnh sản phẩm 2" },
+                    { src: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800", alt: "Ảnh sản phẩm 3" },
+                  ]}
+                  aspectRatio="4/3"
+                />
+              </div>
+            </div>
+
+            {/* Pagination & ErrorState */}
+            <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div>
+                <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                  Phân trang (Pagination)
+                </span>
+                <Pagination
+                  currentPage={crmPage}
+                  totalPages={12}
+                  onPageChange={setCrmPage}
+                  showTotal
+                  totalItems={120}
+                />
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider block mb-2">
+                  Trạng thái lỗi (ErrorState)
+                </span>
+                <ErrorState
+                  title="Không thể đồng bộ trạng thái đơn"
+                  description="Dữ liệu tạm thời bị gián đoạn kết nối socket. Vui lòng bấm thử lại."
+                  onRetry={() => notify.warning("Đang kết nối lại máy chủ CRM...")}
+                  className="p-4"
+                />
+              </div>
             </div>
           </div>
         </section>

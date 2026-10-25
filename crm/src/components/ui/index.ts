@@ -30,6 +30,16 @@ export * from "./Popover";
 export * from "./Tooltip";
 export * from "./Notify";
 
+// Data Display (UI-004)
+export * from "./Tabs";
+export * from "./Accordion";
+export * from "./Breadcrumbs";
+export * from "./Pagination";
+export * from "./EmptyState";
+export * from "./ErrorState";
+export * from "./Gallery";
+export * from "./DataTable";
+
 // Feedback & Loading
 export * from "./Spinner";
 export * from "./Skeleton";

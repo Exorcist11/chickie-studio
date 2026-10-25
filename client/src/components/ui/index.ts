@@ -34,8 +34,15 @@ export * from "./TestimonialCard";
 export * from "./SectionHeading";
 export * from "./Container";
 export * from "./Section";
-export * from "./Breadcrumbs";
+// Data Display (UI-004)
+export * from "./Tabs";
 export * from "./Accordion";
+export * from "./Breadcrumbs";
+export * from "./Pagination";
+export * from "./EmptyState";
+export * from "./ErrorState";
+export * from "./Gallery";
+export * from "./DataTable";
 
 // Feedback & Overlays (UI-002)
 export * from "./Modal";

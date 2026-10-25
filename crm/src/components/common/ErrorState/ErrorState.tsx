@@ -7,6 +7,7 @@ import "./ErrorState.scss";
 export interface ErrorStateProps {
   title?: string;
   subTitle?: string;
+  description?: string;
   onRetry?: () => void;
   className?: string;
 }
@@ -14,6 +15,7 @@ export interface ErrorStateProps {
 export const ErrorState: React.FC<ErrorStateProps> = ({
   title,
   subTitle,
+  description,
   onRetry,
   className,
 }) => {
@@ -35,7 +37,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       </h3>
 
       <p className="text-sm text-ink-muted max-w-sm mb-6">
-        {subTitle || t("error.description")}
+        {description || subTitle || t("error.description")}
       </p>
 
       {onRetry && (

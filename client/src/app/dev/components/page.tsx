@@ -39,7 +39,20 @@ import {
   Toast,
   Skeleton,
   EmptyState,
+  ErrorState,
   Spinner,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Pagination,
+  Gallery,
+  DataTable,
+  Breadcrumbs,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
   Logo,
   Header,
   Footer,
@@ -86,6 +99,8 @@ export default function DevComponentsPage() {
   const [devCurrency, setDevCurrency] = React.useState(350000);
   const [devPhone, setDevPhone] = React.useState("0987654321");
   const [devDate, setDevDate] = React.useState("2026-10-25");
+  const [devTab, setDevTab] = React.useState("info");
+  const [devPage, setDevPage] = React.useState(2);
 
   const colors = [
     { name: "Burgundy", hex: "#641D2B" },
@@ -459,6 +474,126 @@ export default function DevComponentsPage() {
               hint="Chọn ngày từ lịch popup"
               required
             />
+          </div>
+        </section>
+
+        {/* 4d. Giai Đoạn UI-4: Hiển Thị Dữ Liệu (@chickie/ui) */}
+        <section className="space-y-4">
+          <SectionHeading
+            title="4d. Giai Đoạn UI-4: Hiển Thị Dữ Liệu (Tabs, Pagination, ErrorState, Gallery, DataTable)"
+            description="Bộ component trình diễn thông tin: Tab điều hướng phân nhóm, phân trang số lượng lớn, thông báo lỗi mạng, thư viện ảnh lightbox và bảng dữ liệu chuẩn WAI-ARIA"
+          />
+          <div className="space-y-6 p-6 bg-white rounded-card border border-line">
+            {/* Breadcrumbs */}
+            <div>
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Breadcrumbs</p>
+              <Breadcrumbs
+                items={[
+                  { label: "Trang phục", href: "/products" },
+                  { label: "Váy dạ hội", href: "/categories/vay-da-hoi" },
+                  { label: "Váy Nàng Thơ Lụa Tơ Tằm" },
+                ]}
+              />
+            </div>
+
+            {/* Tabs & Panels */}
+            <div className="pt-2">
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Tabs (Pills & Underline)</p>
+              <Tabs value={devTab} onValueChange={setDevTab} variant="pills">
+                <TabsList>
+                  <TabsTrigger value="info">Thông tin chung</TabsTrigger>
+                  <TabsTrigger value="specs">Thông số số đo</TabsTrigger>
+                  <TabsTrigger value="reviews">Đánh giá khách hàng</TabsTrigger>
+                </TabsList>
+                <TabsContent value="info" className="p-4 bg-sand/20 rounded-card mt-3">
+                  <p className="text-sm text-ink leading-relaxed">
+                    Trang phục được hoàn thiện tỉ mỉ từ chất liệu lụa tơ tằm cao cấp, đính kết hoa thủ công. Thích hợp cho các buổi dạ tiệc, chụp kỷ yếu và sự kiện sang trọng.
+                  </p>
+                </TabsContent>
+                <TabsContent value="specs" className="p-4 bg-sand/20 rounded-card mt-3">
+                  <p className="text-sm text-ink">Bảng size: S (Ngực 82-85cm), M (Ngực 86-90cm), L (Ngực 91-95cm). Chiều dài váy 125cm.</p>
+                </TabsContent>
+                <TabsContent value="reviews" className="p-4 bg-sand/20 rounded-card mt-3">
+                  <p className="text-sm text-ink">Đánh giá 5/5 sao từ 128 khách hàng đã trải nghiệm dịch vụ.</p>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            {/* Accordion */}
+            <div className="pt-2">
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Accordion (Collapsible FAQ)</p>
+              <Accordion type="single" collapsible defaultValue="item-1">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>Quy trình đặt cọc và nhận đồ diễn ra thế nào?</AccordionTrigger>
+                  <AccordionContent>
+                    Khách hàng thanh toán tiền cọc qua mã VietQR hoặc chuyển khoản. Đồ thuê sẽ được giao trước ngày chụp 01 ngày kèm bao bì bảo quản.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger>Tôi có cần tự giặt ủi đồ sau khi sử dụng không?</AccordionTrigger>
+                  <AccordionContent>
+                    Chickie Studio đã bao gồm chi phí giặt hấp chuyên nghiệp trong gói thuê. Quý khách vui lòng không tự ý giặt tẩy để bảo vệ sợi vải tơ lụa.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+
+            {/* Gallery */}
+            <div className="pt-2">
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Gallery (Media Frame & Lightbox)</p>
+              <div className="max-w-md">
+                <Gallery
+                  items={[
+                    { src: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800", alt: "Váy dạ hội đỏ", caption: "Ảnh Lookbook góc chính diện" },
+                    { src: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=800", alt: "Chi tiết cổ áo", caption: "Đính kết hạt pha lê" },
+                    { src: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800", alt: "Góc sau lưng", caption: "Thiết kế khoét lưng thanh lịch" },
+                  ]}
+                  aspectRatio="4/3"
+                />
+              </div>
+            </div>
+
+            {/* DataTable */}
+            <div className="pt-2">
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">DataTable (Bảng Dữ Liệu)</p>
+              <DataTable
+                columns={[
+                  { key: "code", title: "Mã đơn", dataIndex: "code", className: "font-mono font-medium text-burgundy" },
+                  { key: "item", title: "Trang phục / Thiết bị", dataIndex: "item" },
+                  { key: "deposit", title: "Tiền cọc", dataIndex: "deposit" },
+                  { key: "status", title: "Trạng thái", dataIndex: "status", render: (val) => <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">{val}</span> },
+                ]}
+                data={[
+                  { id: "1", code: "CK-2610-01", item: "Váy Nàng Thơ Lụa", deposit: "500.000₫", status: "Đã cọc" },
+                  { id: "2", code: "CK-2610-02", item: "Sony A7IV + Lens 24-70 GM", deposit: "2.000.000₫", status: "Đang thuê" },
+                  { id: "3", code: "CK-2610-03", item: "Áo Dài Gấm Phượng Hoàng", deposit: "300.000₫", status: "Hoàn tất" },
+                ]}
+                caption="Lịch sử thuê trang phục gần đây"
+              />
+            </div>
+
+            {/* Pagination & States */}
+            <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Pagination</p>
+                <Pagination
+                  currentPage={devPage}
+                  totalPages={8}
+                  onPageChange={setDevPage}
+                  showTotal
+                  totalItems={78}
+                />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">ErrorState</p>
+                <ErrorState
+                  title="Không thể tải giỏ đồ"
+                  description="Phiên làm việc tạm thời gián đoạn. Vui lòng bấm thử lại."
+                  onRetry={() => notify.info("Đang kết nối lại...")}
+                  className="p-4"
+                />
+              </div>
+            </div>
           </div>
         </section>
 

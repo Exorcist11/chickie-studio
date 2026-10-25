@@ -7,6 +7,38 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Trọn Gói Bộ Component Hiển Thị Dữ Liệu UI-4 (UI-004 - ✅ DONE)**:
+  - **Triển Khai Bộ Component Data Display Dùng Chung Chuẩn Hóa Cho Cả Client & CRM (@chickie/ui)**:
+    - **Tabs (`Tabs.tsx`)**:
+      - Compound component: `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`.
+      - Hỗ trợ variant `pills` và `underline`, điều hướng bàn phím đầy đủ (Arrow Left/Right, Home, End), quản lý focus và ARIA (`role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected`, `aria-controls`).
+    - **Accordion (`Accordion.tsx`)**:
+      - Hỗ trợ chế độ `single` (mở/đóng đơn mục) và `multiple` (mở nhiều mục đồng thời), tùy biến `collapsible`.
+      - Chuẩn WAI-ARIA `role="region"`, `aria-expanded`, `aria-controls`, icon indicator xoay mượt mà, hỗ trợ disabled item.
+    - **Pagination (`Pagination.tsx`)**:
+      - Cung cấp component cấp cao dễ dùng (`currentPage`, `totalPages`, `onPageChange`, `siblingCount`, `showTotal`) kèm bộ primitive subcomponents (`PaginationRoot`, `PaginationContent`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis`).
+      - Tự động tính toán dải trang kèm dấu `...` thông minh, vô hiệu hóa nút Prev/Next ở biên, `aria-label="Pagination"`, `aria-current="page"`.
+    - **Breadcrumbs (`Breadcrumbs.tsx`)**:
+      - Điều hướng phân cấp chuẩn ngữ nghĩa `<nav aria-label="Breadcrumb">` với `ol`, `li`, `aria-current="page"` và icon phân cách ChevronRight.
+    - **EmptyState (`EmptyState.tsx`)**:
+      - Giao diện trạng thái rỗng đồng bộ với icon, tiêu đề, mô tả thân thiện và nút hành động tùy biến (Action button/link).
+    - **ErrorState (`ErrorState.tsx`)**:
+      - Giao diện báo lỗi trực quan với icon cảnh báo, tiêu đề, mô tả và nút "Thử lại" (Retry) kích hoạt callback `onRetry`.
+    - **Gallery (`Gallery.tsx`)**:
+      - Khung ảnh trình diễn tỷ lệ chuẩn (`aspectRatio="4/5"`, `"1/1"`, `"16/9"`), nút chuyển ảnh Prev/Next, dải thumbnail thu nhỏ và chế độ Lightbox phóng to toàn màn hình.
+    - **DataTable (`DataTable.tsx`)**:
+      - Bảng dữ liệu linh hoạt với cấu hình cột `columns`, hàm `render` tùy biến, trạng thái `loading` và `emptyText`, chuẩn ngữ nghĩa `<table role="table">`, `th scope="col"`.
+  - **Trang Trưng Bày Dev Components (`/dev/components`)**:
+    - Bổ sung Section 4d trên Client (`client/src/app/dev/components/page.tsx`) trình diễn thực tế cả 8 component UI-4.
+    - Bổ sung Section 9 trên CRM (`crm/src/pages/DevComponentsPage.tsx`) trình diễn thực tế cả 8 component UI-4.
+  - **Tiêu Chuẩn Kỹ Thuật (DoD)**:
+    - 0% inline CSS (`style={{ ... }}` = 0).
+    - 100% tests pass (Client: 77 suites, 374 tests; CRM: 73 suites, 293 tests).
+    - 0 vi phạm Accessibility (`vitest-axe` pass 100%).
+    - Linter & Typecheck: 0 errors, 0 warnings trên cả hai dự án.
+    - Build production: Client SSG 11/11 routes thành công; CRM Vite build 100% thành công.
+
+
 - **Triển Khai Trọn Gói Các Trang Thông Tin Tĩnh: Chính Sách Thuê, FAQ, Giới Thiệu & Liên Hệ (CNT-002 - ✅ DONE)**:
   - **Triển Khai Bộ Component Dùng Chung Mới (@/components/ui)**:
     - **Accordion (`Accordion.tsx`)**:

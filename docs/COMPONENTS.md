@@ -64,6 +64,21 @@ Bộ component chuyên dụng phục vụ luồng đặt lịch thuê, nhập s�
 | **ColorSwatchGroup** | `src/components/ui/ColorSwatch/ColorSwatch.tsx` | `colors` (`{ name, value, inStock }[]`), `value`, `onChange`, dùng CSS variable `--swatch-color` (0 inline CSS) | `<ColorSwatchGroup colors={swatches} value={color} onChange={setColor} />` | ✅ Pass (100% lines, axe a11y pass) |
 | **Form* Wrappers** | `src/components/ui/Form/FormComponents.tsx` | `FormTextField`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCurrencyField`, `FormPhoneField`, `FormDatePicker` kết nối `react-hook-form` | `<FormCurrencyField control={form.control} name="deposit" label="Tiền cọc" />` | ✅ Pass (100% lines, axe a11y pass) |
 
+### Bảng Component Hiển Thị Dữ Liệu (Giai Đoạn UI-4)
+
+Bộ component trình bày và điều hướng dữ liệu chuẩn hóa, hỗ trợ điều hướng bàn phím đầy đủ (Arrow keys, Enter, Space), WAI-ARIA (`role="tablist"`, `role="region"`, `aria-expanded`, `aria-label="Breadcrumb"`, `aria-current="page"`), 0 inline CSS:
+
+| Tên Component | Vị trí file trong client & crm | Props chính | Ví dụ sử dụng (1 dòng) | Trạng thái Test & Coverage |
+| :--- | :--- | :--- | :--- | :--- |
+| **Tabs** | `src/components/ui/Tabs/Tabs.tsx` | `value`/`defaultValue`, `onValueChange`, `variant` (pills, underline), `<TabsList>`, `<TabsTrigger>`, `<TabsContent>` | `<Tabs defaultValue="desc"><TabsList><TabsTrigger value="desc">Mô tả</TabsTrigger></TabsList><TabsContent value="desc">Nội dung</TabsContent></Tabs>` | ✅ Pass ($\ge 99\%$ lines, axe a11y pass) |
+| **Accordion** | `src/components/ui/Accordion/Accordion.tsx` | `type` ("single" \| "multiple"), `collapsible`, `value`/`defaultValue`, `<AccordionItem>`, `<AccordionTrigger>`, `<AccordionContent>` | `<Accordion type="single" collapsible><AccordionItem value="q1"><AccordionTrigger>Câu hỏi?</AccordionTrigger><AccordionContent>Trả lời</AccordionContent></AccordionItem></Accordion>` | ✅ Pass (100% lines, axe a11y pass) |
+| **Pagination** | `src/components/ui/Pagination/Pagination.tsx` | `currentPage`/`page`, `totalPages`, `onPageChange`, `siblingCount`, `showTotal`, hoặc bộ compound `<PaginationRoot>`, `<PaginationContent>`, `<PaginationItem>`, `<PaginationLink>`, `<PaginationPrevious>`, `<PaginationNext>`, `<PaginationEllipsis>` | `<Pagination currentPage={page} totalPages={10} onPageChange={setPage} showTotal />` | ✅ Pass ($\ge 95\%$ lines, axe a11y pass) |
+| **Breadcrumbs** | `src/components/ui/Breadcrumbs/Breadcrumbs.tsx` | `items` (`{ label, href }[]`), `separator`, `homeHref` | `<Breadcrumbs items={[{ label: "Sản phẩm", href: "/san-pham" }, { label: "Váy dạ hội" }]} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **EmptyState** | `src/components/ui/EmptyState/EmptyState.tsx` | `title`, `description`, `icon`, `actionText`/`action`, `onAction` | `<EmptyState title="Không có đơn hàng" description="Thử tìm kiếm với từ khóa khác" />` | ✅ Pass (100% lines, axe a11y pass) |
+| **ErrorState** | `src/components/ui/ErrorState/ErrorState.tsx` | `title`, `description`/`subTitle`, `onRetry`, `retryText`, `icon` | `<ErrorState title="Lỗi kết nối máy chủ" description="Vui lòng thử lại sau giây lát" onRetry={refetch} />` | ✅ Pass (100% lines, axe a11y pass) |
+| **Gallery** | `src/components/ui/Gallery/Gallery.tsx` | `images` (`{ src, alt, caption }[]`), `aspectRatio`, `thumbnailStrip`, `showLightbox`, `onIndexChange` | `<Gallery images={photos} aspectRatio="4/5" thumbnailStrip showLightbox />` | ✅ Pass ($\ge 98\%$ lines, axe a11y pass) |
+| **DataTable** | `src/components/ui/DataTable/DataTable.tsx` | `columns` (`{ key, header, render, align }[]`), `data`, `loading`, `emptyText`, `rowKey` | `<DataTable columns={cols} data={orders} rowKey="id" loading={isLoading} />` | ✅ Pass (100% lines, axe a11y pass) |
+
 ---
 
 ## 1. Client Components (`client/src/components/ui/`)
