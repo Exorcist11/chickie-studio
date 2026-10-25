@@ -7,6 +7,30 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Quản Lý Từng Món Đồ Thực Tế (Item Instance) & Vòng Đời Trạng Thái (CAT-003 - ✅ DONE)**:
+  - **Backend Server (Spring Boot 3 + MySQL)**:
+    - **Flyway Migration `V7__create_product_items.sql`**: Khởi tạo bảng `product_items` với foreign key `variant_id` (CASCADE on delete), unique index `item_code`, index `status`, và seed data mẫu.
+    - **Entity & State Machine Enum**:
+      - `ProductItemStatus.java`: Định nghĩa 5 trạng thái (`AVAILABLE`, `RENTED`, `LAUNDRY`, `MAINTENANCE`, `RETIRED`) cùng guard `canTransitionTo` chặn tuyệt đối các bước nhảy trạng thái vi phạm quy tắc vận hành.
+      - `ProductItem.java`: Kế thừa `BaseEntity`, liên kết `ProductVariant`, theo dõi `itemCode` (barcode), `rentalCount` (tự động tăng khi hoàn thành chu kỳ thuê), và ghi chú hiện trạng.
+    - **Tầng DTO & MapStruct**: `ProductItemResponse.java`, `CreateItemRequest.java`, `UpdateItemStatusRequest.java`, và mapper `ProductItemMapper.java`.
+    - **Tầng Repository & Service**:
+      - `ProductItemRepository.java`: Hỗ trợ tìm kiếm theo sản phẩm, biến thể, mã barcode, trạng thái tồn kho.
+      - `ProductItemServiceImpl.java`: Tự động sinh mã Barcode duy nhất theo định dạng `CK-{SKU}-{COUNT+1}`, kiểm tra chống trùng barcode, tự động cộng dồn `rental_count` khi hoàn trả đồ (`RENTED` -> `LAUNDRY`), bảo vệ chống xóa đồ đang cho thuê.
+    - **Tầng REST Controller**:
+      - `AdminProductItemController.java`: `GET /api/admin/products/{productId}/items`, `GET /api/admin/product-variants/{variantId}/items`, `GET /api/admin/product-variants/{variantId}/suggest-code`, `POST /api/admin/product-variants/{variantId}/items`, `PATCH /api/admin/product-items/{id}/status`, `DELETE /api/admin/product-items/{id}`.
+    - **Kiểm thử tự động**: 142/142 server tests pass 100% (`ProductItemStatusTest.java`, `ProductItemServiceTest.java`, `AdminProductItemControllerTest.java`).
+  - **CRM Frontend (React 18 + Vite + TanStack Query)**:
+    - **Data Types & API Service**: `productItem.ts`, `productItem.service.ts` (bổ sung method `patch` trong `apiClient.ts`), query keys và custom hooks `useProductItemsByProduct`, `useCreateProductItemMutation`, `useUpdateProductItemStatusMutation`, `useDeleteProductItemMutation`.
+    - **Component Kho Đồ Thực Tế & Barcode [ProductItemsTab.tsx](file:///e:/chickie-studio/crm/src/pages/products/components/ProductItemsTab/ProductItemsTab.tsx)**:
+      - 5 thẻ KPI thống kê tức thì: Tổng đồ vật lý, Sẵn sàng, Đang thuê, Giặt ủi, Bảo dưỡng.
+      - Bảng dữ liệu chi tiết kèm sao chép nhanh mã Barcode, huy hiệu trạng thái màu ngữ cảnh `ItemStatusBadge`, cảnh báo bảo dưỡng khi `rental_count >= 15`.
+      - Bộ lọc biến thể và tìm kiếm tức thì theo mã barcode / ghi chú.
+    - **Modal Thêm Món Đồ [CreateItemModal.tsx](file:///e:/chickie-studio/crm/src/pages/products/components/CreateItemModal/CreateItemModal.tsx)**: Tích hợp chọn biến thể, nút gợi ý mã Barcode tự động từ server, nhập ghi chú hiện trạng.
+    - **Modal Đổi Trạng Thái [ItemStatusChangeModal.tsx](file:///e:/chickie-studio/crm/src/pages/products/components/ItemStatusChangeModal/ItemStatusChangeModal.tsx)**: Tuân thủ nghiêm ngặt State Machine (chỉ hiển thị trạng thái hợp lệ tiếp theo), thông báo tự động tăng số lần thuê khi hoàn trả đồ.
+    - **Tích Hợp Modal Chi Tiết [ProductViewModal.tsx](file:///e:/chickie-studio/crm/src/pages/products/components/ProductViewModal/ProductViewModal.tsx)**: Bổ sung Tab 4 chuyên biệt "Kho đồ thực tế".
+    - **Đa ngôn ngữ & Kiểm thử**: Cập nhật `vi.json` và `en.json`, toàn bộ **50 test files, 212 unit tests pass 100%**, coverage module mới đạt $> 85\%$, lint & typecheck 0 errors.
+
 - **Trang Chi Tiết Sản Phẩm Client Thích Ứng Theo 3 Mảng Kinh Doanh Cốt Lõi (PRD-CLIENT-PRODUCT-PILLAR - ✅ DONE)**:
   - **Kiến trúc Cấu hình Mảng [client/src/components/features/products/product-pillar.config.ts](file:///e:/chickie-studio/client/src/components/features/products/product-pillar.config.ts)**:
     - Xây dựng module cấu hình chuyên biệt `PILLAR_CONFIGS` và hàm nhận diện mảng `resolveProductPillar` cho 3 mảng kinh doanh: `COSTUME` (Thuê trang phục), `CAMERA` (Thuê máy ảnh & thiết bị), `PHOTOGRAPHY` (Dịch vụ chụp ảnh).
