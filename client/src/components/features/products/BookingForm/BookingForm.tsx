@@ -7,6 +7,7 @@ import {
   Clock,
   MapPin,
   Phone,
+  Ruler,
   ShieldCheck,
   Sparkles,
   User,
@@ -19,9 +20,12 @@ import {
   BusinessPillar,
   PILLAR_CONFIGS,
 } from "../product-pillar.config";
+import { SizeGuideModal } from "../SizeGuideModal";
+import { AvailabilityCalendar } from "../AvailabilityCalendar";
 
 export interface BookingFormProps {
   productId: number;
+  slug?: string;
   productName: string;
   rentalPrice: number;
   depositPrice: number;
@@ -32,6 +36,7 @@ export interface BookingFormProps {
 
 export const BookingForm: React.FC<BookingFormProps> = ({
   productId: _productId,
+  slug,
   productName,
   rentalPrice,
   depositPrice,
@@ -102,6 +107,19 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [errorMsg, setErrorMsg] = React.useState<string>("");
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState<boolean>(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = React.useState<boolean>(false);
+  const [showCalendar, setShowCalendar] = React.useState<boolean>(true);
+
+  // Match selected variant object
+  const selectedVariantObj = React.useMemo(() => {
+    if (!variants || variants.length === 0) return undefined;
+    return (
+      variants.find(
+        (v) =>
+          v.size === selectedSize && (!selectedColor || v.color === selectedColor)
+      ) || variants[0]
+    );
+  }, [variants, selectedSize, selectedColor]);
 
   // Calculate rental duration in days
   const rentalDays = React.useMemo(() => {
@@ -172,7 +190,16 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               sizes={availableSizes}
               value={selectedSize}
               onChange={setSelectedSize}
-              sizeGuideAction={<span>Bảng số đo</span>}
+              sizeGuideAction={
+                <button
+                  type="button"
+                  onClick={() => setIsSizeGuideOpen(true)}
+                  className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <Ruler className="w-3.5 h-3.5 text-burgundy" />
+                  Bảng quy đổi kích cỡ
+                </button>
+              }
             />
           </div>
         ) : (
@@ -182,6 +209,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 {pillarConfig.variantLabel}:{" "}
                 <strong className="text-burgundy font-semibold">{selectedSize}</strong>
               </span>
+              <button
+                type="button"
+                onClick={() => setIsSizeGuideOpen(true)}
+                className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
+              >
+                <Ruler className="w-3.5 h-3.5 text-burgundy" />
+                Thông số quy chuẩn
+              </button>
             </div>
             <div className="flex flex-wrap gap-2">
               {availableSizes.map((v) => (
@@ -232,8 +267,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           </div>
         )}
 
-        {/* Rental Dates */}
-        <div className="space-y-1">
+        {/* Rental Dates & Availability Calendar */}
+        <div className="space-y-3">
           <DateRangeField
             label={pillarConfig.dateRangeLabel}
             startDate={startDate}
@@ -243,16 +278,44 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             onEndDateChange={setEndDate}
             required
           />
-          <div className="flex items-center gap-1.5 text-xs text-ink-muted mt-1">
-            <Clock className="w-3.5 h-3.5 text-burgundy" />
-            <span>
-              Thời gian tính:{" "}
-              <strong className="text-burgundy font-medium">
-                {rentalDays} {pillarConfig.durationUnitLabel}
-              </strong>
-              {activePillar !== "PHOTOGRAPHY" && " (24h/ngày)"}
-            </span>
+
+          <div className="flex items-center justify-between text-xs text-ink-muted">
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-burgundy" />
+              <span>
+                Thời gian tính:{" "}
+                <strong className="text-burgundy font-medium">
+                  {rentalDays} {pillarConfig.durationUnitLabel}
+                </strong>
+                {activePillar !== "PHOTOGRAPHY" && " (24h/ngày)"}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowCalendar(!showCalendar)}
+              className="text-xs font-medium text-burgundy hover:underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              <Calendar className="w-3.5 h-3.5 text-burgundy" />
+              {showCalendar ? "Thu gọn lịch" : "Xem lịch trống"}
+            </button>
           </div>
+
+          {showCalendar && (
+            <div className="pt-1">
+              <AvailabilityCalendar
+                slug={slug || "product"}
+                variantId={selectedVariantObj?.id}
+                startDate={startDate}
+                endDate={endDate}
+                onDateRangeChange={(s, e) => {
+                  setStartDate(s);
+                  setEndDate(e);
+                }}
+                pillar={activePillar}
+              />
+            </div>
+          )}
         </div>
 
         {/* Customer Information */}
@@ -488,6 +551,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           </div>
         </div>
       )}
+
+      {/* Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onClose={() => setIsSizeGuideOpen(false)}
+        pillar={activePillar}
+        onSelectSize={(size) => setSelectedSize(size)}
+      />
     </div>
   );
 };

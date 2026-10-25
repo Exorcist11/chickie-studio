@@ -130,5 +130,24 @@
     "hotline": "Hotline: 0987.654.321",
     "address": "Địa chỉ: Hà Nội, Việt Nam",
     "copyright": "© 2026 Chickie Studio. All rights reserved."
+  },
+  "productDetail": {
+    "sizeGuide": "Bảng quy đổi kích cỡ",
+    "sizeGuideDesc": "Đối chiếu số đo 3 vòng để chọn size vừa vặn nhất",
+    "selectDate": "Chọn ngày thuê đồ",
+    "calendarTitle": "Lịch Khả Dụng & Trống Đồ",
+    "calendarSubtitle": "Kiểm tra ngày còn đồ thực tế tại tiệm để chủ động lên lịch chụp",
+    "available": "Còn đồ",
+    "booked": "Đã kín lịch",
+    "past": "Đã qua",
+    "selected": "Đang chọn",
+    "bufferDay": "Ngày đệm giặt ủi",
+    "bufferNote": "Tiệm dành 1 ngày sau khi khách trả để giặt hấp tiệt trùng an toàn",
+    "pricePerDay": "đ / ngày",
+    "depositRequired": "Tiền cọc giữ đồ: {amount} đ",
+    "rentNowButton": "Đặt thuê ngay",
+    "slotsLeft": "Còn {count} chiếc",
+    "checkAvailability": "Xem lịch trống",
+    "closeCalendar": "Thu gọn lịch"
   }
 }

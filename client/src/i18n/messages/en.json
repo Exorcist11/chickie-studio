@@ -130,5 +130,24 @@
     "hotline": "Hotline: 0987.654.321",
     "address": "Address: Hanoi, Vietnam",
     "copyright": "© 2026 Chickie Studio. All rights reserved."
+  },
+  "productDetail": {
+    "sizeGuide": "Size Guide & Measurements",
+    "sizeGuideDesc": "Compare your bust, waist, and hip measurements to pick the best fit",
+    "selectDate": "Select Rental Dates",
+    "calendarTitle": "Availability Calendar",
+    "calendarSubtitle": "Check real-time inventory to schedule your photoshoot with confidence",
+    "available": "Available",
+    "booked": "Fully Booked",
+    "past": "Past",
+    "selected": "Selected",
+    "bufferDay": "Laundering Buffer",
+    "bufferNote": "We reserve 1 day after return for professional dry cleaning",
+    "pricePerDay": "VND / day",
+    "depositRequired": "Security deposit: {amount} VND",
+    "rentNowButton": "Rent Now",
+    "slotsLeft": "{count} items left",
+    "checkAvailability": "View Calendar",
+    "closeCalendar": "Collapse Calendar"
   }
 }

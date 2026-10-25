@@ -17,6 +17,7 @@ import { getPublicProductDetail, getPublicProducts, formatImageUrl } from "@/lib
 import {
   LookbookGallery,
   BookingForm,
+  StickyBottomCta,
   resolveProductPillar,
   PILLAR_CONFIGS,
 } from "@/components/features/products";
@@ -194,9 +195,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 )}
 
                 {/* Integrated Booking Form */}
-                <div className="pt-2">
+                <div id="booking-form-section" className="pt-2">
                   <BookingForm
                     productId={product.id}
+                    slug={product.slug}
                     productName={product.name}
                     rentalPrice={product.rentalPrice}
                     depositPrice={product.depositPrice}
@@ -261,6 +263,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </Section>
         )}
       </div>
+      
+      {/* Sticky CTA for Mobile View */}
+      <StickyBottomCta
+        rentalPrice={product.rentalPrice}
+        depositPrice={product.depositPrice}
+        pillar={pillar}
+      />
 
       <Footer />
     </div>

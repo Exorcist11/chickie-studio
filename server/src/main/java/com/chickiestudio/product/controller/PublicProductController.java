@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicProductController {
 
     private final ProductService productService;
+    private final com.chickiestudio.product.service.ProductAvailabilityService productAvailabilityService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductListResponse>>> getActiveProducts(
@@ -49,6 +50,17 @@ public class PublicProductController {
         } else {
             response = productService.getProductBySlug(idOrSlug);
         }
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/{idOrSlug}/availability")
+    public ResponseEntity<ApiResponse<com.chickiestudio.product.dto.ProductAvailabilityResponse>> getProductAvailability(
+            @PathVariable String idOrSlug,
+            @RequestParam(required = false) Long variantId,
+            @RequestParam(required = false) String month
+    ) {
+        com.chickiestudio.product.dto.ProductAvailabilityResponse response =
+                productAvailabilityService.checkAvailability(idOrSlug, variantId, month);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

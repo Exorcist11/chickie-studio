@@ -64,3 +64,24 @@ export interface PageResult<T> {
   size: number;
   number: number;
 }
+
+export interface DayAvailability {
+  date: string; // YYYY-MM-DD
+  available: boolean;
+  remainingCount: number;
+  reason: "AVAILABLE" | "FULLY_BOOKED" | "MAINTENANCE" | "PAST_DATE" | string;
+}
+
+export interface ProductAvailabilityResponse {
+  productId: number;
+  slug: string;
+  productName: string;
+  variantId?: number;
+  variantName?: string;
+  month: string; // YYYY-MM
+  totalItems: number;
+  availableItems: number;
+  bufferDays: number;
+  days: DayAvailability[];
+}
+

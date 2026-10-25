@@ -3,6 +3,7 @@ import {
   formatImageUrl,
   getPublicProducts,
   getPublicProductDetail,
+  getPublicProductAvailability,
   DEFAULT_FEATURED_PRODUCTS,
 } from "./product";
 
@@ -140,4 +141,48 @@ describe("Product API client", () => {
       expect(res).toBeNull();
     });
   });
+
+  describe("getPublicProductAvailability", () => {
+    it("should return availability from API when call succeeds", async () => {
+      const mockAvailability = {
+        productId: 1,
+        slug: "test-slug",
+        month: "2026-11",
+        totalItems: 3,
+        availableItems: 3,
+        bufferDays: 1,
+        days: [{ date: "2026-11-01", available: true, remainingCount: 3, reason: "AVAILABLE" }],
+      };
+
+      vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          status: 200,
+          data: mockAvailability,
+        }),
+      } as Response);
+
+      const res = await getPublicProductAvailability("test-slug", 10, "2026-11");
+      expect(res).toEqual(mockAvailability);
+    });
+
+    it("should generate dynamic availability fallback when fetch fails", async () => {
+      vi.spyOn(global, "fetch").mockRejectedValueOnce(new Error("Network Error"));
+
+      const res = await getPublicProductAvailability("test-slug", 10, "2026-12");
+      expect(res).not.toBeNull();
+      expect(res?.slug).toBe("test-slug");
+      expect(res?.month).toBe("2026-12");
+      expect(res?.days.length).toBe(31);
+    });
+
+    it("should handle default month when month is not specified", async () => {
+      vi.spyOn(global, "fetch").mockRejectedValueOnce(new Error("Network Error"));
+
+      const res = await getPublicProductAvailability("test-slug");
+      expect(res).not.toBeNull();
+      expect(res?.month).toBeDefined();
+    });
+  });
 });
+

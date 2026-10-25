@@ -7,7 +7,41 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
-- **Quản Lý Từng Món Đồ Thực Tế (Item Instance) & Vòng Đời Trạng Thái (CAT-003 - ✅ DONE)**:
+- **Chi Tiết Sản Phẩm, Bảng Thông Số Kích Cỡ & Lịch Trống Khả Dụng (CAT-006 - ✅ DONE)**:
+  - **Backend Server (Spring Boot 3 + MySQL)**:
+    - **Flyway Migration `V8__create_bookings_and_booking_items.sql`**: Khởi tạo bảng `bookings` và `booking_items`, đánh index `idx_booking_items_dates` (`product_item_id`, `rental_start_date`, `rental_end_date`) và `idx_booking_items_variant`.
+    - **Entities & Repositories**:
+      - `Booking.java`, `BookingItem.java`, `BookingStatus.java` (`PENDING`, `CONFIRMED`, `DEPOSITED`, `DELIVERED`, `RETURNED`, `COMPLETED`, `CANCELLED`).
+      - `BookingItemRepository.java`: Truy vấn các đơn giao thoa ngày chưa bị hủy (`findOverlappingItems`).
+    - **Service & DTOs**:
+      - `ProductAvailabilityResponse.java`, `DayAvailabilityDto.java`.
+      - `ProductAvailabilityService.java`: Thuật toán kiểm tra lịch trống an toàn, tự động tính số ngày đệm giặt ủi (`bufferDays = 1` cho trang phục `COSTUME`, `0` cho thiết bị `CAMERA` / dịch vụ `PHOTOGRAPHY`), chặn ngày quá khứ, phát hiện tình trạng kín đồ (`FULLY_BOOKED`) hoặc bảo dưỡng (`MAINTENANCE`).
+    - **Tầng REST Controller**:
+      - `PublicProductController.java`: Bổ sung endpoint `GET /api/public/products/{idOrSlug}/availability?variantId={id}&month={yyyy-MM}`.
+    - **Kiểm thử tự động Server**:
+      - 149/149 tests pass 100% (`ProductAvailabilityServiceTest.java`, `ProductControllerTest.java`).
+  - **Client Web (Next.js 14 App Router + TailwindCSS)**:
+    - **Component Lịch Trống [AvailabilityCalendar.tsx](file:///e:/chickie-studio/client/src/components/features/products/AvailabilityCalendar/AvailabilityCalendar.tsx)**:
+      - Hiển thị lưới lịch 7 ngày trong tháng, điều hướng tháng linh hoạt (chặn lùi về quá khứ).
+      - Hiển thị trực quan trạng thái từng ngày: Còn đồ (xanh lá), Đã kín lịch (đỏ nhạt, disabled), Đang chọn (Burgundy), Ngày quá khứ (mờ).
+      - Chọn khoảng ngày thuê trực tiếp từ lịch, tự động đồng bộ hai chiều với `DateRangeField`.
+      - Tự động gọi API khi đổi biến thể (Size/Màu) hoặc chuyển tháng.
+    - **Modal Bảng Quy Đổi Kích Cỡ [SizeGuideModal.tsx](file:///e:/chickie-studio/client/src/components/features/products/SizeGuideModal/SizeGuideModal.tsx)**:
+      - Bảng quy chuẩn số đo 3 vòng, chiều cao, cân nặng form nữ Việt Nam cho trang phục (XS, S, M, L), kèm mẹo đo bằng thước dây chuẩn xác.
+      - Thích ứng cấu hình phụ kiện cho máy ảnh `CAMERA` và quyền lợi gói chụp `PHOTOGRAPHY`.
+      - Nút "Chọn size" chọn nhanh kích cỡ và đóng modal tự động.
+    - **Thanh Đặt Thuê Di Động Cố Định [StickyBottomCta.tsx](file:///e:/chickie-studio/client/src/components/features/products/StickyBottomCta/StickyBottomCta.tsx)**:
+      - Ghim cố định ở đáy màn hình điện thoại (`lg:hidden`), hiển thị giá thuê, tiền cọc, nút mở nhanh bảng quy đổi size và nút "Đặt lịch ngay" cuộn mượt đến form.
+    - **Tích Hợp Form Đặt [BookingForm.tsx](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx) & [page.tsx](file:///e:/chickie-studio/client/src/app/products/[slug]/page.tsx)**:
+      - Nút "Bảng quy đổi kích cỡ" mở `SizeGuideModal`.
+      - Bộ mở rộng lịch khả dụng với nút "Thu gọn lịch" / "Xem lịch trống".
+    - **Đa ngôn ngữ & Kiểm thử**:
+      - Bổ sung namespace `productDetail` trong cả `vi.json` và `en.json`.
+      - Unit tests pass 100% (208 tests trên 43 test files).
+      - Coverage: Lines 94.94%, Statements 94.94%, Branches 84.94%, Functions 83.47% (vượt ngưỡng 80%).
+      - TypeScript strict `typecheck` 0 errors, ESLint 0 errors.
+      - Playwright E2E: **10/10 tests pass 100%** (`npm run test:e2e`).
+
   - **Backend Server (Spring Boot 3 + MySQL)**:
     - **Flyway Migration `V7__create_product_items.sql`**: Khởi tạo bảng `product_items` với foreign key `variant_id` (CASCADE on delete), unique index `item_code`, index `status`, và seed data mẫu.
     - **Entity & State Machine Enum**:

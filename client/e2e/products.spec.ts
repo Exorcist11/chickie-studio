@@ -157,5 +157,59 @@ test.describe("Client Products and Booking E2E Tests", () => {
     ).toBeVisible({ timeout: 5000 });
     await expect(page.getByText("Lê Hoàng Nam - 0981234567")).toBeVisible();
   });
+
+  test("tương tác với Lịch trống Availability và mở Bảng quy đổi kích cỡ (CAT-006)", async ({
+    page,
+  }) => {
+    await page.goto("/products/dam-maxi-voan-xoe-tieu-thu");
+
+    // 1. Kiểm tra Lịch trống trực quan xuất hiện trong BookingForm
+    await expect(page.getByRole("button", { name: "Thu gọn lịch" })).toBeVisible();
+    await expect(page.getByText("Còn đồ sẵn sàng")).toBeVisible();
+    await expect(page.getByText("Đã kín lịch")).toBeVisible();
+
+    // Thu gọn và mở lại lịch
+    const toggleBtn = page.getByRole("button", { name: "Thu gọn lịch" });
+    await expect(toggleBtn).toBeVisible();
+    await toggleBtn.click();
+    await expect(page.getByRole("button", { name: "Xem lịch trống" })).toBeVisible();
+    await page.getByRole("button", { name: "Xem lịch trống" }).click();
+    await expect(page.getByText(/Còn đồ sẵn sàng/i)).toBeVisible();
+
+    // 2. Mở Bảng quy đổi kích cỡ (Size Guide Modal)
+    const sizeGuideBtn = page.getByRole("button", { name: /Bảng quy đổi kích cỡ/i });
+    await expect(sizeGuideBtn).toBeVisible();
+    await sizeGuideBtn.click();
+
+    // Kiểm tra modal xuất hiện với bảng thông số đo 3 vòng
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Hướng Dẫn Chọn Size Váy & Áo Dài" })).toBeVisible();
+    await expect(page.getByText("S (Phổ biến)")).toBeVisible();
+    await expect(page.getByText("Mẹo Đo Số Đo Chuẩn Xác Bằng Thước Dây")).toBeVisible();
+
+    // Đóng modal
+    const closeBtn = page.getByRole("button", { name: "Đóng modal" });
+    await closeBtn.click();
+    await expect(dialog).not.toBeVisible();
+  });
+
+  test("hiển thị thanh Sticky Bottom CTA trên giao diện điện thoại (CAT-006)", async ({
+    page,
+  }) => {
+    // Đặt viewport mobile
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/products/dam-maxi-voan-xoe-tieu-thu");
+
+    // Kiểm tra Sticky Bottom CTA xuất hiện
+    const stickyCta = page.getByLabel("Thanh đặt thuê nhanh di động");
+    await expect(stickyCta).toBeVisible();
+    await expect(stickyCta.getByRole("button", { name: "Đặt lịch ngay" })).toBeVisible();
+
+    // Bấm 'Đặt lịch ngay' scroll đến form
+    await stickyCta.getByRole("button", { name: "Đặt lịch ngay" }).click();
+    await expect(page.locator("#booking-form-section")).toBeInViewport();
+  });
 });
+
 

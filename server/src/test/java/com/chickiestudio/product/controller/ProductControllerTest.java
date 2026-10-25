@@ -55,6 +55,9 @@ class ProductControllerTest {
     private ProductService productService;
 
     @MockBean
+    private com.chickiestudio.product.service.ProductAvailabilityService productAvailabilityService;
+
+    @MockBean
     private JwtTokenProvider jwtTokenProvider;
 
     private final ProductDetailResponse sampleDetailResponse = ProductDetailResponse.builder()
@@ -227,5 +230,40 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/public/products/vay-lua-trang-co-yem"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.slug").value("vay-lua-trang-co-yem"));
+    }
+
+    @Test
+    @DisplayName("Public API kiểm tra lịch trống sản phẩm trả về 200")
+    void getProductAvailability_shouldReturn200() throws Exception {
+        com.chickiestudio.product.dto.ProductAvailabilityResponse mockResp =
+                com.chickiestudio.product.dto.ProductAvailabilityResponse.builder()
+                        .productId(1L)
+                        .slug("vay-lua-trang-co-yem")
+                        .month("2026-11")
+                        .totalItems(2)
+                        .availableItems(2)
+                        .bufferDays(1)
+                        .days(List.of(
+                                com.chickiestudio.product.dto.DayAvailabilityDto.builder()
+                                        .date(java.time.LocalDate.parse("2026-11-01"))
+                                        .available(true)
+                                        .remainingCount(2)
+                                        .reason("AVAILABLE")
+                                        .build()
+                        ))
+                        .build();
+
+        when(productAvailabilityService.checkAvailability("vay-lua-trang-co-yem", 101L, "2026-11"))
+                .thenReturn(mockResp);
+
+        mockMvc.perform(get("/api/public/products/vay-lua-trang-co-yem/availability")
+                        .param("variantId", "101")
+                        .param("month", "2026-11"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.data.slug").value("vay-lua-trang-co-yem"))
+                .andExpect(jsonPath("$.data.totalItems").value(2))
+                .andExpect(jsonPath("$.data.bufferDays").value(1))
+                .andExpect(jsonPath("$.data.days[0].available").value(true));
     }
 }

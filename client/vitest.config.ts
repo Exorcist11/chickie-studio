@@ -20,6 +20,8 @@ export default defineConfig({
         statements: 80,
       },
       exclude: [
+        "**/*.test.{ts,tsx}",
+        "**/*.spec.{ts,tsx}",
         "e2e/**",
         "playwright.config.ts",
         "node_modules/**",

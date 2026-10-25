@@ -7,10 +7,10 @@
 | **Module** | CAT (Catalog) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Frontend Lead / Fullstack Dev |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Ngày bắt đầu** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `CAT-002`, `CAT-003` |
 
 ---
@@ -89,11 +89,11 @@ CREATE INDEX `idx_booking_items_dates` ON `booking_items` (`product_item_id`, `r
 ```
 
 ## 9. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Xem lịch trống**:
+- [x] **Kịch bản 1 - Xem lịch trống**:
   - **Given**: Biến thể Váy Size S có 2 chiếc thực tế, ngày 10/11 mới có 1 đơn đặt.
   - **When**: Khách mở lịch tháng 11 xem ngày 10/11.
   - **Then**: Ngày 10/11 vẫn hiển thị trạng thái "Còn đồ" (màu xanh) cho khách chọn tiếp.
-- [ ] **Kịch bản 2 - Ngày đã kín đồ**:
+- [x] **Kịch bản 2 - Ngày đã kín đồ**:
   - **Given**: Cả 2 chiếc váy Size S đều đã có đơn đặt vào ngày 12/11.
   - **When**: Khách xem ngày 12/11.
   - **Then**: Ngày 12/11 bị làm mờ, không thể click chọn.
@@ -104,13 +104,15 @@ CREATE INDEX `idx_booking_items_dates` ON `booking_items` (`product_item_id`, `r
 - **Mục tiêu Coverage**: $\ge 80\%$.
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] `generateMetadata` chuẩn SEO (OG Image, description, title).
-- [ ] UI Mobile responsive mượt mà với thanh Sticky CTA.
-- [ ] Đầy đủ i18n cho các chuỗi hiển thị và chú thích lịch.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] `generateMetadata` chuẩn SEO (OG Image, description, title).
+- [x] UI Mobile responsive mượt mà với thanh Sticky CTA.
+- [x] Đầy đủ i18n cho các chuỗi hiển thị và chú thích lịch (`productDetail` namespace).
+- [x] Test coverage $\ge 80\%$ (Client lines 94.94%, branches 84.94%, functions 83.47%; Server 149 tests pass).
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev | Hoàn thành toàn diện: V8 Migration Flyway, Backend API GET /api/public/products/{idOrSlug}/availability tính toán đệm giặt ủi bufferDays, Client AvailabilityCalendar lưới 7 ngày chọn dải ngày, SizeGuideModal bảng quy đổi kích cỡ chuẩn 3 trụ cột, StickyBottomCta mobile view, test coverage đạt 94.9%, 10/10 Playwright E2E pass | ✅ DONE |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
+

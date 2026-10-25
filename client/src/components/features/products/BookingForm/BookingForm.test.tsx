@@ -228,5 +228,36 @@ describe("BookingForm component", () => {
       screen.getByText("Vui lòng nhập số điện thoại để tiệm liên hệ.")
     ).toBeInTheDocument();
   });
+
+  it("opens size guide modal and toggles calendar visibility", async () => {
+    const user = userEvent.setup();
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+        variants={mockVariants}
+      />
+    );
+
+    // Open size guide modal
+    const sizeGuideBtn = screen.getByRole("button", { name: /Bảng quy đổi kích cỡ/i });
+    await user.click(sizeGuideBtn);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+    // Close size guide modal
+    const closeGuideBtn = screen.getByRole("button", { name: "Đóng modal" });
+    await user.click(closeGuideBtn);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    // Toggle calendar visibility
+    const toggleCalendarBtn = screen.getByRole("button", { name: "Thu gọn lịch" });
+    await user.click(toggleCalendarBtn);
+    expect(screen.getByRole("button", { name: "Xem lịch trống" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Xem lịch trống" }));
+    expect(screen.getByRole("button", { name: "Thu gọn lịch" })).toBeInTheDocument();
+  });
 });
 
