@@ -155,7 +155,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|---|
 | `SET-001` | Cấu hình thông tin shop, số ngày đệm giặt ủi, tỉ lệ cọc | CRM, SERVER, CLIENT | P1 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [SET-001](features/system-setting/SET-001-cau-hinh-thong-tin-shop-tham-so.md) |
 | `SET-002` | Cấu hình nội dung banner & thông điệp trang chủ | CRM, SERVER, CLIENT | P2 | 📝 SPEC | Fullstack Dev & UI/UX Specialist | - | - | [SET-002](features/system-setting/SET-002-cau-hinh-banner-thong-diep-trang-chu.md) |
-| `SET-003` | Hệ thống thông báo qua Email: Xác nhận đặt lịch, cọc & nhắc lịch thuê (Chưa triển khai Zalo/SMS) | SERVER, CRM | P1 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [SET-003](features/system-setting/SET-003-thong-bao-email-xac-nhan-va-nhac-lich.md) |
+| `SET-003` | Hệ thống thông báo qua Email: Xác nhận đặt lịch, cọc & nhắc lịch thuê (Chưa triển khai Zalo/SMS) | SERVER, CRM | P1 | ✅ DONE (Backend) | Backend Engineer & Tech Lead | 2026-10-25 | 2026-10-25 | [SET-003](features/system-setting/SET-003-thong-bao-email-xac-nhan-va-nhac-lich.md) |
 
 ---
 
@@ -163,6 +163,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `SET-003` | 📝 SPEC $\rightarrow$ ✅ DONE (Backend) | Backend Engineer & Fullstack Dev | Hoàn thành toàn diện phân hệ Backend: Flyway V12 (bảng notification_logs & customer_email), MailConfig async executor, EmailNotificationService + 7 template Thymeleaf, AdminNotificationController, tích hợp tự động gửi email xác nhận đặt lịch & cập nhật trạng thái trong BookingService, JaCoCo coverage $\ge 80\%$ line & branch (239 tests pass) |
 | 2026-10-25 | `BOK-001` | ✅ DONE $\rightarrow$ 🔄 REOPENED | Tech Lead & Fullstack Dev | Đánh dấu thực hiện lại do thay đổi yêu cầu: Bổ sung trường Email khách hàng trên Form đặt thuê Client, cập nhật Backend API/DTO và kích hoạt tự động gửi Email xác nhận đặt đơn (booking-confirmation.html) kèm mã VietQR (SET-003) |
 | 2026-10-25 | `SET-003, BOK-001` | Thay đổi yêu cầu (CR) | Tech Lead & Fullstack Dev | Thay đổi kênh thông báo: Khách đặt lịch thành công nhận Email xác nhận tự động; chuẩn hóa toàn bộ các thông báo vòng đời đơn (cọc, nhắc lịch, hoàn cọc, quá hạn) qua Email; tạm thời chưa triển khai Zalo ZNS và SMS. Cập nhật đồng bộ các spec SET-003, BOK-001, BOK-003, BOK-005, BOK-007, BOK-009, BOK-010, PAY-001, SET-001. |
 | 2026-10-25 | Toàn bộ 13 tính năng P1/P2 còn lại | ⬜ TODO $\rightarrow$ 📝 SPEC | Fullstack Dev, Tech Lead & UI/UX Specialist | Hoàn thành 100% hồ sơ đặc tả chi tiết cho toàn bộ 50 tính năng của dự án Chickie Studio: Gợi ý phụ kiện (CAT-007), Đơn kỷ yếu số lượng lớn (BOK-008), Biên bản bàn giao ảnh (BOK-009), Đặt lịch thử đồ (BOK-010), Mã giảm giá (CUS-003), Ưu đãi HSSV (CUS-004), Thống kê hiệu suất kho (RPT-003), SEO & Sitemap (CNT-003), Blog chia sẻ (CNT-004), Lookbook (CNT-005), Đánh giá feedback (CNT-006), Banner trang chủ (SET-002), Thông báo Zalo ZNS (SET-003) |

@@ -1,5 +1,6 @@
 package com.chickiestudio.booking.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -29,6 +30,10 @@ public class CreateBookingRequest {
             message = "Số điện thoại không hợp lệ (phải bắt đầu bằng 0 hoặc +84 và gồm 10 chữ số)"
     )
     private String customerPhone;
+
+    @Email(message = "Địa chỉ email không đúng định dạng")
+    @Size(max = 255, message = "Email tối đa 255 ký tự")
+    private String customerEmail;
 
     @NotBlank(message = "Hình thức nhận đồ không được để trống")
     @Builder.Default

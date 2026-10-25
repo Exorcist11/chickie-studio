@@ -44,6 +44,9 @@ public class Booking extends BaseEntity {
     @Column(name = "customer_phone", nullable = false, length = 20)
     private String customerPhone;
 
+    @Column(name = "customer_email", length = 255)
+    private String customerEmail;
+
     @Column(name = "delivery_method", nullable = false, length = 30)
     @Builder.Default
     private String deliveryMethod = "PICKUP_STORE";

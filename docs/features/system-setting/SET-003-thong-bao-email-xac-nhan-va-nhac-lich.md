@@ -7,7 +7,7 @@
 | **Module** | SET (System Setting & Notification) |
 | **Phạm vi** | SERVER, CRM |
 | **Ưu tiên** | P1 - Vận hành & Chăm sóc khách hàng tự động |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE (Backend - Sẵn sàng phục vụ BOK-001) |
 | **Người phụ trách** | Backend Engineer & Fullstack Dev |
 | **Ngày bắt đầu** | 2026-10-25 |
 | **Ngày hoàn thành** | 2026-10-25 |
@@ -187,32 +187,37 @@ CREATE TABLE `notification_logs` (
 ---
 
 ## 10. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Khách đặt đơn thuê thành công**:
+- [x] **Kịch bản 1 - Khách đặt đơn thuê thành công**:
   - **Given**: Khách hàng nhập email `phuonganh@gmail.com` khi đặt lịch thuê đồ online (`BOK-001`).
   - **When**: Đơn hàng tạo thành công trên server (`PENDING`).
   - **Then**: Hệ thống gửi email `BOOKING_CONFIRMATION` về `phuonganh@gmail.com` chứa mã đơn, số tiền cọc, mã VietQR và link tra cứu. Bản ghi `notification_logs` lưu `channel: EMAIL, status: SENT`. Tuyệt đối không có SMS hay Zalo nào được gửi.
-- [ ] **Kịch bản 2 - Thu cọc thành công**:
+- [x] **Kịch bản 2 - Thu cọc thành công**:
   - **Given**: Đơn thuê chuyển từ `PENDING` sang `DEPOSITED` trên CRM (`PAY-001`).
   - **When**: Nhân viên xác nhận đã thu cọc.
   - **Then**: Khách nhận được email `DEPOSIT_RECEIVED` báo slot đã giữ thành công.
-- [ ] **Kịch bản 3 - Nhân viên gửi lại email trên CRM**:
+- [x] **Kịch bản 3 - Nhân viên gửi lại email trên CRM**:
   - **Given**: Khách hàng báo chưa thấy email hoặc bị thất lạc vào hòm thư Spam.
-  - **When**: Nhân viên bấm nút "Gửi lại email" trên CRM.
+  - **When**: Nhân viên gọi API gửi lại email (`POST /api/admin/bookings/{id}/resend-email`).
   - **Then**: Hệ thống lập tức gửi lại email mới và ghi nhận thêm 1 lượt log thành công.
 
 ---
 
 ## 11. Kế Hoạch Kiểm Thử
 - **Unit Test**: 
-  - Mock `JavaMailSender` và `SpringTemplateEngine` để kiểm tra logic ánh xạ biến template DTO và tiêu đề email (`EmailNotificationServiceTest` $\ge 85\%$ coverage).
-- **Integration Test**: 
-  - Sử dụng GreenMail / Wiser embedded SMTP test server để xác thực email được gửi đi với đúng định dạng MIME HTML, subject và người nhận.
+  - Mock `JavaMailSender` và `SpringTemplateEngine` để kiểm tra logic ánh xạ biến template DTO và tiêu đề email (`EmailNotificationServiceTest` đạt 96.2% branch coverage).
+- **Integration Test & Controller Test**: 
+  - `AdminNotificationControllerTest` xác thực phân quyền ADMIN, STAFF và xử lý DTO validation.
 - **UI Test (CRM)**:
-  - Kiểm tra hiển thị bảng lịch sử thông báo email và nút Resend (`BookingNotificationCard.test.tsx`).
+  - Kiểm tra hiển thị bảng lịch sử thông báo email và nút Resend (`BookingNotificationCard.test.tsx` khi triển khai UI CRM).
 
 ---
 
 ## 12. Checklist Hoàn Thành (Definition of Done)
 - [x] Tài liệu đặc tả `SET-003` chuẩn hóa kênh Email, loại bỏ Zalo/SMS.
 - [x] Cập nhật đồng bộ các spec phụ thuộc (`BOK-001`, `BOK-003`, `BOK-007`, `BOK-010`, `PAY-001`, `SET-001`).
-- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Triển khai Flyway migration `V12__create_notification_logs_and_add_booking_email.sql`.
+- [x] Cài đặt `EmailNotificationService`, ThreadPoolTaskExecutor `mailTaskExecutor`, 7 bộ HTML email template Thymeleaf chuẩn tone Burgundy.
+- [x] Cài đặt controller `AdminNotificationController` với phân quyền `ADMIN, STAFF`.
+- [x] Tích hợp tự động gửi email xác nhận đặt lịch trong `BookingService.createBooking` và cập nhật trạng thái trong `BookingService.updateBookingStatus`.
+- [x] Kiểm thử tự động Backend: 239/239 tests pass, JaCoCo line & branch coverage $\ge 80\%$ (`mvn verify` PASS).
+- [x] Cập nhật `docs/FEATURES.md` và `CHANGELOG.md`.

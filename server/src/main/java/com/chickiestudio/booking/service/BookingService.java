@@ -18,6 +18,7 @@ import com.chickiestudio.category.entity.CategoryType;
 import com.chickiestudio.common.exception.BadRequestException;
 import com.chickiestudio.common.exception.ConflictException;
 import com.chickiestudio.common.exception.ResourceNotFoundException;
+import com.chickiestudio.notification.service.EmailNotificationService;
 import com.chickiestudio.product.entity.Product;
 import com.chickiestudio.product.entity.ProductItem;
 import com.chickiestudio.product.entity.ProductItemStatus;
@@ -53,6 +54,7 @@ public class BookingService {
     private final ProductVariantRepository productVariantRepository;
     private final ProductItemRepository productItemRepository;
     private final BookingStatusHistoryRepository bookingStatusHistoryRepository;
+    private final EmailNotificationService emailNotificationService;
 
     @Transactional
     public BookingResponse createBooking(CreateBookingRequest request) {
@@ -166,6 +168,7 @@ public class BookingService {
                 .bookingCode(bookingCode)
                 .customerName(request.getCustomerName().trim())
                 .customerPhone(request.getCustomerPhone().trim())
+                .customerEmail(request.getCustomerEmail() != null ? request.getCustomerEmail().trim() : null)
                 .deliveryMethod(request.getDeliveryMethod() != null ? request.getDeliveryMethod() : "PICKUP_STORE")
                 .deliveryAddress(request.getDeliveryAddress() != null ? request.getDeliveryAddress().trim() : null)
                 .rentalStartDate(request.getRentalStartDate())
@@ -202,6 +205,9 @@ public class BookingService {
 
         log.info("Đã tạo thành công đơn đặt thuê {} cho khách hàng {} (Item #{})",
                 bookingCode, request.getCustomerName(), allocatedItem.getId());
+
+        // Kích hoạt gửi email xác nhận đặt lịch tự động nếu khách có nhập email (SET-003 & BOK-001)
+        emailNotificationService.sendBookingConfirmation(savedBooking);
 
         return mapToResponse(savedBooking, durationDays);
     }
@@ -307,6 +313,9 @@ public class BookingService {
         log.info("Cập nhật trạng thái đơn thuê ID {} ({}) từ {} sang {} bởi {}",
                 saved.getId(), saved.getBookingCode(), currentStatus, targetStatus, changedBy);
 
+        // Kích hoạt gửi email tự động tương ứng theo trạng thái đơn (SET-003)
+        emailNotificationService.sendBookingStatusNotification(saved, targetStatus);
+
         int durationDays = (int) ChronoUnit.DAYS.between(saved.getRentalStartDate(), saved.getRentalEndDate()) + 1;
         if (durationDays < 1) durationDays = 1;
 
@@ -390,7 +399,7 @@ public class BookingService {
         return response;
     }
 
-    private boolean isPhoneMatching(String phone1, String phone2) {
+    boolean isPhoneMatching(String phone1, String phone2) {
         if (phone1 == null || phone2 == null) return false;
         String p1 = phone1.replaceAll("[^0-9]", "");
         String p2 = phone2.replaceAll("[^0-9]", "");
@@ -467,6 +476,7 @@ public class BookingService {
                 .bookingCode(booking.getBookingCode())
                 .customerName(booking.getCustomerName())
                 .customerPhone(booking.getCustomerPhone())
+                .customerEmail(booking.getCustomerEmail())
                 .deliveryMethod(booking.getDeliveryMethod())
                 .deliveryAddress(booking.getDeliveryAddress())
                 .rentalStartDate(booking.getRentalStartDate())

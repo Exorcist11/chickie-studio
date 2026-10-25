@@ -37,6 +37,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +48,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +70,9 @@ class BookingServiceTest {
 
     @Mock
     private BookingStatusHistoryRepository bookingStatusHistoryRepository;
+
+    @Mock
+    private com.chickiestudio.notification.service.EmailNotificationService emailNotificationService;
 
     @InjectMocks
     private BookingService bookingService;
@@ -765,5 +772,236 @@ class BookingServiceTest {
         assertThat(res.getStatus()).isEqualTo(BookingStatus.CONFIRMED);
         assertThat(res.getNextValidStatuses())
                 .containsExactlyInAnyOrder(BookingStatus.DEPOSITED, BookingStatus.CANCELLED);
+    }
+
+    @Test
+    @DisplayName("BOK-003: updateBookingStatus đồng bộ trạng thái ProductItem (DELIVERED, RETURNED, COMPLETED, CANCELLED)")
+    void updateBookingStatus_syncProductItemStatus() {
+        ProductItem pi = ProductItem.builder()
+                .id(501L)
+                .itemCode("CK-DR-001-01")
+                .status(ProductItemStatus.AVAILABLE)
+                .rentalCount(0)
+                .build();
+        BookingItem bi = BookingItem.builder().productItem(pi).build();
+        List<BookingItem> items = new ArrayList<>();
+        items.add(bi);
+
+        Booking booking = Booking.builder()
+                .id(20L)
+                .bookingCode("BK-SYNC-STATUS")
+                .customerName("Khách Hàng Sync")
+                .customerPhone("0987654321")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.CONFIRMED)
+                .items(items)
+                .build();
+
+        when(bookingRepository.findById(20L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        // 1. DEPOSITED -> DELIVERED (item -> RENTED)
+        booking.setStatus(BookingStatus.DEPOSITED);
+        bookingService.updateBookingStatus(20L, UpdateBookingStatusRequest.builder().status(BookingStatus.DELIVERED).build(), "staff");
+        assertThat(pi.getStatus()).isEqualTo(ProductItemStatus.RENTED);
+
+        // 2. DELIVERED -> RETURNED (item -> LAUNDRY, count + 1)
+        booking.setStatus(BookingStatus.DELIVERED);
+        bookingService.updateBookingStatus(20L, UpdateBookingStatusRequest.builder().status(BookingStatus.RETURNED).build(), "staff");
+        assertThat(pi.getStatus()).isEqualTo(ProductItemStatus.LAUNDRY);
+        assertThat(pi.getRentalCount()).isEqualTo(1);
+
+        // 3. RETURNED -> COMPLETED (item -> AVAILABLE)
+        booking.setStatus(BookingStatus.RETURNED);
+        bookingService.updateBookingStatus(20L, UpdateBookingStatusRequest.builder().status(BookingStatus.COMPLETED).build(), "staff");
+        assertThat(pi.getStatus()).isEqualTo(ProductItemStatus.AVAILABLE);
+
+        // 4. PENDING -> CANCELLED khi item đang RENTED (item -> AVAILABLE)
+        booking.setStatus(BookingStatus.PENDING);
+        pi.setStatus(ProductItemStatus.RENTED);
+        bookingService.updateBookingStatus(20L, UpdateBookingStatusRequest.builder().status(BookingStatus.CANCELLED).note("Lý do hủy đơn").build(), "staff");
+        assertThat(pi.getStatus()).isEqualTo(ProductItemStatus.AVAILABLE);
+    }
+
+    @Test
+    @DisplayName("BOK-001: createBooking tự động tạo ProductItem dự phòng khi biến thể chưa có item nào trong kho")
+    void createBooking_autoGenerateFallbackItems() {
+        when(productVariantRepository.findById(100L)).thenReturn(Optional.of(variant));
+
+        ProductItem mockItem = ProductItem.builder()
+                .id(888L)
+                .variant(variant)
+                .itemCode("CK-ITEM-FALLBACK")
+                .status(ProductItemStatus.AVAILABLE)
+                .rentalCount(0)
+                .build();
+
+        when(productItemRepository.findActiveItemsForUpdate(100L)).thenReturn(Collections.emptyList(), List.of(mockItem));
+        when(productItemRepository.findByVariantIdOrderByIdAsc(100L)).thenReturn(Collections.emptyList());
+        when(productItemRepository.saveAll(any())).thenReturn(List.of(mockItem));
+        when(bookingItemRepository.findOverlappingItems(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(inv -> {
+            Booking b = inv.getArgument(0);
+            b.setId(777L);
+            return b;
+        });
+
+        request.setDeliveryMethod("DELIVERY");
+        request.setDeliveryAddress("123 Cầu Giấy");
+        request.setNote("Ghi chú thử đồ");
+
+        BookingResponse response = bookingService.createBooking(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getDeliveryMethod()).isEqualTo("DELIVERY");
+        assertThat(response.getDeliveryAddress()).isEqualTo("123 Cầu Giấy");
+        verify(productItemRepository).saveAll(any());
+    }
+
+    @Test
+    @DisplayName("BOK-002: calculateBufferDays tính ngày đệm chính xác cho từng loại sản phẩm")
+    void calculateBufferDays_allBranches() {
+        // 1. null product -> 1
+        assertThat(bookingService.calculateBufferDays(null)).isEqualTo(1);
+
+        // 2. product with null category -> 1
+        Product pNoCat = Product.builder().build();
+        assertThat(bookingService.calculateBufferDays(pNoCat)).isEqualTo(1);
+
+        // 3. CAMERA category -> 0
+        Product pCamera = Product.builder()
+                .category(Category.builder().type(CategoryType.CAMERA).build())
+                .build();
+        assertThat(bookingService.calculateBufferDays(pCamera)).isEqualTo(0);
+
+        // 4. PHOTOGRAPHY category -> 0
+        Product pPhoto = Product.builder()
+                .category(Category.builder().type(CategoryType.PHOTOGRAPHY).build())
+                .build();
+        assertThat(bookingService.calculateBufferDays(pPhoto)).isEqualTo(0);
+
+        // 5. COSTUME category -> 1
+        Product pCostume = Product.builder()
+                .category(Category.builder().type(CategoryType.COSTUME).build())
+                .build();
+        assertThat(bookingService.calculateBufferDays(pCostume)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("BOK-005: isPhoneMatching so khớp chuẩn hóa số điện thoại các định dạng 0x và +84x")
+    void isPhoneMatching_allBranches() {
+        // null cases
+        assertThat(bookingService.isPhoneMatching(null, "0912345678")).isFalse();
+        assertThat(bookingService.isPhoneMatching("0912345678", null)).isFalse();
+
+        // formatted cases
+        assertThat(bookingService.isPhoneMatching("+84912345678", "0912345678")).isTrue();
+        assertThat(bookingService.isPhoneMatching("0912345678", "+84912345678")).isTrue();
+        assertThat(bookingService.isPhoneMatching("0912345678", "0987654321")).isFalse();
+    }
+
+    @Test
+    @DisplayName("BOK-003: markOverdueBookings cập nhật đơn DELIVERED quá hạn sang OVERDUE")
+    void markOverdueBookings_withOverdueOrders() {
+        Booking overdueBooking = Booking.builder()
+                .id(99L)
+                .bookingCode("BK-OVERDUE-1")
+                .status(BookingStatus.DELIVERED)
+                .rentalEndDate(LocalDate.now().minusDays(1))
+                .build();
+
+        when(bookingRepository.findByStatusAndRentalEndDateBefore(eq(BookingStatus.DELIVERED), any()))
+                .thenReturn(List.of(overdueBooking));
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        int count = bookingService.markOverdueBookings(LocalDate.now());
+
+        assertThat(count).isEqualTo(1);
+        assertThat(overdueBooking.getStatus()).isEqualTo(BookingStatus.OVERDUE);
+        verify(bookingStatusHistoryRepository).save(any(BookingStatusHistory.class));
+    }
+
+    @Test
+    @DisplayName("BOK-005: trackBooking tra cứu đơn thành công và ẩn danh thông tin nhân viên")
+    void trackBooking_successAndSanitizeStaff() {
+        Booking booking = Booking.builder()
+                .id(100L)
+                .bookingCode("BK20261105-TRACK")
+                .customerName("Khách Hàng Tra Cứu")
+                .customerPhone("0912345678")
+                .rentalStartDate(LocalDate.now())
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.CONFIRMED)
+                .build();
+
+        BookingStatusHistory hCustomer = BookingStatusHistory.builder()
+                .id(1L)
+                .fromStatus(null)
+                .toStatus(BookingStatus.PENDING)
+                .changedBy("CUSTOMER")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        BookingStatusHistory hStaff = BookingStatusHistory.builder()
+                .id(2L)
+                .fromStatus(BookingStatus.PENDING)
+                .toStatus(BookingStatus.CONFIRMED)
+                .changedBy("admin_user")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        when(bookingRepository.findByBookingCode("BK20261105-TRACK")).thenReturn(Optional.of(booking));
+        when(bookingStatusHistoryRepository.findByBookingIdOrderByCreatedAtDesc(100L))
+                .thenReturn(List.of(hStaff, hCustomer));
+
+        BookingTrackingRequest req = BookingTrackingRequest.builder()
+                .bookingCode("BK20261105-TRACK")
+                .phone("0912345678")
+                .build();
+
+        BookingResponse response = bookingService.trackBooking(req);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getBookingCode()).isEqualTo("BK20261105-TRACK");
+        assertThat(response.getStatusHistories()).hasSize(2);
+        assertThat(response.getStatusHistories().get(0).getChangedBy()).isEqualTo("CHICKIE_STUDIO");
+        assertThat(response.getStatusHistories().get(1).getChangedBy()).isEqualTo("CUSTOMER");
+    }
+
+    @Test
+    @DisplayName("BOK-005: trackBooking ném ResourceNotFoundException khi mã đơn không tồn tại")
+    void trackBooking_codeNotFound() {
+        when(bookingRepository.findByBookingCode("BK-UNKNOWN")).thenReturn(Optional.empty());
+
+        BookingTrackingRequest req = BookingTrackingRequest.builder()
+                .bookingCode("BK-UNKNOWN")
+                .phone("0912345678")
+                .build();
+
+        assertThatThrownBy(() -> bookingService.trackBooking(req))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Không tìm thấy đơn đặt thuê phù hợp");
+    }
+
+    @Test
+    @DisplayName("BOK-005: trackBooking ném ResourceNotFoundException khi số điện thoại không khớp")
+    void trackBooking_phoneMismatch() {
+        Booking booking = Booking.builder()
+                .id(101L)
+                .bookingCode("BK-PHONE-TEST")
+                .customerPhone("0912345678")
+                .build();
+
+        when(bookingRepository.findByBookingCode("BK-PHONE-TEST")).thenReturn(Optional.of(booking));
+
+        BookingTrackingRequest req = BookingTrackingRequest.builder()
+                .bookingCode("BK-PHONE-TEST")
+                .phone("0999999999")
+                .build();
+
+        assertThatThrownBy(() -> bookingService.trackBooking(req))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Không tìm thấy đơn đặt thuê phù hợp");
     }
 }

@@ -8,6 +8,14 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Hệ Thống Thông Báo Qua Email: Xác Nhận Đặt Lịch, Cọc & Nhắc Lịch Thuê (SET-003 - Backend ✅ DONE)**:
+  - Triển khai hạ tầng gửi email HTML tự động qua Spring Boot `JavaMailSender` và Thymeleaf template engine với thread pool bất đồng bộ `@EnableAsync` (`mailTaskExecutor`).
+  - Thiết kế 7 bộ mẫu HTML email chuẩn thương hiệu Chickie Studio tông màu Burgundy (`#641D2B`), Gold và Ivory: `booking-confirmation.html` (kèm mã VietQR động & link tra cứu), `deposit-received.html`, `pickup-reminder.html`, `return-reminder.html`, `return-completed.html`, `booking-expired.html`, `fitting-confirmation.html`.
+  - Migration Flyway `V12__create_notification_logs_and_add_booking_email.sql`: bổ sung cột `customer_email` vào bảng `bookings` và tạo bảng lưu nhật ký `notification_logs` với đầy đủ indexes.
+  - Tự động kích hoạt gửi email xác nhận ngay khi tạo đơn mới (`BookingService.createBooking`) và gửi email cập nhật trạng thái khi xác nhận cọc/nhận đồ/trả đồ (`BookingService.updateBookingStatus`).
+  - Cung cấp API quản trị CRM tra cứu lịch sử gửi (`GET /api/admin/bookings/{id}/notifications`) và gửi lại email (`POST /api/admin/bookings/{id}/resend-email`) phân quyền `ADMIN, STAFF`.
+  - Bộ kiểm thử tự động toàn diện: 239/239 tests pass (0 failures), JaCoCo line coverage > 90% và branch coverage $\ge 80\%$ (`mvn verify` PASS 100%).
+
 - **Định Tuyến Chuyên Biệt Theo Ngành Nghề Kinh Doanh & Kích Hoạt Menu Tự Động (Phương Án A)**:
   - Khai báo các semantic routes chuyên biệt trực tiếp cho 4 trụ cột kinh doanh cốt lõi thay vì dùng query params (`?type=...`):
     - 👗 Thuê trang phục: `/thue-trang-phuc` (catalog) và `/thue-trang-phuc/[slug]` (chi tiết sản phẩm).

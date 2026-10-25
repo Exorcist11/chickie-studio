@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận lịch hẹn thử đồ tại showroom - Chickie Studio</title>
+    <style>
+        body { margin: 0; padding: 0; background-color: #FDFBF7; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #2D2D2D; line-height: 1.6; }
+        .container { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(100, 29, 43, 0.08); border: 1px solid #F0E8DC; }
+        .header { background: linear-gradient(135deg, #641D2B 0%, #44111C 100%); padding: 32px 24px; text-align: center; color: #ffffff; }
+        .header h1 { margin: 0 0 8px 0; font-size: 24px; color: #F8E8C8; }
+        .content { padding: 32px 24px; }
+        .badge { background: #FDF2F8; border: 1px solid #FBCFE8; color: #9D174D; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; display: inline-block; margin-bottom: 20px; }
+        .card { background: #FAF7F2; border-radius: 8px; padding: 18px; margin: 20px 0; border-left: 4px solid #641D2B; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .footer { background: #240B10; padding: 24px; text-align: center; color: #BBA7A9; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CHICKIE STUDIO</h1>
+            <p>Xác Nhận Lịch Hẹn Thử Đồ Tại Showroom</p>
+        </div>
+        <div class="content">
+            <div class="badge">&#128087; Lịch Thử Đồ Đã Được Đặt Thành Công</div>
+            <p>Kính gửi <strong th:text="${customerName}">Quý khách</strong>,</p>
+            <p>Chickie Studio rất hân hạnh được chào đón bạn đến trải nghiệm không gian thử đồ và lựa chọn trang phục trực tiếp tại Showroom của chúng tôi.</p>
+            
+            <div class="card">
+                <div class="row"><span>Thời gian hẹn:</span><strong th:text="${appointmentTime}">15:00 - 15:45, Thứ 7 ngày 01/11/2026</strong></div>
+                <div class="row"><span>Địa điểm:</span><strong>123 Đường Láng, Đống Đa, Hà Nội</strong></div>
+                <div class="row" th:if="${note != null and note != ''}"><span>Ghi chú mong muốn:</span><span th:text="${note}">Váy cưới phong cách tối giản</span></div>
+            </div>
+
+            <p><strong>Ưu đãi khi đến thử đồ:</strong></p>
+            <ul>
+                <li>Chuyên viên Stylist tư vấn vóc dáng và phối phụ kiện miễn phí 1-1.</li>
+                <li>Phòng thử đồ riêng tư cao cấp với ánh sáng chuẩn studio chụp hình.</li>
+            </ul>
+        </div>
+        <div class="footer">
+            <p>Hotline hỗ trợ: 0901 234 567 &bull; Showroom mở cửa 08:30 - 21:30 hàng ngày</p>
+        </div>
+    </div>
+</body>
+</html>

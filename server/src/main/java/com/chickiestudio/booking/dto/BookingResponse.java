@@ -23,6 +23,7 @@ public class BookingResponse {
     private String bookingCode;
     private String customerName;
     private String customerPhone;
+    private String customerEmail;
     private String deliveryMethod;
     private String deliveryAddress;
     private LocalDate rentalStartDate;

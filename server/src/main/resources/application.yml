@@ -35,8 +35,29 @@ spring:
     baseline-on-migrate: true
     locations: classpath:db/migration
 
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:dngngx2077@gmail.com}
+    password: ${MAIL_PASSWORD:murthzgtyhkttooc}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+
 chickie:
   jwt:
     secret: ${JWT_SECRET:4c6869636b696553747564696f5365637265744b657932303236466f724a575441757468656e7469636174696f6e546f6b656e}
     access-token-expiration-ms: 900000       # 15 phút
     refresh-token-expiration-ms: 604800000   # 7 ngày
+  mail:
+    from-email: ${MAIL_FROM:dngngx2077@gmail.com}
+    from-name: ${MAIL_FROM_NAME:Chickie Studio}
+    enabled: ${MAIL_ENABLED:true}

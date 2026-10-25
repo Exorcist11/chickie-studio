@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đơn đặt thuê - Chickie Studio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FDFBF7;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #2D2D2D;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(100, 29, 43, 0.08);
+            border: 1px solid #F0E8DC;
+        }
+        .header {
+            background: linear-gradient(135deg, #641D2B 0%, #44111C 100%);
+            padding: 32px 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #F8E8C8;
+        }
+        .header p {
+            margin: 0;
+            font-size: 15px;
+            color: #E2D3B4;
+        }
+        .content {
+            padding: 32px 24px;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #641D2B;
+            margin-bottom: 12px;
+        }
+        .notice-badge {
+            display: inline-block;
+            background: #FFF8E7;
+            border: 1px solid #F0D080;
+            color: #946200;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .order-card {
+            background: #FAF7F2;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border-left: 4px solid #641D2B;
+        }
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .order-row:last-child {
+            margin-bottom: 0;
+        }
+        .order-label {
+            color: #71717A;
+            font-weight: 500;
+        }
+        .order-value {
+            font-weight: 600;
+            color: #18181B;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        .items-table th {
+            background: #F4EFEA;
+            color: #641D2B;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 2px solid #E5DCD3;
+        }
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #F0EAE1;
+            font-size: 14px;
+        }
+        .total-box {
+            background: #FAF5F0;
+            border: 1px dashed #D6C2B0;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 28px;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .total-row.highlight {
+            font-size: 16px;
+            font-weight: 700;
+            color: #641D2B;
+            border-top: 1px solid #E2D3B4;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .qr-section {
+            background: #FCF9F2;
+            border: 1px solid #EEDFBE;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .qr-section h3 {
+            margin: 0 0 8px 0;
+            color: #641D2B;
+            font-size: 17px;
+        }
+        .qr-img {
+            max-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin: 14px 0;
+        }
+        .bank-details {
+            font-size: 13px;
+            color: #555555;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: left;
+            display: inline-block;
+            width: 90%;
+        }
+        .btn-track {
+            display: inline-block;
+            background: #641D2B;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        .footer {
+            background: #240B10;
+            padding: 24px;
+            text-align: center;
+            color: #BBA7A9;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        .footer a {
+            color: #F8E8C8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CHICKIE STUDIO</h1>
+            <p>Thời Trang Dự Tiệc & Thuê Trang Phục Cao Cấp</p>
+        </div>
+        <div class="content">
+            <div class="greeting">
+                Kính gửi <span th:text="${customerName}">Quý khách</span>,
+            </div>
+            <p>Cảm ơn bạn đã lựa chọn Chickie Studio! Đơn đặt thuê của bạn đã được tiếp nhận thành công trên hệ thống.</p>
+            
+            <div class="notice-badge">
+                ⏳ Thời hạn giữ chỗ: 60 phút kể từ lúc đặt hàng
+            </div>
+
+            <div class="order-card">
+                <div class="order-row">
+                    <span class="order-label">Mã đơn đặt thuê:</span>
+                    <span class="order-value" th:text="${bookingCode}">#BK20261105-0001</span>
+                </div>
+                <div class="order-row">
+                    <span class="order-label">Số điện thoại:</span>
+                    <span class="order-value" th:text="${customerPhone}">0901234567</span>
+                </div>
+                <div class="order-row">
+                    <span class="order-label">Thời gian thuê:</span>
+                    <span class="order-value"><span th:text="${rentalStartDate}">01/11/2026</span> &rarr; <span th:text="${rentalEndDate}">03/11/2026</span> (<span th:text="${durationDays}">3</span> ngày)</span>
+                </div>
+                <div class="order-row">
+                    <span class="order-label">Phương thức nhận:</span>
+                    <span class="order-value" th:text="${deliveryMethod == 'DELIVERY' ? 'Giao tận nơi' : 'Nhận tại Showroom'}">Nhận tại Showroom</span>
+                </div>
+                <div class="order-row" th:if="${deliveryAddress != null and deliveryAddress != ''}">
+                    <span class="order-label">Địa chỉ giao:</span>
+                    <span class="order-value" th:text="${deliveryAddress}">Hà Nội</span>
+                </div>
+            </div>
+
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Kích cỡ</th>
+                        <th style="text-align: right;">Tiền thuê</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.productName}">Váy Dạ Hội Lụa Cao Cấp</td>
+                        <td th:text="${item.size != null ? item.size : 'Tiêu chuẩn'}">M</td>
+                        <td style="text-align: right;" th:text="${#numbers.formatDecimal(item.rentalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">350,000 đ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total-box">
+                <div class="total-row">
+                    <span>Tổng tiền thuê:</span>
+                    <span th:text="${#numbers.formatDecimal(totalRentalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">350,000 đ</span>
+                </div>
+                <div class="total-row">
+                    <span>Tiền đặt cọc trang phục:</span>
+                    <span th:text="${#numbers.formatDecimal(totalDepositPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">500,000 đ</span>
+                </div>
+                <div class="total-row highlight">
+                    <span>Số tiền cần chuyển khoản (Cọc giữ chỗ 50% tiền thuê):</span>
+                    <span th:text="${#numbers.formatDecimal(depositRequired, 0, 'COMMA', 0, 'POINT')} + ' đ'">175,000 đ</span>
+                </div>
+            </div>
+
+            <div class="qr-section">
+                <h3>Thanh Toán Đặt Cọc 1 Chạm Qua VietQR</h3>
+                <p style="font-size: 13px; color: #666; margin: 0;">Quét mã bên dưới bằng ứng dụng ngân hàng bất kỳ để hoàn tất giữ slot</p>
+                
+                <img class="qr-img" th:src="${vietQrUrl}" alt="Mã VietQR Thanh Toán" />
+
+                <div class="bank-details">
+                    <div><strong>Ngân hàng:</strong> MB Bank (Quân Đội)</div>
+                    <div><strong>Số tài khoản:</strong> 0901234567</div>
+                    <div><strong>Chủ tài khoản:</strong> CHICKIE STUDIO</div>
+                    <div><strong>Nội dung CK:</strong> <span style="color: #641D2B; font-weight: 700;" th:text="${bookingCode}">BK20261105-0001</span></div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0 10px 0;">
+                <a class="btn-track" th:href="${trackingUrl}">Tra Cứu Chi Tiết Đơn Hàng</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>CHICKIE STUDIO &bull; Tỏa Sáng Trong Mọi Khoảnh Khắc</strong><br>
+            Hotline: 0901 234 567 &bull; Email: cskh@chickiestudio.com<br>
+            Địa chỉ Showroom: 123 Đường Láng, Đống Đa, Hà Nội (Mở cửa 08:30 - 21:30)</p>
+            <p>&copy; 2026 Chickie Studio. Bảo lưu mọi quyền.</p>
+        </div>
+    </div>
+</body>
+</html>

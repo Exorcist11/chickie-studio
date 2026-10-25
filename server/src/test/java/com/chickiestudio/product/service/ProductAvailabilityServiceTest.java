@@ -260,4 +260,44 @@ class ProductAvailabilityServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Biến thể không thuộc sản phẩm này");
     }
+
+    @Test
+    @DisplayName("checkAvailability tìm kiếm bằng Product ID số khi idOrSlug là số, monthStr null và variantId null")
+    void checkAvailability_ById_NullMonth_NullVariant() {
+        when(productRepository.findById(10L)).thenReturn(Optional.of(testProduct));
+        when(productVariantRepository.findByProductId(10L)).thenReturn(List.of(testVariant));
+        when(productItemRepository.findByVariantIdOrderByIdAsc(101L)).thenReturn(List.of(item1));
+        when(bookingItemRepository.findOverlappingItems(eq(101L), any(), any(), eq(BookingStatus.CANCELLED)))
+                .thenReturn(Collections.emptyList());
+
+        ProductAvailabilityResponse response = availabilityService.checkAvailability("10", null, null);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getProductId()).isEqualTo(10L);
+        assertThat(response.getBufferDays()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("checkAvailability xử lý an toàn khi monthStr không đúng định dạng và category là CAMERA")
+    void checkAvailability_InvalidMonth_And_CameraCategory() {
+        Category cameraCat = Category.builder()
+                .id(3L)
+                .name("Máy ảnh")
+                .type(CategoryType.CAMERA)
+                .build();
+        testProduct.setCategory(cameraCat);
+
+        when(productRepository.findBySlug("vay-da-hoi-kim-sa-do")).thenReturn(Optional.of(testProduct));
+        when(productVariantRepository.findById(101L)).thenReturn(Optional.of(testVariant));
+        when(productItemRepository.findByVariantIdOrderByIdAsc(101L)).thenReturn(List.of(item1));
+        when(bookingItemRepository.findOverlappingItems(eq(101L), any(), any(), eq(BookingStatus.CANCELLED)))
+                .thenReturn(Collections.emptyList());
+
+        ProductAvailabilityResponse response = availabilityService.checkAvailability(
+                "vay-da-hoi-kim-sa-do", 101L, "invalid-month-str"
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getBufferDays()).isEqualTo(0);
+    }
 }
