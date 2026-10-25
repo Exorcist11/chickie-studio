@@ -7,6 +7,40 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Trọn Gói Bộ Component Lớp Phủ & Phản Hồi UI-2 (UI-002 - ✅ DONE)**:
+  - **Triển Khai Bộ Component Overlays & Feedback Chuẩn Hóa (@chickie/ui)**:
+    - **Drawer (`Drawer.tsx`)**:
+      - Hỗ trợ 4 hướng trượt linh hoạt (`right`, `left`, `bottom`, `top`) và 4 kích thước (`sm`, `md`, `lg`, `full`).
+      - Tích hợp Focus Trap khép kín (Tab / Shift+Tab tuần hoàn), phím Escape đóng nhanh và tự động trả lại focus cho phần tử kích hoạt trước đó.
+      - Tự động khóa cuộn trang (`document.body.style.overflow = "hidden"`) khi mở và phục hồi nguyên vẹn khi đóng.
+      - Tuân thủ WAI-ARIA `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-describedby`.
+    - **Menu (`Menu.tsx` / DropdownMenu)**:
+      - Compound component: `Menu`, `MenuItem`, `MenuHeader`, `MenuDivider`.
+      - Hỗ trợ căn lề `align="left" | "right"`, trạng thái `disabled`, `danger`, icon đi kèm.
+      - Điều hướng bàn phím chuẩn W3C: `ArrowDown`, `ArrowUp`, `Home`, `End`, `Enter`, `Space` và `Escape`.
+      - Tự động đóng khi nhấp chuột ra ngoài (*click outside*).
+    - **Popover (`Popover.tsx`)**:
+      - Thẻ tương tác nổi gắn với trigger button, hỗ trợ 12 cấu hình vị trí (`bottom-start`, `bottom-center`, `bottom-end`, `top-*`, `left-*`, `right-*`).
+      - Hỗ trợ cả chế độ điều khiển (*controlled*) và không điều khiển (*uncontrolled*), tự đóng khi click ngoài hoặc bấm Escape.
+    - **Tooltip (`Tooltip.tsx`)**:
+      - Hiển thị gợi ý ngữ cảnh khi rê chuột (*hover*) hoặc nhận tiêu điểm (*focus*) với độ trễ tùy biến (`delayMs`).
+      - Tự ẩn khi rê chuột ra ngoài, mất focus hoặc nhấn phím Escape.
+      - WAI-ARIA `role="tooltip"`, tự động liên kết `aria-describedby` với phần tử kích hoạt.
+    - **Hệ Thống Thông Báo Phản Hồi Notify & Toaster (`notify.ts`, `Toaster.tsx`)**:
+      - Cung cấp API lập trình nhẹ, tiện lợi: `notify.success()`, `notify.error()`, `notify.warning()`, `notify.info()`, `notify.dismiss()`.
+      - Tự động biến mất sau thời gian định sẵn (mặc định 4.000ms), tự tạm dừng đếm ngược khi rê chuột vào thông báo.
+      - Container `<Toaster />` hỗ trợ các vị trí góc màn hình (`top-right`, `bottom-right`, `top-center`, `bottom-center`), mount sẵn tại layout gốc của Client và CRM.
+    - **Đồng Bộ Modal & ConfirmModal**:
+      - Re-export đồng bộ tại `@chickie/ui` / `src/components/ui/Modal/` cho cả Client và CRM.
+  - **Trang Trưng Bày Dev Showcase (`/dev/components`)**:
+    - Bổ sung khu vực thử nghiệm trực quan và tương tác trực tiếp toàn bộ bộ component UI-002 trên cả Client (Next.js) và CRM (Vite).
+    - Thay thế toàn bộ lệnh `alert()` cũ trong CRM bằng `notify`.
+  - **Kiểm Thử Tự Động & Tiêu Chuẩn Kỹ Thuật (DoD)**:
+    - 0% inline CSS (`style={{ ... }}` = 0), 100% quản lý qua Tailwind utility và tokens CSS.
+    - 100% tests kiểm thử khả năng truy cập WAI-ARIA với `vitest-axe` đạt 0 vi phạm (*no violations*).
+    - Toàn bộ unit tests mới cho `Drawer`, `Menu`, `Popover`, `Tooltip`, `Notify` đều pass 100% với line coverage $\ge 95\%$ và branch coverage $\ge 83\%$.
+    - Production build cả Client (`next build`) và CRM (`vite build`) thành công 100% với 0 errors.
+
 - **State Machine Quản Lý Vòng Đời Đơn Thuê & Tự Động Quét Quá Hạn (BOK-003 - ✅ DONE)**:
   - **Hạ Tầng Backend Server (Spring Boot 3 + MySQL)**:
     - **State Transition Guard (`BookingStatus.canTransitionTo` & `getValidNextStatuses`)**:

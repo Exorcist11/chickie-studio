@@ -77,6 +77,27 @@ describe("Modal & ConfirmModal components", () => {
     expect(handleConfirm).toHaveBeenCalledTimes(1);
   });
 
+  it("traps focus between focusable elements on Tab and Shift+Tab", () => {
+    render(
+      <Modal isOpen={true} onClose={vi.fn()} title="Focus Trap Modal">
+        <input data-testid="input-first" />
+        <button data-testid="button-second">Xác nhận</button>
+      </Modal>
+    );
+
+    const closeBtn = screen.getByRole("button", { name: "Đóng hộp thoại" });
+    const button = screen.getByTestId("button-second");
+
+    closeBtn.focus();
+    expect(document.activeElement).toBe(closeBtn);
+
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(button);
+
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: false });
+    expect(document.activeElement).toBe(closeBtn);
+  });
+
   it("has no accessibility violations", async () => {
     const { container } = render(
       <Modal isOpen={true} onClose={vi.fn()} title="Tiêu đề kiểm tra">

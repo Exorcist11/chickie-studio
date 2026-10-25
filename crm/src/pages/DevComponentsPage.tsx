@@ -27,6 +27,14 @@ import {
   CardDescription,
   CardContent,
   Badge,
+  Drawer,
+  Menu,
+  MenuItem,
+  MenuHeader,
+  MenuDivider,
+  Popover,
+  Tooltip,
+  notify,
 } from "../components/ui";
 import {
   Button as ChickieUIButton,
@@ -60,6 +68,7 @@ interface SampleOrderRecord extends Record<string, unknown> {
 
 export const DevComponentsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState("dashboard");
   const [uiSearch, setUiSearch] = useState("");
   const [uiSelect, setUiSelect] = useState("AVAILABLE");
@@ -241,7 +250,7 @@ export const DevComponentsPage: React.FC = () => {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => alert("Xuất Excel thành công")}
+                onClick={() => notify.success("Xuất file Excel thành công!")}
               >
                 Xuất Excel
               </Button>
@@ -300,7 +309,7 @@ export const DevComponentsPage: React.FC = () => {
               <EmptyState
                 description="Chưa có món đồ nào"
                 actionText="Thêm ngay"
-                onAction={() => alert("Thêm đồ")}
+                onAction={() => notify.info("Đã mở form thêm món đồ")}
               />
             </div>
 
@@ -310,7 +319,7 @@ export const DevComponentsPage: React.FC = () => {
               </h4>
               <ErrorState
                 title="Mất kết nối máy chủ"
-                onRetry={() => alert("Thử lại")}
+                onRetry={() => notify.warning("Đang thử kết nối lại...")}
               />
             </div>
 
@@ -534,7 +543,67 @@ export const DevComponentsPage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* 7. Giai đoạn UI-002: Lớp Phủ & Phản Hồi (@chickie/ui Overlays & Feedback) */}
+        <section className="bg-warm-white p-5 rounded-card border border-line space-y-4">
+          <div>
+            <h3 className="font-playfair text-lg font-semibold text-ink">
+              7. Giai đoạn UI-002: Lớp Phủ & Phản Hồi (Overlays & Feedback)
+            </h3>
+            <p className="text-sm text-ink-muted mt-1">
+              Bộ Modal, Drawer, Menu, Popover, Tooltip và Notify chuẩn WAI-ARIA Accessible, Focus Trap, 0 Inline CSS.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="sm" onClick={() => setDrawerOpen(true)}>
+              Mở Drawer (Ngăn kéo)
+            </Button>
+
+            <Menu trigger={<Button variant="secondary" size="sm">Tác vụ nhanh (Menu)</Button>}>
+              <MenuHeader>Thao tác đơn</MenuHeader>
+              <MenuItem onClick={() => notify.info("Đang in biên bản bàn giao...")}>In biên bản bàn giao</MenuItem>
+              <MenuItem onClick={() => notify.success("Đã gửi mã VietQR cho khách!")}>Gửi lại mã VietQR</MenuItem>
+              <MenuDivider />
+              <MenuItem danger onClick={() => notify.error("Đã ghi nhận hỏng đồ")}>Báo cáo hỏng đồ</MenuItem>
+            </Menu>
+
+            <Popover trigger={<Button variant="secondary" size="sm">Bộ lọc nâng cao (Popover)</Button>}>
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-ink">Cấu hình hiển thị cột</h4>
+                <p className="text-xs text-ink-muted">Tùy chỉnh các trường dữ liệu hiển thị trên bảng quản trị.</p>
+                <div className="pt-2 flex justify-end">
+                  <Button size="sm" onClick={() => notify.success("Đã lưu thiết lập!")}>Áp dụng</Button>
+                </div>
+              </div>
+            </Popover>
+
+            <Tooltip content="Nhấn để gửi thông báo thử nghiệm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => notify.success("Thao tác CRM thành công!", { title: "Thông báo" })}
+              >
+                Gửi Notify Toast
+              </Button>
+            </Tooltip>
+          </div>
+        </section>
       </div>
+
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Ngăn kéo chi tiết đơn thuê"
+        subtitle="Mã đơn: ORD-20261025-001"
+        footer={<Button size="sm" onClick={() => setDrawerOpen(false)}>Đóng ngăn kéo</Button>}
+      >
+        <div className="space-y-3 text-sm text-ink-muted">
+          <p>• Khách hàng: Lê Thuỳ Chi (0987654321)</p>
+          <p>• Ngày nhận: 25/10/2026 - Ngày trả: 27/10/2026</p>
+          <p>• Tiền cọc giữ đồ: 500.000₫ (Đã nhận chuyển khoản)</p>
+        </div>
+      </Drawer>
 
       <ConfirmModal
         open={modalOpen}

@@ -14,6 +14,14 @@ export * from "./Switch";
 export * from "./Badge";
 export * from "./Card";
 
+// Overlays & Feedback (UI-002)
+export * from "./Modal";
+export * from "./Drawer";
+export * from "./Menu";
+export * from "./Popover";
+export * from "./Tooltip";
+export * from "./Notify";
+
 // Feedback & Loading
 export * from "./Spinner";
 export * from "./Skeleton";

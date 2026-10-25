@@ -12,6 +12,7 @@ import { ProductsPage } from "./pages/products/ProductsPage";
 import { OrdersPage } from "./pages/orders/OrdersPage";
 import { MainDashboardLayout } from "./layouts/MainDashboardLayout";
 import { DevComponentsPage } from "./pages/DevComponentsPage";
+import { Toaster } from "./components/ui/Notify";
 import "./i18n";
 
 export const App: React.FC = () => {
@@ -48,6 +49,7 @@ export const App: React.FC = () => {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Toaster />
       </AuthProvider>
     </BrowserRouter>
   </QueryClientProvider>

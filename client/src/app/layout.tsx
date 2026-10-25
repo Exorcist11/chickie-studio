@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { I18nProvider } from "@/components/providers/I18nProvider";
+import { Toaster } from "@/components/ui/Notify";
 import { fontLora, fontBeVietnamPro } from "@/lib/fonts";
 import "@/styles/main.scss";
 
@@ -20,7 +21,10 @@ export default function RootLayout({
       className={`${fontLora.variable} ${fontBeVietnamPro.variable} antialiased`}
     >
       <body className="min-h-screen bg-warm-white text-ink font-sans selection:bg-burgundy selection:text-white">
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          {children}
+          <Toaster />
+        </I18nProvider>
       </body>
     </html>
   );

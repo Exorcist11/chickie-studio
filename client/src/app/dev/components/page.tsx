@@ -24,6 +24,14 @@ import {
   Section,
   Modal,
   ConfirmModal,
+  Drawer,
+  Menu,
+  MenuItem,
+  MenuHeader,
+  MenuDivider,
+  Popover,
+  Tooltip,
+  notify,
   Toast,
   Skeleton,
   EmptyState,
@@ -65,6 +73,7 @@ export default function DevComponentsPage() {
   const [selectedColor, setSelectedColor] = React.useState("#641D2B");
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [uiSearch, setUiSearch] = React.useState("");
   const [uiSelect, setUiSelect] = React.useState("aodai");
   const [uiChecked, setUiChecked] = React.useState(true);
@@ -562,6 +571,32 @@ export default function DevComponentsPage() {
             <div className="flex flex-wrap items-center gap-4">
               <Button onClick={() => setIsModalOpen(true)}>Mở Modal xem thử</Button>
               <Button variant="secondary" onClick={() => setIsConfirmOpen(true)}>Mở ConfirmModal</Button>
+              <Button variant="secondary" onClick={() => setIsDrawerOpen(true)}>Mở Drawer</Button>
+
+              <Menu trigger={<Button variant="secondary">Menu tác vụ</Button>}>
+                <MenuHeader>Thao tác nhanh</MenuHeader>
+                <MenuItem onClick={() => notify.info("Đã chọn xem chi tiết")}>Xem chi tiết</MenuItem>
+                <MenuItem onClick={() => notify.success("Đã sao chép liên kết!")}>Sao chép link</MenuItem>
+                <MenuDivider />
+                <MenuItem danger onClick={() => notify.error("Hủy yêu cầu thành công")}>Hủy giữ đồ</MenuItem>
+              </Menu>
+
+              <Popover trigger={<Button variant="secondary">Mở Popover</Button>}>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm text-ink">Ưu đãi mùa kỷ yếu</h4>
+                  <p className="text-xs text-ink-muted">Giảm ngay 15% khi thuê combo váy và máy ảnh trong tuần này.</p>
+                  <Button size="sm" onClick={() => notify.success("Đã áp dụng mã!")}>Áp dụng mã</Button>
+                </div>
+              </Popover>
+
+              <Tooltip content="Mẹo: Click để kích hoạt thông báo">
+                <Button
+                  size="sm"
+                  onClick={() => notify.success("Chào mừng bạn đến với Chickie Studio!", { title: "Xin chào" })}
+                >
+                  Bắn Toast Notify
+                </Button>
+              </Tooltip>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -617,6 +652,20 @@ export default function DevComponentsPage() {
         cancelText="Giữ lại đơn"
         variant="danger"
       />
+
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        title="Ngăn kéo giỏ đồ & Đặt cọc"
+        description="Xem trước danh sách trang phục đang chọn"
+        footer={<Button onClick={() => setIsDrawerOpen(false)}>Hoàn tất</Button>}
+      >
+        <div className="space-y-4 text-sm text-ink-muted">
+          <p>• 1x Váy dạ hội Lụa Burgundy (Size M)</p>
+          <p>• 1x Máy ảnh Canon EOS R5 + Lens 50mm</p>
+          <p className="font-semibold text-ink pt-2 border-t border-line">Tổng tiền thuê tạm tính: 750.000₫</p>
+        </div>
+      </Drawer>
 
       <Footer />
     </div>

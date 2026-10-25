@@ -30,8 +30,13 @@ export * from "./SectionHeading";
 export * from "./Container";
 export * from "./Section";
 
-// Feedback & Overlays
+// Feedback & Overlays (UI-002)
 export * from "./Modal";
+export * from "./Drawer";
+export * from "./Menu";
+export * from "./Popover";
+export * from "./Tooltip";
+export * from "./Notify";
 export * from "./Toast";
 export * from "./Skeleton";
 export * from "./EmptyState";

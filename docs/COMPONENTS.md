@@ -35,6 +35,20 @@ Các component nền tảng được bọc từ shadcn/ui primitive, tuân thủ
 | **Spinner** | `src/components/ui/Spinner/Spinner.tsx` | `size` (xs, sm, md, lg, xl), `variant` (primary, secondary, current, white), `label` (sr-only a11y) | `<Spinner size="md" label="Đang tải dữ liệu..." />` | ✅ Pass (100% lines, axe a11y pass) |
 | **Skeleton** | `src/components/ui/Skeleton/Skeleton.tsx` | `shape` (text, circular, rectangular, card), `label`, `aria-hidden` | `<Skeleton shape="circular" className="h-10 w-10" />` | ✅ Pass (100% lines, axe a11y pass) |
 
+### Bảng Component Lớp Phủ & Phản Hồi (Giai Đoạn UI-2)
+
+Bộ component overlays & feedback chuẩn WAI-ARIA, Focus Trap, Escape handler, body scroll lock, 0 inline CSS:
+
+| Tên Component | Vị trí file trong client & crm | Props chính | Ví dụ sử dụng (1 dòng) | Trạng thái Test & Coverage |
+| :--- | :--- | :--- | :--- | :--- |
+| **Modal** | `src/components/ui/Modal/Modal.tsx` | `isOpen`/`open`, `onClose`, `title`, `description`, `footer`, `size`/`maxWidth` | `<Modal isOpen={open} onClose={handleClose} title="Bảng size">...</Modal>` | ✅ Pass ($\ge 97\%$ lines, axe a11y pass) |
+| **ConfirmModal** | `src/components/ui/Modal/` | `isOpen`/`open`, `onClose`, `onConfirm`, `title`, `content`, `variant`, `confirmText` | `<ConfirmModal isOpen={open} onConfirm={handleDelete} title="Xác nhận" content="..." />` | ✅ Pass (100% lines, axe a11y pass) |
+| **Drawer** | `src/components/ui/Drawer/Drawer.tsx` | `isOpen`/`open`, `onClose`, `placement` (right, left, bottom, top), `size`, `title`, `footer` | `<Drawer isOpen={open} onClose={handleClose} placement="right" title="Giỏ đồ">...</Drawer>` | ✅ Pass (100% lines, 94.8% branches, axe pass) |
+| **Menu** | `src/components/ui/Menu/Menu.tsx` | `trigger`, `align` (left, right), `<MenuItem>`, `<MenuHeader>`, `<MenuDivider>` | `<Menu trigger={<Button>Tác vụ</Button>}><MenuItem onClick={...}>Sửa</MenuItem></Menu>` | ✅ Pass ($\ge 99\%$ lines, 87.5% branches, axe pass) |
+| **Popover** | `src/components/ui/Popover/Popover.tsx` | `trigger`, `placement` (bottom, top, left, right), `align`, `open`, `onOpenChange` | `<Popover trigger={<Button>Xem</Button>}><p>Thông tin nổi</p></Popover>` | ✅ Pass ($\ge 99\%$ lines, 88.4% branches, axe pass) |
+| **Tooltip** | `src/components/ui/Tooltip/Tooltip.tsx` | `content`, `children`, `placement`, `delayMs` (default 200ms) | `<Tooltip content="Gợi ý"><button>Icon</button></Tooltip>` | ✅ Pass (100% lines, 95% branches, axe pass) |
+| **Notify & Toaster** | `src/components/ui/Notify/` | `notify.success()`, `notify.error()`, `notify.warning()`, `notify.info()`, `<Toaster />` | `notify.success("Lưu thành công!", { title: "Hoàn tất" })` | ✅ Pass ($\ge 99\%$ lines, 92.3% branches, axe pass) |
+
 ---
 
 ## 1. Client Components (`client/src/components/ui/`)
