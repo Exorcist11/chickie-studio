@@ -22,7 +22,7 @@ export type ItemStatus =
   | "INACTIVE";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 font-medium rounded-full border transition-colors",
+  "inline-flex items-center gap-1.5 font-medium rounded-full border transition-colors whitespace-nowrap shrink-0",
   {
     variants: {
       size: {

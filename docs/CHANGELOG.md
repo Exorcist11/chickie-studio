@@ -7,6 +7,41 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Quản Lý Đơn Thuê Tập Trung Trên CRM & API Quản Trị Trạng Thái (BOK-004 - ✅ DONE)**:
+  - **Backend Server (Spring Boot 3 + MySQL)**:
+    - **Flyway Migration `V10__create_booking_status_histories.sql`**: Bổ sung bảng `booking_status_histories` phục vụ lưu vết lịch sử chuyển đổi trạng thái (Audit Trail) gồm `booking_id`, `from_status`, `to_status`, `changed_by`, `note`, `created_at`.
+    - **State Machine Guard & Entities**:
+      - Bổ sung trạng thái `OVERDUE` vào `BookingStatus.java` và phương thức kiểm tra hợp lệ `canTransitionTo(targetStatus)` ngăn chặn chuyển đổi trái phép.
+      - Entity `BookingStatusHistory.java` và Repository `BookingStatusHistoryRepository.java`.
+      - Mở rộng `BookingRepository` kế thừa `JpaSpecificationExecutor<Booking>`.
+    - **Specification & Dynamic Filters**:
+      - `BookingSpecification.java`: Lọc đa chiều theo trạng thái (`status`), tìm kiếm từ khóa mã đơn / tên khách / số điện thoại, khoảng ngày thuê (`startDate`, `endDate`), cờ lọc hôm nay cần giao (`todayDeliver`), hôm nay cần trả (`todayReturn`), và đơn trễ hạn (`overdue`).
+    - **Service & Item Sync**:
+      - `BookingService.java`: Triển khai `getBookingsForAdmin`, `getBookingById`, và `updateBookingStatus`.
+      - Tự động đồng bộ trạng thái vật lý của trang phục (`product_items`): khi đơn chuyển sang `DELIVERED` $\rightarrow$ item sang `RENTED`; khi chuyển sang `RETURNED` $\rightarrow$ item sang `LAUNDRY` (hàng đợi giặt ủi); khi chuyển sang `COMPLETED` $\rightarrow$ item sang `AVAILABLE`.
+    - **REST Controller**:
+      - `AdminBookingController.java`: Cung cấp `GET /api/admin/bookings`, `GET /api/admin/bookings/{id}`, và `PATCH /api/admin/bookings/{id}/status`.
+    - **Kiểm thử tự động Server**: 186/186 tests pass 100% (`BookingStatusTest.java`, `BookingSpecificationTest.java`, `BookingServiceTest.java`, `AdminBookingControllerTest.java`, JaCoCo coverage $>90\%$).
+  - **Frontend CRM (React 18 + Vite + TypeScript + SCSS Modules)**:
+    - **Thiết kế Chuẩn UI/UX Pro Max**:
+      - Gam màu thương hiệu ấm áp Chic Burgundy (`#6B1D2F`), Vàng Champagne (`#C5A880`), Ivory kem mềm mại, phông chữ Inter hiện đại.
+      - Bộ 4 thẻ KPI StatCard trực quan: Tổng đơn thuê, Chờ xác nhận, Cần giao hôm nay, Đơn quá hạn.
+      - Thanh điều hướng lọc trạng thái nhanh bằng Pill Tabs (Tất cả, Chờ duyệt, Cần giao hôm nay, Cần trả hôm nay, Đang cho thuê, Quá hạn, Hoàn tất, Đã hủy).
+      - FilterBar hỗ trợ tìm kiếm debounce và bộ lọc ngày trực quan.
+      - Bảng dữ liệu `DataTable` hỗ trợ phân trang server-side, render trạng thái đơn hàng bằng `StatusBadge`, hiển thị mã đơn, ngày tạo, khách hàng, hình thức nhận đồ, thời gian thuê, và tổng tiền chuẩn VND.
+      - Quick Action buttons trên từng dòng theo đúng chu trình vòng đời đơn (Duyệt đơn, Xác nhận cọc, Bàn giao đồ, Nhận trả đồ, Hoàn tất đơn).
+    - **Modals Tương Tác**:
+      - `UpdateStatusModal`: Hộp thoại xác nhận chuyển đổi trạng thái với biểu tượng tương ứng, hỗ trợ nhập ghi chú / bắt buộc nhập lý do khi hủy đơn (`CANCELLED`).
+      - `BookingDetailModal`: Hộp thoại chi tiết toàn diện thông tin đơn hàng, sao chép nhanh mã đơn / mã barcode vật lý (`navigator.clipboard`), thông tin khách hàng, chi tiết trang phục, chiết tính tiền cọc/tiền thuê, timeline lịch sử chuyển đổi trạng thái (Audit Trail), và các nút điều hướng trạng thái tiếp theo.
+    - **Tích Hợp Dữ Liệu & Đa Ngôn Ngữ**:
+      - Tích hợp `booking.service.ts` và TanStack Query với query keys `bookingKeys`.
+      - Đa ngôn ngữ song ngữ đầy đủ (`vi.json`, `en.json`) cho toàn bộ namespace `orders.*` và `orderStatus.*`.
+      - Định tuyến `/orders` và `/bookings` tích hợp trong `App.tsx` và `MainDashboardLayout.tsx`.
+    - **Kiểm thử tự động CRM**:
+      - Vitest: **55 test files, 229 tests pass 100%**.
+      - Playwright E2E: **5/5 tests pass 100%** (`crm/e2e/orders.spec.ts`, `crm/e2e/auth.spec.ts`).
+      - TypeScript strict `tsc --noEmit` và `eslint` pass 100% không lỗi.
+
 - **Đặt Thuê Trực Tuyến Phía Client & Xác Nhận Đơn Hàng (BOK-001 - ✅ DONE)**:
   - **Backend Server (Spring Boot 3 + MySQL)**:
     - **Repository**: Bổ sung `BookingRepository.java` hỗ trợ tìm kiếm `findByBookingCode`, `findByCustomerPhoneOrderByCreatedAtDesc`, và `existsByBookingCode`.

@@ -9,6 +9,7 @@ import { ForbiddenPage } from "./pages/ForbiddenPage";
 import { DashboardHome } from "./pages/DashboardHome";
 import { CategoriesPage } from "./pages/categories/CategoriesPage";
 import { ProductsPage } from "./pages/products/ProductsPage";
+import { OrdersPage } from "./pages/orders/OrdersPage";
 import { MainDashboardLayout } from "./layouts/MainDashboardLayout";
 import { DevComponentsPage } from "./pages/DevComponentsPage";
 import "./i18n";
@@ -30,7 +31,8 @@ export const App: React.FC = () => {
           <Route element={<RoleGuard />}>
             <Route element={<MainDashboardLayout />}>
               <Route path="/" element={<DashboardHome />} />
-              <Route path="/orders" element={<DashboardHome />} />
+              <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/bookings" element={<OrdersPage />} />
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/customers" element={<DashboardHome />} />
 

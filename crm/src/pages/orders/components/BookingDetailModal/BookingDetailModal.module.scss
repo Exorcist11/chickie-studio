@@ -1,0 +1,454 @@
+@use "../../../../styles/tokens" as *;
+
+.modalHeaderTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.codeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.codeText {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+  letter-spacing: -0.01em;
+}
+
+.copyBtn,
+.copyInlineBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--color-line);
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-ivory);
+    border-color: var(--color-gold);
+  }
+}
+
+.createdTime {
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.leftActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.cancelBookingBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-danger);
+  border-color: rgba(217, 56, 58, 0.4);
+  background-color: #fff;
+
+  &:hover {
+    background-color: #fef2f2;
+    border-color: var(--color-danger);
+  }
+}
+
+.cancelBtn {
+  color: var(--color-danger);
+  border-color: rgba(217, 56, 58, 0.3);
+
+  &:hover {
+    background-color: #fef2f2;
+    border-color: var(--color-danger);
+  }
+}
+
+.completeBtn {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+
+  &:hover {
+    background-color: #156d44;
+  }
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cardSection {
+  background-color: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  margin-top: 0;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--color-line);
+}
+
+.customerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.infoRowFull {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.infoLabel {
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
+  font-weight: 500;
+}
+
+.infoValueBold {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.infoValue {
+  font-size: 0.875rem;
+  color: var(--color-ink);
+}
+
+.phoneLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.deliveryBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background-color: var(--color-ivory);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.dateRangeBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  background-color: rgba(100, 29, 43, 0.06);
+  padding: 4px 10px;
+  border-radius: var(--radius-btn);
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.durationPill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  background-color: rgba(100, 29, 43, 0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-tag);
+  margin-left: 6px;
+}
+
+.noteText {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  background-color: var(--color-ivory);
+  padding: 8px 12px;
+  border-radius: var(--radius-btn);
+  font-style: italic;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background-color: var(--color-ivory);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  gap: 12px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.itemMain {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.itemTags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.variantTag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background-color: #fff;
+  border: 1px solid var(--color-line);
+  padding: 2px 8px;
+  border-radius: var(--radius-tag);
+}
+
+.barcodeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  background-color: #fff;
+  border: 1px dashed var(--color-gold);
+  padding: 2px 8px;
+  border-radius: var(--radius-tag);
+}
+
+.itemPricing {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+
+  @media (max-width: 640px) {
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1px dashed var(--color-line);
+  }
+}
+
+.pricingRow {
+  display: flex;
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+
+.pricingLabel {
+  color: var(--color-ink-muted);
+}
+
+.pricingVal {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.depositVal {
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+.emptyItemsText {
+  font-size: 0.875rem;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.pricingSummaryBox {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background-color: #faf7f4;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--color-ink-muted);
+}
+
+.summaryTotalRow {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px dashed var(--color-line);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+}
+
+.totalAmountVal {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-burgundy);
+}
+
+.timelineList {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 20px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background-color: var(--color-line);
+  }
+}
+
+.timelineItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timelineDot {
+  position: absolute;
+  left: -20px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--color-burgundy);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px var(--color-burgundy);
+}
+
+.timelineContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: var(--color-ivory);
+  padding: 10px 14px;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--color-line);
+}
+
+.timelineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.transitionBadges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transitionArrow {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+.timelineTime {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+.timelineMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.changedByText {
+  font-size: 0.8125rem;
+  color: var(--color-ink);
+}
+
+.historyNote {
+  font-size: 0.8125rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
+}

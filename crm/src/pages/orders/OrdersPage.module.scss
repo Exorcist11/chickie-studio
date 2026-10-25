@@ -1,0 +1,361 @@
+@use "../../styles/tokens" as *;
+
+.ordersPage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.refreshBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tabsWrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 4px;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-line);
+    border-radius: var(--radius-pill);
+  }
+}
+
+.tabsScroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-ivory);
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-line);
+}
+
+.tabPill {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--color-burgundy);
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.tabPillActive {
+  background-color: var(--color-burgundy);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(100, 29, 43, 0.25);
+
+  &:hover {
+    background-color: var(--color-burgundy-light);
+    color: #fff;
+  }
+}
+
+.filterCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background-color: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--color-ivory);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-btn);
+  flex: 1;
+  min-width: 280px;
+
+  &:focus-within {
+    border-color: var(--color-burgundy);
+    background-color: #fff;
+  }
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  width: 100%;
+
+  &::placeholder {
+    color: var(--color-ink-muted);
+  }
+}
+
+.dateFilterGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.datePickerContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-ivory);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-btn);
+  padding: 3px 8px 3px 4px;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--color-burgundy);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(100, 29, 43, 0.08);
+  }
+}
+
+.dateInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dateLabelMini {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  font-weight: 600;
+}
+
+.styledDateInput {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background-color: transparent;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &:focus {
+    background-color: #fff;
+    border-color: var(--color-line);
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 2px;
+    border-radius: 3px;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(100, 29, 43, 0.08);
+    }
+  }
+}
+
+.dateArrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-ink-muted);
+}
+
+.clearDateBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  padding: 2px;
+  border-radius: 50%;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: rgba(100, 29, 43, 0.1);
+    color: var(--color-burgundy);
+  }
+}
+
+.resetBtn {
+  font-size: 0.8125rem;
+  height: 32px;
+  color: var(--color-ink-muted);
+}
+
+.tableCard {
+  background-color: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.bookingCodeCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.codeLink {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--color-burgundy);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
+
+  &:hover {
+    text-decoration-color: var(--color-burgundy);
+  }
+}
+
+.createdDateMini {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+.customerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.customerNameText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.customerPhoneText {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+.deliveryBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background-color: var(--color-ivory);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-line);
+  white-space: nowrap;
+}
+
+.dateCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dateRangeText {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.daysBadge {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  background-color: rgba(100, 29, 43, 0.08);
+  padding: 1px 6px;
+  border-radius: var(--radius-tag);
+  width: fit-content;
+}
+
+.totalAmountText {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+}
+
+.actionCell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.viewDetailBtn {
+  padding: 6px;
+  border-radius: var(--radius-btn);
+
+  &:hover {
+    background-color: var(--color-ivory);
+  }
+}
+
+.quickActionBtn {
+  font-size: 0.75rem;
+  height: 28px;
+  padding: 0 8px;
+  gap: 4px;
+}
+
+.completeQuickBtn {
+  font-size: 0.75rem;
+  height: 28px;
+  padding: 0 8px;
+  gap: 4px;
+  border-color: rgba(27, 135, 85, 0.4);
+  color: var(--color-success);
+
+  &:hover {
+    background-color: #f0fdf4;
+  }
+}
