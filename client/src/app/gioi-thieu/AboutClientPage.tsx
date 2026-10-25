@@ -25,6 +25,8 @@ import {
   CardTitle,
   CardContent,
   Button,
+  Header,
+  Footer,
 } from "@/components/ui";
 
 export function AboutClientPage() {
@@ -61,8 +63,10 @@ export function AboutClientPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-sand/20 py-8 md:py-12">
-      <Container>
+    <div className="min-h-screen flex flex-col bg-sand/20 text-ink">
+      <Header activeHref="/gioi-thieu" />
+      <main className="flex-1 py-8 md:py-12">
+        <Container>
         {/* Breadcrumbs */}
         <div className="mb-6">
           <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
@@ -206,6 +210,8 @@ export function AboutClientPage() {
           </div>
         </div>
       </Container>
+      </main>
+      <Footer />
     </div>
   );
 }

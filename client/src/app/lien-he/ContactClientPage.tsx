@@ -25,6 +25,8 @@ import {
   TextField,
   Textarea,
   notify,
+  Header,
+  Footer,
 } from "@/components/ui";
 
 export function ContactClientPage() {
@@ -82,8 +84,10 @@ export function ContactClientPage() {
     "https://maps.google.com/?q=Số+12+ngõ+80+Chùa+Láng+Láng+Thượng+Đống+Đa+Hà+Nội";
 
   return (
-    <div className="min-h-screen bg-sand/20 py-8 md:py-12">
-      <Container>
+    <div className="min-h-screen flex flex-col bg-sand/20 text-ink">
+      <Header activeHref="/lien-he" />
+      <main className="flex-1 py-8 md:py-12">
+        <Container>
         {/* Breadcrumbs */}
         <div className="mb-6">
           <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
@@ -365,6 +369,8 @@ export function ContactClientPage() {
           </div>
         </div>
       </Container>
+      </main>
+      <Footer />
     </div>
   );
 }

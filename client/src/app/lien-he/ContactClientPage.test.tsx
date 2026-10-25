@@ -16,7 +16,7 @@ describe("ContactClientPage", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Liên Hệ & Ghé Thăm Showroom"
     );
-    expect(screen.getByText("Số 12 ngõ 80 Chùa Láng, Đống Đa, Hà Nội")).toBeInTheDocument();
+    expect(screen.getAllByText("Số 12 ngõ 80 Chùa Láng, Đống Đa, Hà Nội")[0]).toBeInTheDocument();
     expect(screen.getByText("08:30 - 21:30 (Thứ Hai - Chủ Nhật)")).toBeInTheDocument();
     expect(screen.getByText("0987.654.321")).toBeInTheDocument();
     expect(screen.getByText("Mở ứng dụng Google Maps")).toBeInTheDocument();

@@ -16,7 +16,6 @@ import {
 import Link from "next/link";
 import {
   Container,
-  Section,
   Breadcrumbs,
   Badge,
   Card,
@@ -24,6 +23,8 @@ import {
   CardTitle,
   CardContent,
   Button,
+  Header,
+  Footer,
 } from "@/components/ui";
 
 export function PolicyClientPage() {
@@ -45,8 +46,10 @@ export function PolicyClientPage() {
   };
 
   return (
-    <div className="min-h-screen bg-sand/20 py-8 md:py-12">
-      <Container>
+    <div className="min-h-screen flex flex-col bg-sand/20 text-ink">
+      <Header activeHref="/chinh-sach-thue-do" />
+      <main className="flex-1 py-8 md:py-12">
+        <Container>
         {/* Breadcrumbs */}
         <div className="mb-6">
           <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
@@ -109,7 +112,7 @@ export function PolicyClientPage() {
           </aside>
 
           {/* Main Content Area */}
-          <main className="lg:col-span-8 flex flex-col space-y-10 md:space-y-12">
+          <div className="lg:col-span-8 flex flex-col space-y-10 md:space-y-12">
             {/* Section 1: Deposit */}
             <section id="deposit" className="scroll-mt-24">
               <Card className="border border-line/80 shadow-sm bg-warm-white">
@@ -364,9 +367,11 @@ export function PolicyClientPage() {
                 </Button>
               </Link>
             </div>
-          </main>
+          </div>
         </div>
       </Container>
-    </div>
-  );
+    </main>
+    <Footer />
+  </div>
+);
 }

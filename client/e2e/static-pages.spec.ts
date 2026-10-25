@@ -5,6 +5,7 @@ test.describe("Static Content Pages (CNT-002)", () => {
     await page.goto("/chinh-sach-thue-do");
 
     // Kiểm tra Header & Breadcrumbs
+    await expect(page.getByRole("banner")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Chính Sách Thuê Đồ & Đặt Cọc"
     );
@@ -19,12 +20,14 @@ test.describe("Static Content Pages (CNT-002)", () => {
     // Kiểm tra bảng bồi hoàn hư hại
     await expect(page.getByText("Tình trạng hư hại")).toBeVisible();
     await expect(page.getByText("Miễn phí hỗ trợ phục chế")).toBeVisible();
+    await expect(page.getByRole("contentinfo")).toBeVisible();
   });
 
   test("trang FAQ: tìm kiếm, lọc theo danh mục và đóng mở câu hỏi tương tác", async ({ page }) => {
     await page.goto("/faq");
 
-    // Kiểm tra Tiêu đề
+    // Kiểm tra Header & Tiêu đề
+    await expect(page.getByRole("banner")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Câu Hỏi Thường Gặp"
     );
@@ -53,10 +56,11 @@ test.describe("Static Content Pages (CNT-002)", () => {
   test("trang giới thiệu: hiển thị câu chuyện thương hiệu, chỉ số thống kê và giá trị cốt lõi", async ({ page }) => {
     await page.goto("/gioi-thieu");
 
+    await expect(page.getByRole("banner")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Về Chickie Studio"
     );
-    await expect(page.getByText("More Than Just A Dress")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "More Than Just A Dress" })).toBeVisible();
 
     // Kiểm tra các chỉ số thống kê
     await expect(page.getByText("200+")).toBeVisible();
@@ -66,6 +70,7 @@ test.describe("Static Content Pages (CNT-002)", () => {
     // Kiểm tra nút CTA dẫn tới danh sách sản phẩm
     const exploreBtn = page.getByRole("link", { name: /Xem bộ sưu tập váy/i });
     await expect(exploreBtn).toBeVisible();
+    await expect(page.getByRole("contentinfo")).toBeVisible();
   });
 
   test("trang liên hệ: hiển thị thông tin showroom, bản đồ và gửi form thành công", async ({ page }) => {
@@ -74,10 +79,11 @@ test.describe("Static Content Pages (CNT-002)", () => {
 
     await page.goto("/lien-he");
 
+    await expect(page.getByRole("banner")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Liên Hệ & Ghé Thăm Showroom"
     );
-    await expect(page.getByText("Số 12 ngõ 80 Chùa Láng, Đống Đa, Hà Nội")).toBeVisible();
+    await expect(page.getByRole("main").getByText("Số 12 ngõ 80 Chùa Láng, Đống Đa, Hà Nội")).toBeVisible();
     await expect(page.getByText("08:30 - 21:30 (Thứ Hai - Chủ Nhật)")).toBeVisible();
 
     // Kiểm tra link Google Maps
