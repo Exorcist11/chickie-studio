@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Sparkles, PackagePlus } from "lucide-react";
+import { Sparkles, PackagePlus, Barcode, CheckCircle2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Modal } from "../../../../components/common/Modal";
 import { Button } from "../../../../components/ui/Button";
 import { Select } from "../../../../components/ui/Select";
-import { TextField } from "../../../../components/ui/TextField";
 import { TextArea } from "../../../../components/ui/TextArea";
 import { FormField } from "../../../../components/common/FormField";
 import { ProductDetailResponse } from "../../../../types/product";
@@ -134,29 +133,39 @@ export const CreateItemModal: React.FC<CreateItemModalProps> = ({
           />
         </FormField>
 
-        <div className={styles.barcodeRow}>
-          <FormField
-            label={t("productItem.itemCode", "Mã đồ vật lý (Barcode)")}
-            helperText={t("productItem.autoCodeHint", "Để trống để hệ thống tự động sinh mã Barcode")}
-          >
-            <TextField
-              value={itemCode}
-              onChange={(e) => setItemCode(e.target.value.toUpperCase())}
-              placeholder="CK-DR01-S-01"
-            />
-          </FormField>
-          <Button
-            type="button"
-            variant="outline"
-            className={styles.suggestBtn}
-            onClick={handleSuggestCode}
-            disabled={!selectedVariantId || isSuggesting}
-            loading={isSuggesting}
-          >
-            <Sparkles className="w-3.5 h-3.5 mr-1" />
-            {t("productItem.suggestCode", "Gợi ý")}
-          </Button>
-        </div>
+        <FormField
+          name="itemCode"
+          label={t("productItem.itemCode", "Mã đồ vật lý (Barcode)")}
+          helperText={t("productItem.autoCodeHint", "Để trống để hệ thống tự động sinh mã Barcode duy nhất")}
+        >
+          <div className={styles.barcodeControl}>
+            <div className={styles.inputWrapper}>
+              <Barcode className={styles.barcodeIcon} aria-hidden="true" />
+              <input
+                id="itemCode"
+                name="itemCode"
+                type="text"
+                value={itemCode}
+                onChange={(e) => setItemCode(e.target.value.toUpperCase())}
+                placeholder="CK-DR01-S-01"
+                className={styles.barcodeInput}
+                disabled={createMutation.isPending}
+              />
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className={styles.suggestBtn}
+              onClick={handleSuggestCode}
+              disabled={!selectedVariantId || isSuggesting || createMutation.isPending}
+              loading={isSuggesting}
+              title={t("productItem.suggestCode", "Gợi ý mã Barcode")}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-burgundy" />
+              <span>{t("productItem.suggestCode", "Gợi ý mã Barcode")}</span>
+            </Button>
+          </div>
+        </FormField>
 
         <FormField label={t("productItem.note", "Ghi chú hiện trạng")}>
           <TextArea
@@ -164,8 +173,21 @@ export const CreateItemModal: React.FC<CreateItemModalProps> = ({
             onChange={(e) => setNote(e.target.value)}
             placeholder={t("productItem.statusNotePlaceholder", "Ví dụ: Hàng mới nhập, đính cúc chắc chắn...")}
             rows={3}
+            disabled={createMutation.isPending}
           />
         </FormField>
+
+        {/* Initial Status Callout */}
+        <div className={styles.statusCallout}>
+          <div className={styles.statusBadge}>
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-semibold text-ink">Trạng thái khởi tạo:</span>
+            <span className={styles.statusTag}>Sẵn sàng (AVAILABLE)</span>
+          </div>
+          <p className={styles.statusDesc}>
+            Món đồ sau khi tạo sẽ tự động kích hoạt trạng thái sẵn sàng cho thuê trong kho thực tế.
+          </p>
+        </div>
       </form>
     </Modal>
   );

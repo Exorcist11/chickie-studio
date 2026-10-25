@@ -5,18 +5,51 @@
   @apply flex flex-col gap-4 py-1;
 }
 
-.variantNotice {
-  @apply text-xs text-stone-500 bg-stone-50 p-2.5 rounded-lg border border-line flex items-center gap-2;
+// Integrated Barcode Control
+.barcodeControl {
+  @apply flex items-center gap-2 w-full;
 }
 
-.barcodeRow {
-  @apply flex items-end gap-2;
+.inputWrapper {
+  @apply relative flex items-center flex-1 h-10 rounded-lg border border-line bg-white px-3 transition-colors;
 
-  > :first-child {
-    @apply flex-1;
+  &:focus-within {
+    border-color: $burgundy;
+    box-shadow: 0 0 0 2px rgba(100, 29, 43, 0.15);
   }
 }
 
+.barcodeIcon {
+  @apply w-4 h-4 text-stone-400 shrink-0 mr-2.5 pointer-events-none select-none;
+}
+
+.barcodeInput {
+  @apply w-full h-full bg-transparent border-0 text-sm font-mono uppercase tracking-wide text-ink placeholder:text-stone-400 focus:outline-none p-0;
+}
+
 .suggestBtn {
-  @apply mb-0.5 whitespace-nowrap shrink-0;
+  @apply h-10 px-3.5 whitespace-nowrap shrink-0 gap-1.5 border border-line font-medium text-xs md:text-sm transition-all;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-warm-white, #FAF8F5);
+    border-color: rgba(100, 29, 43, 0.35);
+    color: $burgundy;
+  }
+}
+
+// Initial Status Callout
+.statusCallout {
+  @apply p-3 rounded-xl border border-stone-200/80 bg-stone-50/70 flex flex-col gap-1;
+}
+
+.statusBadge {
+  @apply flex items-center gap-2 text-xs text-stone-700;
+}
+
+.statusTag {
+  @apply px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200;
+}
+
+.statusDesc {
+  @apply text-[11px] text-stone-500 leading-relaxed pl-6;
 }

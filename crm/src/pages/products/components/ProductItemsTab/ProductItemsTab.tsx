@@ -142,7 +142,7 @@ export const ProductItemsTab: React.FC<ProductItemsTabProps> = ({ product }) => 
         </div>
         <div className={cn(styles.statCard, styles["statCard--maintenance"])}>
           <span className={styles.statLabel}>{t("productItem.maintenanceCount", "Bảo dưỡng")}</span>
-          <span className={cn(styles.statValue, "text-rose-700")}>{stats.maintenance}</span>
+          <span className={cn(styles.statValue, "text-red-700")}>{stats.maintenance}</span>
         </div>
       </div>
 

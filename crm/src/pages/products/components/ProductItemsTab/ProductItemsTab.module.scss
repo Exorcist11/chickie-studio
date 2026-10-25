@@ -30,7 +30,7 @@
   }
 
   &--maintenance {
-    @apply border-rose-200 bg-rose-50/40;
+    @apply border-red-200 bg-red-50/40;
   }
 }
 
@@ -84,7 +84,7 @@
   }
 
   td {
-    @apply px-4 py-3.5 border-b border-line/60 text-stone-700 align-middle;
+    @apply px-4 py-3.5 border-b border-line text-stone-700 align-middle;
   }
 
   tr:last-child td {
@@ -121,7 +121,7 @@
 }
 
 .rentalWarning {
-  @apply px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700 border border-rose-200;
+  @apply px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-700 border border-red-200;
 }
 
 .actionsCell {
