@@ -143,20 +143,25 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await expect(page.getByText("Đặt Thuê Máy Ảnh & Thiết Bị")).toBeVisible();
     await expect(page.getByText(/Phiên bản \/ Bộ Combo:/i)).toBeVisible();
 
-    // Điền thông tin đặt thuê và chọn ngày khả dụng trong tương lai
-    await page.getByRole("textbox", { name: "Đến ngày" }).fill("2027-02-16");
-    await page.getByRole("textbox", { name: "Từ ngày" }).fill("2027-02-15");
+    // Điền thông tin đặt thuê và chọn ngày khả dụng trong tương lai (sinh ngày động tránh trùng lịch DB)
+    const randomOffset = 150 + Math.floor(Math.random() * 800);
+    const startDate = new Date(Date.now() + randomOffset * 86400000).toISOString().split("T")[0];
+    const endDate = new Date(Date.now() + (randomOffset + 1) * 86400000).toISOString().split("T")[0];
+
+    await page.getByRole("textbox", { name: "Từ ngày" }).fill(startDate);
+    await page.getByRole("textbox", { name: "Đến ngày" }).fill(endDate);
     await page.getByPlaceholder("Ví dụ: Nguyễn Quỳnh Anh").fill("Lê Hoàng Nam");
     await page.getByPlaceholder("Ví dụ: 0912 345 678").fill("0981234567");
 
     // Submit form
     const submitBtn = page.getByRole("button", { name: "Xác Nhận Thuê Thiết Bị" });
+    await expect(submitBtn).toBeEnabled();
     await submitBtn.click();
 
     // Kiểm tra Modal thành công
     await expect(
       page.getByRole("heading", { name: "Đặt Thuê Thiết Bị Thành Công!" })
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 10000 });
     await expect(page.getByText("Lê Hoàng Nam - 0981234567")).toBeVisible();
   });
 

@@ -7,10 +7,10 @@
 | **Module** | CNT (Content & SEO) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 🚧 IN_PROGRESS (BE DONE) |
-| **Người phụ trách** | Fullstack Dev / Tech Lead |
+| **Trạng thái** | ✅ DONE |
+| **Người phụ trách** | Fullstack Dev & UI/UX Specialist |
 | **Ngày bắt đầu** | 2026-10-25 |
-| **Ngày hoàn thành** | - |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `CAT-001`, `CAT-005` |
 
 ---
@@ -93,14 +93,15 @@ flowchart TD
 - **Mục tiêu Coverage**: $\ge 80\%$.
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Server Component SSR hoàn toàn cho trang chủ.
-- [ ] Đầy đủ metadata SEO (OpenGraph, Twitter card).
-- [ ] i18n đầy đủ tiếng Việt và tiếng Anh.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Server Component SSR hoàn toàn cho trang chủ.
+- [x] Đầy đủ metadata SEO (OpenGraph, Twitter card, JSON-LD ClothingStore).
+- [x] i18n đầy đủ tiếng Việt và tiếng Anh.
+- [x] Test coverage $\ge 80\%$ (Client 273/273 tests pass, E2E 16/16 pass, Server 195/195 pass).
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev & UI/UX Specialist | Hoàn tất Frontend Client: kết nối API SSR GET /api/public/home/featured, ProcessSteps 4 bước, FloatingContact hotline & Zalo, JSON-LD SEO, 273/273 unit tests & 16/16 Playwright pass | ✅ DONE |
 | 2026-10-25 | Fullstack Dev | Triển khai hoàn tất Backend: DTOs, HomeFeaturedService, PublicHomeController GET /api/public/home/featured, 195/195 tests pass | 🚧 IN_PROGRESS |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

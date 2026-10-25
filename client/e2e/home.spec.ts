@@ -23,6 +23,24 @@ test.describe("Client Home Page UI Test", () => {
     await expect(page).toHaveURL(/\/products/);
   });
 
+  test("hiển thị quy trình 4 bước thuê đồ và các nút liên hệ nổi Zalo / Hotline", async ({ page }) => {
+    await page.goto("/");
+
+    // Kiểm tra quy trình 4 bước thuê đồ
+    await expect(page.getByRole("heading", { name: "Quy Trình Thuê Đồ Đơn Giản" })).toBeVisible();
+    await expect(page.getByText("Chọn mẫu & size")).toBeVisible();
+    await expect(page.getByText("Đặt cọc giữ đồ")).toBeVisible();
+    await expect(page.getByText("Nhận đồ xinh")).toBeVisible();
+    await expect(page.getByText("Trả đồ & hoàn cọc")).toBeVisible();
+
+    // Kiểm tra floating contact buttons
+    const hotlineBtn = page.getByRole("link", { name: /Gọi hotline tư vấn trực tiếp/i });
+    await expect(hotlineBtn).toBeVisible();
+
+    const zaloBtn = page.getByRole("link", { name: /Nhắn tin tư vấn trực tiếp qua Zalo/i });
+    await expect(zaloBtn).toBeVisible();
+  });
+
   test("áp dụng đúng bộ font tiếng Việt (Lora cho Serif và Be Vietnam Pro cho Sans)", async ({ page }) => {
     await page.goto("/");
 
