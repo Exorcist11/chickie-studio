@@ -7,9 +7,9 @@
 | **Module** | CNT (Content & SEO) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
-| **Người phụ trách** | Frontend Lead / UI/UX Designer |
-| **Ngày bắt đầu** | - |
+| **Trạng thái** | 🚧 IN_PROGRESS (BE DONE) |
+| **Người phụ trách** | Fullstack Dev / Tech Lead |
+| **Ngày bắt đầu** | 2026-10-25 |
 | **Ngày hoàn thành** | - |
 | **Phụ thuộc** | `CAT-001`, `CAT-005` |
 
@@ -102,4 +102,5 @@ flowchart TD
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev | Triển khai hoàn tất Backend: DTOs, HomeFeaturedService, PublicHomeController GET /api/public/home/featured, 195/195 tests pass | 🚧 IN_PROGRESS |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

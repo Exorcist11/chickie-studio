@@ -45,9 +45,9 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
-| **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
+| **CNT** | Nội dung & SEO | 7 | 4 | 2 | 1 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **6** | **0** | **13** | **26.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **5** | **1** | **13** | **26.0%** |
 
 *(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-004, BOK-005 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
@@ -141,7 +141,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ### 4.7. Module CNT (Nội Dung & SEO)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
-| `CNT-001` | Trang chủ website Client (Landing Page) | CLIENT, SERVER | P0 | 📝 SPEC | Frontend Lead | - | - | [CNT-001](features/content-seo/CNT-001-trang-chu-client.md) |
+| `CNT-001` | Trang chủ website Client (Landing Page) | CLIENT, SERVER | P0 | 🚧 IN_PROGRESS | Fullstack Dev | 2026-10-25 | - | [CNT-001](features/content-seo/CNT-001-trang-chu-client.md) |
 | `CNT-002` | Các trang tĩnh: Chính sách thuê, FAQ, Liên hệ | CLIENT | P0 | 📝 SPEC | Content Lead | - | - | [CNT-002](features/content-seo/CNT-002-trang-tinh-chinh-sach-faq-lien-he.md) |
 | `CNT-003` | Cấu hình SEO Metadata, Sitemap XML & Structured Data | CLIENT | P2 | ⬜ TODO | - | - | - | - |
 | `CNT-004` | Blog chia sẻ kinh nghiệm chụp ảnh & chọn đồ | CLIENT, CRM | P2 | ⬜ TODO | - | - | - | - |
@@ -164,6 +164,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `CNT-001` | 📝 SPEC $\rightarrow$ 🚧 IN_PROGRESS | Fullstack Dev | Hoàn thành toàn diện phần Backend: DTOs (HeroBannerDto, FeaturedServiceDto, RentalStepDto, TestimonialDto, HomeFeaturedResponse), HomeFeaturedService tổng hợp top categories & top products, PublicHomeController endpoint GET /api/public/home/featured, 195/195 tests pass 100% |
 | 2026-10-25 | `BOK-005` | 📝 SPEC $\rightarrow$ 🚧 IN_PROGRESS | Fullstack Dev | Hoàn thành toàn diện phần Backend: V11 Flyway migration tạo index kép (booking_code, customer_phone), DTO BookingTrackingRequest kiểm tra regex SĐT, BookingService.trackBooking chuẩn hóa số điện thoại, bảo mật BR-01/BR-02 ẩn danh changedBy nhân viên, Controller POST /api/public/bookings/tracking, 193/193 tests pass 100% |
 | 2026-10-25 | `BOK-001` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Backend API POST /api/public/bookings (tạo đơn giữ chỗ, phân bổ item kho an toàn, tự sinh mã BK...), GET /api/public/bookings/{code}, Client BookingForm trực quan với inline validation, phương thức nhận đồ (Tại tiệm/Giao tận nơi), modal Luxury xác nhận đặt cọc và trang hóa đơn `/booking/success/[code]`. Test coverage > 93%, 11/11 Playwright E2E pass |
 | 2026-10-25 | `CAT-006` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện: V8 Migration Flyway, Backend API GET /api/public/products/{idOrSlug}/availability tính toán đệm giặt ủi bufferDays, Client AvailabilityCalendar lưới 7 ngày chọn dải ngày, SizeGuideModal bảng quy đổi kích cỡ chuẩn 3 trụ cột, StickyBottomCta mobile view, test coverage đạt 94.9%, 10/10 Playwright E2E pass |

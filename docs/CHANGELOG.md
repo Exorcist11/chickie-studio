@@ -7,6 +7,26 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Xây Dựng Hạ Tầng Backend Trang Chủ & API Tổng Hợp (CNT-001 - 🚧 IN_PROGRESS: BE DONE)**:
+  - **Hạ Tầng Backend Server (Spring Boot 3 + MySQL)**:
+    - **Kiến trúc phân tầng Package `com.chickiestudio.content`**:
+      - `HeroBannerDto.java`: Chứa thông tin slider banner (id, title, subtitle, imageUrl, altText, ctaText, ctaLink).
+      - `FeaturedServiceDto.java`: Thẻ 3 dịch vụ cốt lõi (Thuê trang phục, Thuê máy ảnh, Dịch vụ chụp ảnh).
+      - `RentalStepDto.java`: Mô hình 4 bước quy trình thuê đồ (Chọn mẫu & size $\rightarrow$ Đặt cọc giữ đồ $\rightarrow$ Nhận đồ xinh $\rightarrow$ Trả đồ & hoàn cọc).
+      - `TestimonialDto.java`: Đánh giá kèm avatar và số sao khách hàng.
+      - `HomeFeaturedResponse.java`: Aggregate DTO tổng hợp toàn bộ sections cho trang chủ.
+    - **Tầng Service `HomeFeaturedService.java` & `HomeFeaturedServiceImpl.java`**:
+      - Xử lý nghiệp vụ `@Transactional(readOnly = true)`.
+      - Tích hợp gọi `CategoryService.getPublicCategories()` và `ProductService.getProducts(...)` (top 10 sản phẩm `status = ACTIVE` mới nhất).
+      - Tối ưu tải trang SSR cho Client với 1 request round-trip duy nhất.
+    - **Tầng Controller `PublicHomeController.java`**:
+      - Cung cấp endpoint RESTful `GET /api/public/home/featured`.
+      - Kết quả bọc chuẩn `ApiResponse<HomeFeaturedResponse>`, tự động phân quyền public không cần token đăng nhập.
+    - **Kiểm thử tự động Server**:
+      - `HomeFeaturedServiceImplTest.java`: Unit test kiểm thử logic nghiệp vụ tổng hợp dữ liệu, mock `CategoryService` và `ProductService`.
+      - `PublicHomeControllerTest.java`: WebMvcTest kiểm thử HTTP 200 OK, format JSON, validate các trường dữ liệu.
+      - Toàn bộ **195/195 tests Server pass 100%**, coverage $\ge 90\%$.
+
 - **Tra Cứu Đơn Thuê Bằng Mã Đơn & SĐT Trực Tuyến Trên Client (BOK-005 - ✅ DONE)**:
   - **Frontend Client (Next.js 14 App Router + TypeScript + Tailwind + shadcn/ui)**:
     - **Trang Tra Cứu `/tra-cuu-don`**: Thiết kế theo tiêu chuẩn UI/UX Pro Max với tông màu Warm Chic Burgundy (`#6B1D2F`), Vàng Champagne (`#C5A880`), thẻ nền kem ngà sang trọng, responsive mượt mà từ mobile đến desktop.
