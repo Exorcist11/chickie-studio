@@ -155,6 +155,68 @@ describe("AvailabilityCalendar", () => {
     await user.unhover(day1);
   });
 
+  it("renders appropriate pillar badge and avoids showing 'Đệm giặt' for CAMERA and PHOTOGRAPHY", async () => {
+    // 1. Costume renders laundering buffer
+    const { rerender } = render(
+      <AvailabilityCalendar
+        slug="vay-da-hoi-kim-sa-do"
+        pillar="COSTUME"
+        initialMonth="2026-11"
+      />
+    );
+    await waitFor(() => {
+      expect(screen.getByText(/Đệm giặt 1 ngày/)).toBeInTheDocument();
+    });
+
+    // 2. Camera renders inspection badge, not laundering
+    rerender(
+      <AvailabilityCalendar
+        slug="canon-eos-r50"
+        pillar="CAMERA"
+        initialMonth="2026-11"
+      />
+    );
+    expect(screen.getByText("Kiểm tra máy sẵn sàng")).toBeInTheDocument();
+    expect(screen.queryByText(/Đệm giặt/)).not.toBeInTheDocument();
+
+    // 3. Photography renders dedicated session badge, not laundering
+    rerender(
+      <AvailabilityCalendar
+        slug="goi-chup-anh-sen"
+        pillar="PHOTOGRAPHY"
+        initialMonth="2026-11"
+      />
+    );
+    expect(screen.getByText("Ca chụp độc quyền")).toBeInTheDocument();
+    expect(screen.queryByText(/Đệm giặt/)).not.toBeInTheDocument();
+  });
+
+  it("highlights in-between dates when a date range is selected", async () => {
+    render(
+      <AvailabilityCalendar
+        slug="vay-da-hoi-kim-sa-do"
+        initialMonth="2026-11"
+        startDate="2026-11-01"
+        endDate="2026-11-04"
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("calendar-day-2026-11-01")).toBeInTheDocument();
+    });
+
+    const day1 = screen.getByTestId("calendar-day-2026-11-01");
+    const day2 = screen.getByTestId("calendar-day-2026-11-02");
+    const day4 = screen.getByTestId("calendar-day-2026-11-04");
+
+    // Start day has 'Nhận'
+    expect(day1).toHaveTextContent("Nhận");
+    // End day has 'Trả'
+    expect(day4).toHaveTextContent("Trả");
+    // In-between day has ribbon highlight class
+    expect(day2.className).toContain("bg-[#F8ECEE]");
+  });
+
   it("passes accessibility checks", async () => {
     const { container } = render(
       <AvailabilityCalendar

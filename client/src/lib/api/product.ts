@@ -732,15 +732,27 @@ export async function getPublicProductAvailability(
     });
   }
 
+  const matchedProduct = DEFAULT_FEATURED_PRODUCTS.find((p) => p.slug === slug);
+  const isNonCostume =
+    matchedProduct?.type === "CAMERA" ||
+    matchedProduct?.type === "PHOTOGRAPHY" ||
+    slug.includes("camera") ||
+    slug.includes("sony") ||
+    slug.includes("canon") ||
+    slug.includes("fuji") ||
+    slug.includes("chup") ||
+    slug.includes("photo");
+  const bufferDays = isNonCostume ? 0 : 1;
+
   return {
-    productId: 1,
+    productId: matchedProduct?.id || 1,
     slug,
-    productName: "Sản phẩm",
+    productName: matchedProduct?.name || "Sản phẩm",
     variantId,
     month: currentMonth,
     totalItems: 3,
     availableItems: 2,
-    bufferDays: 1,
+    bufferDays,
     days,
   };
 }

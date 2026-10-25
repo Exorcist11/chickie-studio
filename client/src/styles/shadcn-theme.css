@@ -27,6 +27,7 @@
 
   /* Chickie Studio Brand Design Tokens */
   --color-burgundy: #641D2B;
+  --color-burgundy-rgb: 100 29 43;
   --color-burgundy-light: #762538;
   --color-burgundy-dark: #4C1520;
   --color-primary: #641D2B;
@@ -37,6 +38,7 @@
   --color-ivory: #F8F1E8;
   --color-warm-white: #FFFCF8;
   --color-ink: #302528;
+  --color-ink-rgb: 48 37 40;
   --color-ink-muted: #6B5D60;
   --color-line: #EADFD6;
   --color-sidebar-dark: #302528;

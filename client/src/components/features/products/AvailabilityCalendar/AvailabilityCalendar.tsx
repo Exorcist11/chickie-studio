@@ -150,10 +150,20 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <h4 className="font-semibold text-sm text-ink">
             Tháng {monthNum} / {yearNum}
           </h4>
-          {availabilityData?.bufferDays && availabilityData.bufferDays > 0 ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-ink-muted bg-ivory px-2 py-0.5 rounded-full border border-line">
+          {pillar === "COSTUME" && availabilityData?.bufferDays && availabilityData.bufferDays > 0 ? (
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-ink-muted bg-ivory px-2.5 py-0.5 rounded-full border border-line">
               <Clock className="w-3 h-3 text-burgundy" />
               Đệm giặt {availabilityData.bufferDays} ngày
+            </span>
+          ) : pillar === "CAMERA" ? (
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+              <Sparkles className="w-3 h-3 text-emerald-600" />
+              Kiểm tra máy sẵn sàng
+            </span>
+          ) : pillar === "PHOTOGRAPHY" ? (
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-burgundy bg-ivory px-2.5 py-0.5 rounded-full border border-line">
+              <Sparkles className="w-3 h-3 text-burgundy" />
+              Ca chụp độc quyền
             </span>
           ) : null}
         </div>
@@ -213,20 +223,26 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 
           const isStart = pickingStart === dateStr;
           const isEnd = pickingEnd === dateStr;
-          const isInRange =
+          const isInRange = Boolean(
             pickingStart &&
             pickingEnd &&
             dateStr > pickingStart &&
-            dateStr < pickingEnd;
+            dateStr < pickingEnd
+          );
 
           // In-progress range hover
-          const isHoverInRange =
+          const isHoverInRange = Boolean(
             pickingStart &&
             !pickingEnd &&
             hoveredDate &&
             hoveredDate > pickingStart &&
             dateStr > pickingStart &&
-            dateStr <= hoveredDate;
+            dateStr <= hoveredDate
+          );
+
+          const dayOfWeekIndex = (emptyLeadingDays + idx) % 7; // 0: T2 ... 6: CN
+          const isWeekStart = dayOfWeekIndex === 0;
+          const isWeekEnd = dayOfWeekIndex === 6;
 
           return (
             <button
@@ -239,33 +255,48 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
               onMouseEnter={() => setHoveredDate(dateStr)}
               onMouseLeave={() => setHoveredDate(null)}
               className={cn(
-                "relative h-11 sm:h-12 rounded-xl text-xs flex flex-col items-center justify-center transition-all group",
+                "relative h-11 sm:h-12 text-xs flex flex-col items-center justify-center transition-all group",
                 // Base status styles
-                isPast && "text-ink-muted/30 bg-ivory/20 cursor-not-allowed",
+                isPast && "rounded-xl text-ink-muted/30 bg-ivory/20 cursor-not-allowed",
                 (isFullyBooked || isMaintenance) &&
-                  "bg-danger/5 text-ink-muted/60 line-through cursor-not-allowed border border-danger/10",
+                  "rounded-xl bg-danger/5 text-ink-muted/60 line-through cursor-not-allowed border border-danger/10",
                 isAvailable &&
                   !isStart &&
                   !isEnd &&
                   !isInRange &&
                   !isHoverInRange &&
-                  "bg-white hover:bg-emerald-50 text-ink border border-line hover:border-emerald-500/50 hover:shadow-xs",
-                // Selection highlight
-                (isStart || isEnd) &&
-                  "bg-burgundy text-white font-bold shadow-md z-10 scale-105",
+                  "rounded-xl bg-white hover:bg-emerald-50 text-ink border border-line hover:border-emerald-500/50 hover:shadow-xs",
+                // Continuous Selection Range Ribbon
                 (isInRange || isHoverInRange) &&
-                  "bg-burgundy/15 text-burgundy font-medium rounded-none first:rounded-l-xl last:rounded-r-xl"
+                  "bg-[#F8ECEE] text-burgundy font-semibold border-y border-[#F0D5D9] shadow-none rounded-none z-0",
+                (isInRange || isHoverInRange) && isWeekStart && "rounded-l-xl border-l border-[#F0D5D9]",
+                (isInRange || isHoverInRange) && isWeekEnd && "rounded-r-xl border-r border-[#F0D5D9]",
+                // Start & End markers
+                isStart &&
+                  "bg-burgundy text-white font-bold shadow-md z-10 scale-105 rounded-xl ring-2 ring-burgundy/20",
+                isEnd &&
+                  "bg-burgundy text-white font-bold shadow-md z-10 scale-105 rounded-xl ring-2 ring-burgundy/20"
               )}
             >
-              <span className="font-semibold text-xs sm:text-sm">{day}</span>
+              <span className={cn(
+                "font-semibold text-xs sm:text-sm",
+                (isStart || isEnd) ? "text-white" : isInRange ? "text-burgundy font-bold" : "text-ink"
+              )}>
+                {day}
+              </span>
 
-              {/* Status indicator pill or dot */}
-              {isAvailable && !isStart && !isEnd && (
+              {/* Status indicator pill or dot: hide when inside active range selection to keep focus crisp */}
+              {isAvailable && !isStart && !isEnd && !isInRange && !isHoverInRange && (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-0.5 group-hover:scale-125 transition-transform" />
               )}
-              {(isStart || isEnd) && (
-                <span className="text-[9px] font-normal opacity-90 leading-none mt-0.5">
-                  {isStart ? "Nhận" : "Trả"}
+              {isStart && (
+                <span className="text-[9px] font-semibold text-rose-100 uppercase leading-none mt-0.5">
+                  Nhận
+                </span>
+              )}
+              {isEnd && (
+                <span className="text-[9px] font-semibold text-rose-100 uppercase leading-none mt-0.5">
+                  Trả
                 </span>
               )}
               {isFullyBooked && (
