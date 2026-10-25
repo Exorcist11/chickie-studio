@@ -17,6 +17,7 @@ import {
   Share2,
   Folder,
   Scissors,
+  Boxes,
 } from "lucide-react";
 import { cn } from "../../../../lib/cn";
 import { Modal } from "../../../../components/common/Modal";
@@ -25,9 +26,10 @@ import { Badge } from "../../../../components/ui/Badge";
 import { ProductDetailResponse } from "../../../../types/product";
 import { Category, CategoryType } from "../../../../types/category";
 import { PILLAR_PRODUCT_CONFIG } from "../../constants";
+import { ProductItemsTab } from "../ProductItemsTab/ProductItemsTab";
 import styles from "./ProductViewModal.module.scss";
 
-type DetailTab = "overview" | "variants" | "gallery";
+type DetailTab = "overview" | "variants" | "items" | "gallery";
 
 interface ProductViewModalProps {
   isOpen: boolean;
@@ -302,6 +304,20 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
             <span className={styles.productViewModal__tabCount}>
               {product.variants?.length || 0}
             </span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "items"}
+            className={cn(
+              styles.productViewModal__tabBtn,
+              activeTab === "items" && styles["productViewModal__tabBtn--active"]
+            )}
+            onClick={() => setActiveTab("items")}
+          >
+            <Boxes size={16} />
+            <span>{t("productItem.title", "Kho đồ thực tế")}</span>
           </button>
 
           <button
@@ -614,6 +630,10 @@ export const ProductViewModal: React.FC<ProductViewModalProps> = ({
               </div>
             )}
           </div>
+        )}
+        {/* TAB 4: ITEM INSTANCES / KHO ĐỒ THỰC TẾ (CAT-003) */}
+        {activeTab === "items" && (
+          <ProductItemsTab product={product} />
         )}
       </div>
     </Modal>

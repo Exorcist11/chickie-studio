@@ -1,18 +1,117 @@
-// CategoryModal Form Styles with @apply
+// CategoryModal Form Styles
 @use "../../../../styles/tokens" as *;
 
 .modalFormContent {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col gap-5;
 }
 
 .errorBanner {
-  @apply bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded-lg text-sm flex items-center gap-2 font-medium;
+  @apply bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm flex items-center gap-2.5 font-medium shadow-2xs;
 }
 
+// Business Pillar 3-Card Interactive Selector
+.pillarSection {
+  @apply flex flex-col gap-2;
+}
+
+.pillarCards {
+  @apply grid grid-cols-3 gap-2.5;
+}
+
+.pillarCard {
+  @apply flex flex-col items-center text-center p-3 rounded-xl border border-line bg-white cursor-pointer transition-all duration-150;
+
+  &:hover {
+    border-color: rgba(100, 29, 43, 0.35);
+    background-color: var(--color-warm-white, #FAF8F5);
+    transform: translateY(-1px);
+  }
+
+  &--active {
+    border-color: $burgundy !important;
+    background-color: rgba(100, 29, 43, 0.04) !important;
+    box-shadow: 0 0 0 1px $burgundy, 0 2px 8px rgba(100, 29, 43, 0.08);
+
+    .pillarIconWrapper {
+      background-color: rgba(100, 29, 43, 0.12);
+      color: $burgundy;
+    }
+
+    .pillarCardTitle {
+      color: $burgundy;
+      font-weight: 600;
+    }
+  }
+}
+
+.pillarIconWrapper {
+  @apply w-9 h-9 rounded-lg bg-stone-100 text-stone-600 flex items-center justify-center mb-1.5 transition-colors;
+}
+
+.pillarCardTitle {
+  @apply text-xs font-medium text-stone-700 leading-tight;
+}
+
+.pillarCardCode {
+  @apply text-[10px] text-stone-600 font-mono mt-0.5;
+}
+
+// Icon Picker Grid
+.iconPickerSection {
+  @apply flex flex-col gap-2 p-3 rounded-xl border border-line bg-stone-50/50;
+}
+
+.iconPickerHeader {
+  @apply flex items-center justify-between text-xs text-ink-muted font-medium;
+}
+
+.iconGrid {
+  @apply grid grid-cols-6 gap-2;
+}
+
+.iconButton {
+  @apply w-10 h-10 rounded-lg border border-line bg-white flex flex-col items-center justify-center text-stone-600 hover:text-burgundy hover:border-burgundy/40 hover:bg-stone-50 transition-all cursor-pointer relative;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px $burgundy;
+  }
+
+  &--selected {
+    border-color: $burgundy !important;
+    background-color: rgba(100, 29, 43, 0.08) !important;
+    color: $burgundy !important;
+    box-shadow: 0 0 0 1px $burgundy;
+  }
+}
+
+.customIconRow {
+  @apply flex items-center gap-2 pt-1;
+}
+
+// Two-column layout
 .formGrid {
-  @apply grid grid-cols-2 gap-4;
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
 }
 
-.switchWrapper {
-  @apply pt-1 pb-1;
+// URL Preview chip
+.urlPreview {
+  @apply text-[11px] font-mono text-stone-600 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200 mt-1 flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap;
+}
+
+// Switch card with helper text
+.switchCard {
+  @apply flex items-center justify-between p-3.5 rounded-xl border border-line bg-white hover:border-stone-300 transition-colors;
+}
+
+.switchText {
+  @apply flex flex-col gap-0.5;
+}
+
+.switchTitle {
+  @apply text-sm font-medium text-ink;
+}
+
+.switchSub {
+  @apply text-xs text-stone-600;
 }

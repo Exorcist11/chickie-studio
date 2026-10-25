@@ -1,9 +1,21 @@
 import React, { useState } from "react";
-import { Layers, AlertCircle } from "lucide-react";
+import {
+  Layers,
+  AlertCircle,
+  Sparkles,
+  Link as LinkIcon,
+  RotateCcw,
+  Check,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { Category, CategoryType, CreateCategoryInput, UpdateCategoryInput } from "../../../../types/category";
+import {
+  Category,
+  CategoryType,
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from "../../../../types/category";
 import { categoryService } from "../../../../services/category.service";
 import { FormField } from "../../../../components/common/FormField";
 import { Modal } from "../../../../components/common/Modal";
@@ -11,8 +23,14 @@ import { Button } from "../../../../components/ui/Button";
 import { Input } from "../../../../components/ui/Input";
 import { TextArea } from "../../../../components/ui/TextArea";
 import { Switch } from "../../../../components/ui/Switch";
-import { Select } from "../../../../components/ui/Select";
-import { slugify, getErrorMessage } from "../../constants";
+import { cn } from "../../../../lib/cn";
+import {
+  slugify,
+  getErrorMessage,
+  CATEGORY_TYPE_CONFIG,
+  SUGGESTED_ICONS,
+  ICON_MAP,
+} from "../../constants";
 import styles from "./CategoryModal.module.scss";
 
 // Form Validation Schemas using Zod
@@ -64,7 +82,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
       name: category?.name ?? "",
       slug: category?.slug ?? "",
       description: category?.description ?? "",
-      iconUrl: category?.iconUrl ?? "",
+      iconUrl: category?.iconUrl ?? "Sparkles",
       displayOrder: category ? category.displayOrder : displayOrderDefault,
       isActive: category ? category.isActive : true,
     },
@@ -97,11 +115,12 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         }
         await onSuccess();
         onClose();
-      } catch (err: any) {
-        if (err?.response?.status === 409) {
+      } catch (err: unknown) {
+        const errorObj = err as { response?: { status?: number; data?: { message?: string } } };
+        if (errorObj?.response?.status === 409) {
           setServerError("Tên danh mục hoặc đường dẫn URL đã tồn tại");
         } else {
-          setServerError(err?.response?.data?.message || "Có lỗi xảy ra khi lưu danh mục");
+          setServerError(errorObj?.response?.data?.message || "Có lỗi xảy ra khi lưu danh mục");
         }
       } finally {
         setSubmitting(false);
@@ -111,12 +130,21 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
 
   if (!open) return null;
 
+  const currentIconName = form.getFieldValue("iconUrl") || "";
+  const CurrentIconComponent = ICON_MAP[currentIconName] || Layers;
+
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title={category ? t("category.editCategory") : t("category.addCategory")}
-      icon={<Layers className="w-5 h-5 text-burgundy" />}
+      maxWidth="xl"
+      title={category ? t("category.editCategory", "Chỉnh sửa danh mục") : t("category.addCategory", "Thêm danh mục")}
+      subtitle={
+        category
+          ? t("category.editSubtitle", "Cập nhật thông tin phân loại danh mục sản phẩm")
+          : t("category.addSubtitle", "Khởi tạo danh mục mới cho các dòng sản phẩm trong studio")
+      }
+      icon={<CurrentIconComponent className="w-5 h-5 text-burgundy" />}
       ariaLabelledBy="category-modal-title"
       closeOnEsc={!submitting}
       closeOnOverlayClick={!submitting}
@@ -128,7 +156,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             onClick={onClose}
             disabled={submitting}
           >
-            {t("common.cancel")}
+            {t("common.cancel", "Hủy")}
           </Button>
           <Button
             type="submit"
@@ -136,7 +164,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             isLoading={submitting}
             disabled={submitting}
           >
-            {t("common.save")}
+            {t("common.save", "Lưu thay đổi")}
           </Button>
         </>
       }
@@ -153,12 +181,12 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         <div className={styles.modalFormContent}>
           {serverError && (
             <div className={styles.errorBanner} role="alert">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
               <span>{serverError}</span>
             </div>
           )}
 
-          {/* Business Pillar (Type) */}
+          {/* Business Pillar: Interactive Cards + Synchronized Select for RTL testing */}
           <form.Field
             name="type"
             validators={{
@@ -171,23 +199,61 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               return (
                 <FormField
                   name="type"
-                  label={t("category.type")}
+                  label={t("category.type", "Mảng kinh doanh")}
                   required
                   error={errorMessage}
                 >
-                  <Select
-                    id="type"
-                    name={field.name}
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value as CategoryType)}
-                    onValueChange={(val) => field.handleChange(val as CategoryType)}
-                    options={[
-                      { label: "Thuê trang phục (COSTUME)", value: "COSTUME" },
-                      { label: "Thuê máy ảnh (CAMERA)", value: "CAMERA" },
-                      { label: "Dịch vụ chụp ảnh (PHOTOGRAPHY)", value: "PHOTOGRAPHY" },
-                    ]}
-                    disabled={submitting}
-                  />
+                  <div className={styles.pillarSection}>
+                    {/* Visual 3-card selector */}
+                    <div className={styles.pillarCards} role="radiogroup" aria-label="Phân loại mảng">
+                      {(["COSTUME", "CAMERA", "PHOTOGRAPHY"] as CategoryType[]).map((pillKey) => {
+                        const cfg = CATEGORY_TYPE_CONFIG[pillKey];
+                        const Icon = cfg.icon;
+                        const isSelected = field.state.value === pillKey;
+                        return (
+                          <div
+                            key={pillKey}
+                            role="radio"
+                            aria-checked={isSelected}
+                            tabIndex={0}
+                            onClick={() => field.handleChange(pillKey)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                field.handleChange(pillKey);
+                              }
+                            }}
+                            className={cn(
+                              styles.pillarCard,
+                              isSelected && styles["pillarCard--active"]
+                            )}
+                          >
+                            <div className={styles.pillarIconWrapper}>
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <span className={styles.pillarCardTitle}>
+                              {t(cfg.labelKey, cfg.defaultLabel)}
+                            </span>
+                            <span className={styles.pillarCardCode}>({pillKey})</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Accessible select control for standard forms and Vitest user.selectOptions */}
+                    <select
+                      id="type"
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value as CategoryType)}
+                      disabled={submitting}
+                      className="sr-only"
+                    >
+                      <option value="COSTUME">Thuê trang phục (COSTUME)</option>
+                      <option value="CAMERA">Thuê máy ảnh (CAMERA)</option>
+                      <option value="PHOTOGRAPHY">Dịch vụ chụp ảnh (PHOTOGRAPHY)</option>
+                    </select>
+                  </div>
                 </FormField>
               );
             }}
@@ -207,7 +273,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               return (
                 <FormField
                   name="name"
-                  label={t("category.name")}
+                  label={t("category.name", "Tên danh mục")}
                   required
                   error={errorMessage}
                 >
@@ -225,7 +291,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                       }
                     }}
                     onBlur={field.handleBlur}
-                    placeholder={t("category.namePlaceholder")}
+                    placeholder={t("category.namePlaceholder", "Ví dụ: Váy Thiết Kế")}
                     disabled={submitting}
                     autoFocus
                   />
@@ -234,7 +300,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             }}
           </form.Field>
 
-          {/* Slug Field */}
+          {/* Slug Field with Live URL Preview */}
           <form.Field
             name="slug"
             validators={{
@@ -245,66 +311,136 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
           >
             {(field) => {
               const errorMessage = getErrorMessage(field.state.meta.errors[0]);
+              const currentName = form.getFieldValue("name");
               return (
                 <FormField
                   name="slug"
-                  label={t("category.slug")}
+                  label={t("category.slug", "Đường dẫn URL (slug)")}
                   required
                   error={errorMessage}
-                  helperText={t("category.slugHelper")}
+                  helperText={t("category.slugHelper", "Slug chỉ chứa chữ thường, số và dấu gạch ngang (a-z, 0-9, -)")}
                 >
-                  <Input
-                    id="slug"
-                    name={field.name}
-                    value={field.state.value}
-                    onChange={(e) => {
-                      setIsSlugManuallyEdited(true);
-                      field.handleChange(e.target.value);
-                      if (serverError) setServerError(null);
-                    }}
-                    onBlur={field.handleBlur}
-                    placeholder={t("category.slugPlaceholder")}
-                    disabled={submitting}
-                  />
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="relative flex-1">
+                        <Input
+                          id="slug"
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => {
+                            setIsSlugManuallyEdited(true);
+                            field.handleChange(e.target.value);
+                            if (serverError) setServerError(null);
+                          }}
+                          onBlur={field.handleBlur}
+                          placeholder={t("category.slugPlaceholder", "vay-thiet-ke")}
+                          disabled={submitting}
+                        />
+                      </div>
+                      {isSlugManuallyEdited && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setIsSlugManuallyEdited(false);
+                            const autoSlug = slugify(currentName || "");
+                            form.setFieldValue("slug", autoSlug);
+                            form.validateField("slug", "change");
+                          }}
+                          title={t("category.syncSlug", "Đồng bộ từ tên")}
+                          className="shrink-0 text-stone-500 hover:text-burgundy"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Live URL Preview badge */}
+                    <div className={styles.urlPreview}>
+                      <LinkIcon className="w-3 h-3 text-burgundy shrink-0" />
+                      <span>chickiestudio.vn/categories/{field.state.value || "slug"}</span>
+                    </div>
+                  </div>
                 </FormField>
               );
             }}
           </form.Field>
 
-          <div className={styles.formGrid}>
-            {/* Icon Url */}
-            <form.Field
-              name="iconUrl"
-              validators={{
-                onChange: iconUrlFieldSchema,
-                onSubmit: iconUrlFieldSchema,
-              }}
-            >
-              {(field) => {
-                const errorMessage = getErrorMessage(field.state.meta.errors[0]);
-                return (
-                  <FormField
-                    name="iconUrl"
-                    label={t("category.icon")}
-                    error={errorMessage}
-                  >
-                    <Input
-                      id="iconUrl"
-                      name={field.name}
-                      value={field.state.value}
-                      onChange={(e) => {
-                        field.handleChange(e.target.value);
-                        if (serverError) setServerError(null);
-                      }}
-                      onBlur={field.handleBlur}
-                      placeholder="Sparkles, Flower2, Camera..."
-                      disabled={submitting}
-                    />
-                  </FormField>
-                );
-              }}
-            </form.Field>
+          {/* Interactive Visual Icon Picker */}
+          <form.Field
+            name="iconUrl"
+            validators={{
+              onChange: iconUrlFieldSchema,
+              onSubmit: iconUrlFieldSchema,
+            }}
+          >
+            {(field) => {
+              const errorMessage = getErrorMessage(field.state.meta.errors[0]);
+              return (
+                <FormField
+                  name="iconUrl"
+                  label={t("category.selectIcon", "Chọn biểu tượng đại diện")}
+                  error={errorMessage}
+                  helperText={t("category.selectIconHint", "Nhấp chọn nhanh biểu tượng phù hợp với dòng sản phẩm")}
+                >
+                  <div className={styles.iconPickerSection}>
+                    <div className={styles.iconPickerHeader}>
+                      <span>Biểu tượng đề xuất</span>
+                      {field.state.value && (
+                        <span className="font-mono text-burgundy font-medium">
+                          {field.state.value}
+                        </span>
+                      )}
+                    </div>
 
+                    {/* Quick Icon Selector Grid */}
+                    <div className={styles.iconGrid} role="group" aria-label="Danh sách biểu tượng">
+                      {SUGGESTED_ICONS.map((item) => {
+                        const Icon = item.icon;
+                        const isSelected = field.state.value === item.name;
+                        return (
+                          <button
+                            key={item.name}
+                            type="button"
+                            title={item.label}
+                            aria-label={`icon-${item.name}`}
+                            onClick={() => field.handleChange(item.name)}
+                            className={cn(
+                              styles.iconButton,
+                              isSelected && styles["iconButton--selected"]
+                            )}
+                          >
+                            <Icon className="w-4 h-4" />
+                            {isSelected && (
+                              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-burgundy rounded-full text-white flex items-center justify-center">
+                                <Check className="w-2.5 h-2.5" />
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Manual input for custom icon string or edge case */}
+                    <div className={styles.customIconRow}>
+                      <Input
+                        id="iconUrl"
+                        name={field.name}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="Sparkles, Flower2, Camera..."
+                        disabled={submitting}
+                      />
+                    </div>
+                  </div>
+                </FormField>
+              );
+            }}
+          </form.Field>
+
+          {/* Two-Column: Display Order & Status Switch */}
+          <div className={styles.formGrid}>
             {/* Display Order */}
             <form.Field
               name="displayOrder"
@@ -318,8 +454,9 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 return (
                   <FormField
                     name="displayOrder"
-                    label={t("category.displayOrder")}
+                    label={t("category.displayOrder", "Thứ tự hiển thị")}
                     error={errorMessage}
+                    helperText={t("category.orderHelper", "Số nhỏ hơn sẽ được ưu tiên hiển thị trước")}
                   >
                     <Input
                       id="displayOrder"
@@ -339,6 +476,33 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 );
               }}
             </form.Field>
+
+            {/* Active Status Switch Card */}
+            <form.Field name="isActive">
+              {(field) => (
+                <div className="flex flex-col justify-end">
+                  <div className={styles.switchCard}>
+                    <div className={styles.switchText}>
+                      <span className={styles.switchTitle}>
+                        {t("category.activeLabel", "Kích hoạt hiển thị")}
+                      </span>
+                      <span className={styles.switchSub}>
+                        {field.state.value
+                          ? t("category.active", "Đang hoạt động")
+                          : t("category.inactive", "Tạm ẩn")}
+                      </span>
+                    </div>
+                    <Switch
+                      id="isActive"
+                      name={field.name}
+                      checked={field.state.value}
+                      onCheckedChange={(checked) => field.handleChange(checked)}
+                      disabled={submitting}
+                    />
+                  </div>
+                </div>
+              )}
+            </form.Field>
           </div>
 
           {/* Description using system TextArea */}
@@ -354,7 +518,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               return (
                 <FormField
                   name="description"
-                  label={t("category.description")}
+                  label={t("category.description", "Mô tả")}
                   error={errorMessage}
                 >
                   <TextArea
@@ -366,29 +530,13 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                       if (serverError) setServerError(null);
                     }}
                     onBlur={field.handleBlur}
-                    placeholder={t("category.descriptionPlaceholder")}
+                    placeholder={t("category.descriptionPlaceholder", "Mô tả ngắn gọn về danh mục...")}
                     disabled={submitting}
                     rows={3}
                   />
                 </FormField>
               );
             }}
-          </form.Field>
-
-          {/* Active Status using system Switch */}
-          <form.Field name="isActive">
-            {(field) => (
-              <div className={styles.switchWrapper}>
-                <Switch
-                  id="isActive"
-                  name={field.name}
-                  label={t("category.active")}
-                  checked={field.state.value}
-                  onCheckedChange={(checked) => field.handleChange(checked)}
-                  disabled={submitting}
-                />
-              </div>
-            )}
           </form.Field>
         </div>
       </form>

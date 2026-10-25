@@ -216,6 +216,43 @@
       "variants": "Variants Size/Color",
       "images": "Photo Gallery"
     }
+  },
+  "productItem": {
+    "title": "Item Instances Inventory",
+    "subtitle": "Manage individual physical item copies, barcodes, and lifecycle states",
+    "itemCode": "Item Code (Barcode)",
+    "status": "Item Status",
+    "rentalCount": "Rental Count",
+    "note": "Condition / Note",
+    "addItem": "Add Item to Stock",
+    "addItemTitle": "Add Physical Item to Inventory",
+    "addItemDesc": "Create an actual physical copy linked to a variant and generate unique barcode.",
+    "selectVariant": "Select Variant",
+    "autoCodeHint": "Leave empty for system to generate unique barcode automatically",
+    "suggestCode": "Suggest Barcode",
+    "changeStatus": "Change Status",
+    "changeStatusTitle": "Update Lifecycle State",
+    "changeStatusDesc": "Choose the next valid state according to inventory workflow rules.",
+    "newStatus": "New Status",
+    "statusNote": "Reason / Note for status transition",
+    "statusNotePlaceholder": "E.g. Returned by customer at 10 AM, sent to laundry...",
+    "status_AVAILABLE": "Available",
+    "status_RENTED": "Rented",
+    "status_LAUNDRY": "In Laundry",
+    "status_MAINTENANCE": "Maintenance",
+    "status_RETIRED": "Retired",
+    "deleteTitle": "Delete Physical Item",
+    "deleteDesc": "Are you sure you want to remove this item from inventory? Rented items cannot be removed.",
+    "createSuccess": "Added physical item to inventory successfully!",
+    "updateStatusSuccess": "Updated item lifecycle status successfully!",
+    "deleteSuccess": "Deleted physical item successfully!",
+    "noItems": "No physical item instances in inventory for this product yet.",
+    "totalItems": "Total Items",
+    "availableCount": "Available",
+    "rentedCount": "Rented",
+    "laundryCount": "In Laundry",
+    "maintenanceCount": "Maintenance",
+    "maintenanceWarning": "Rented > 15 times, maintenance check recommended"
   }
 }
 

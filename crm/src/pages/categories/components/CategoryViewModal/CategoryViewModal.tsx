@@ -89,7 +89,7 @@ export const CategoryViewModal: React.FC<CategoryViewModalProps> = ({
               onEdit(category);
             }}
           >
-            {t("category.edit", "Chỉnh sửa")}
+            {t("category.editCategory", "Chỉnh sửa danh mục")}
           </Button>
         </>
       }
@@ -192,7 +192,7 @@ export const CategoryViewModal: React.FC<CategoryViewModalProps> = ({
               <span className="font-mono text-sm">{category.iconUrl || "Mặc định (Layers)"}</span>
             </div>
             <span className={styles.cardSub}>
-              Thứ tự ưu tiên sắp xếp: <strong>#{category.displayOrder}</strong>
+              Thứ tự sắp xếp ưu tiên: vị trí <strong>{category.displayOrder}</strong>
             </span>
           </div>
 
@@ -223,7 +223,7 @@ export const CategoryViewModal: React.FC<CategoryViewModalProps> = ({
               <span>{t("category.orderPriority", "Thứ tự hiển thị")}</span>
             </div>
             <div className={styles.cardValue}>
-              <span className="text-lg font-bold text-burgundy font-mono">#{category.displayOrder}</span>
+              <span className="text-lg font-bold text-burgundy font-mono">{category.displayOrder}</span>
               <span className="text-xs text-stone-500 font-normal">
                 ({category.isActive ? "Đang mở cho khách" : "Đang tạm ẩn"})
               </span>
@@ -241,7 +241,7 @@ export const CategoryViewModal: React.FC<CategoryViewModalProps> = ({
             <span>{t("category.description", "Mô tả")}</span>
           </div>
           {category.description ? (
-            <p className={styles.descText}>"{category.description}"</p>
+            <p className={styles.descText}>{category.description}</p>
           ) : (
             <span className={styles.emptyDesc}>
               {t("category.noDescription", "Chưa có mô tả chi tiết cho danh mục này.")}

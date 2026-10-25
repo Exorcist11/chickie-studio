@@ -1,0 +1,22 @@
+// CreateItemModal Scoped Styles
+@use "../../../../styles/tokens" as *;
+
+.form {
+  @apply flex flex-col gap-4 py-1;
+}
+
+.variantNotice {
+  @apply text-xs text-stone-500 bg-stone-50 p-2.5 rounded-lg border border-line flex items-center gap-2;
+}
+
+.barcodeRow {
+  @apply flex items-end gap-2;
+
+  > :first-child {
+    @apply flex-1;
+  }
+}
+
+.suggestBtn {
+  @apply mb-0.5 whitespace-nowrap shrink-0;
+}

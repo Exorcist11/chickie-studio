@@ -1,0 +1,146 @@
+// ProductItemsTab Scoped Styles
+@use "../../../../styles/tokens" as *;
+
+.tabContainer {
+  @apply flex flex-col gap-5;
+}
+
+// KPI Stat Cards Grid
+.statsGrid {
+  @apply grid grid-cols-2 sm:grid-cols-5 gap-3;
+}
+
+.statCard {
+  @apply p-3.5 rounded-xl border border-line bg-white flex flex-col gap-1 shadow-xs transition-shadow;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  &--available {
+    @apply border-emerald-200 bg-emerald-50/40;
+  }
+
+  &--rented {
+    @apply border-sky-200 bg-sky-50/40;
+  }
+
+  &--laundry {
+    @apply border-amber-200 bg-amber-50/40;
+  }
+
+  &--maintenance {
+    @apply border-rose-200 bg-rose-50/40;
+  }
+}
+
+.statLabel {
+  @apply text-xs font-medium text-stone-500 flex items-center justify-between;
+}
+
+.statValue {
+  @apply text-xl font-bold font-mono text-ink tracking-tight;
+}
+
+// Controls Toolbar
+.toolbar {
+  @apply flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-stone-50/80 p-3 rounded-xl border border-line;
+}
+
+.filters {
+  @apply flex items-center gap-2 flex-1;
+}
+
+.searchWrapper {
+  @apply relative flex-1 max-w-xs;
+}
+
+.searchInput {
+  @apply pl-8 text-xs h-9;
+}
+
+.searchIcon {
+  @apply absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400 pointer-events-none;
+}
+
+.variantSelect {
+  @apply w-48 text-xs;
+}
+
+// Table Styles
+.tableCard {
+  @apply border border-line rounded-xl overflow-hidden bg-white shadow-xs;
+}
+
+.tableWrapper {
+  @apply overflow-x-auto;
+}
+
+.table {
+  @apply w-full text-left border-collapse text-xs;
+
+  th {
+    @apply px-4 py-3 bg-stone-50 text-stone-600 font-semibold border-b border-line whitespace-nowrap;
+  }
+
+  td {
+    @apply px-4 py-3.5 border-b border-line/60 text-stone-700 align-middle;
+  }
+
+  tr:last-child td {
+    @apply border-b-0;
+  }
+
+  tr:hover td {
+    @apply bg-stone-50/50;
+  }
+}
+
+.codeCell {
+  @apply flex items-center gap-1.5 font-mono font-semibold text-ink;
+}
+
+.copyCodeBtn {
+  @apply p-1 rounded hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors;
+}
+
+.variantInfo {
+  @apply flex flex-col;
+}
+
+.variantMain {
+  @apply font-medium text-stone-800;
+}
+
+.variantSku {
+  @apply text-[11px] font-mono text-stone-400;
+}
+
+.rentalCell {
+  @apply flex items-center gap-1.5;
+}
+
+.rentalWarning {
+  @apply px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700 border border-rose-200;
+}
+
+.actionsCell {
+  @apply flex items-center justify-end gap-1.5;
+}
+
+// Empty State
+.emptyState {
+  @apply flex flex-col items-center justify-center p-8 text-center gap-3;
+}
+
+.emptyIcon {
+  @apply w-12 h-12 text-stone-300;
+}
+
+.emptyText {
+  @apply text-sm font-medium text-stone-600;
+}
+
+.emptySub {
+  @apply text-xs text-stone-400 max-w-sm;
+}

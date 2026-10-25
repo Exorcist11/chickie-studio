@@ -2,6 +2,7 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProductViewModal } from "./ProductViewModal";
 import { ProductDetailResponse } from "../../../../types/product";
 import { Category } from "../../../../types/category";
@@ -57,9 +58,16 @@ describe("ProductViewModal", () => {
   };
 
   let writeTextSpy: any;
+  let queryClient: QueryClient;
+
+  const customRender = (ui: React.ReactElement) =>
+    render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
 
   beforeEach(() => {
     vi.clearAllMocks();
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     if (!navigator.clipboard) {
       Object.defineProperty(navigator, "clipboard", {
         value: { writeText: vi.fn().mockResolvedValue(undefined) },
@@ -70,19 +78,19 @@ describe("ProductViewModal", () => {
   });
 
   it("returns null when product is null or isOpen is false", () => {
-    const { container: c1 } = render(
+    const { container: c1 } = customRender(
       <ProductViewModal isOpen={false} onClose={vi.fn()} product={mockProduct} />
     );
     expect(c1).toBeEmptyDOMElement();
 
-    const { container: c2 } = render(
+    const { container: c2 } = customRender(
       <ProductViewModal isOpen={true} onClose={vi.fn()} product={null} />
     );
     expect(c2).toBeEmptyDOMElement();
   });
 
   it("renders product basic info, code, pillar badge, and pricing", () => {
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={vi.fn()}
@@ -102,7 +110,7 @@ describe("ProductViewModal", () => {
 
   it("switches to variants tab and displays statistics and variant rows", async () => {
     const user = userEvent.setup();
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={vi.fn()}
@@ -121,7 +129,7 @@ describe("ProductViewModal", () => {
 
   it("switches to gallery tab and shows all lookbook photos", async () => {
     const user = userEvent.setup();
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={vi.fn()}
@@ -139,7 +147,7 @@ describe("ProductViewModal", () => {
 
   it("allows navigating through images via next and prev buttons", async () => {
     const user = userEvent.setup();
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={vi.fn()}
@@ -165,7 +173,7 @@ describe("ProductViewModal", () => {
     const user = userEvent.setup();
     const handleEdit = vi.fn();
 
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={vi.fn()}
@@ -186,7 +194,7 @@ describe("ProductViewModal", () => {
     const user = userEvent.setup();
     const handleClose = vi.fn();
 
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={handleClose}
@@ -203,7 +211,7 @@ describe("ProductViewModal", () => {
 
   it("handles copy to clipboard for product code and direct link", async () => {
     const user = userEvent.setup();
-    render(
+    customRender(
       <ProductViewModal
         isOpen={true}
         onClose={vi.fn()}
@@ -225,5 +233,22 @@ describe("ProductViewModal", () => {
     await waitFor(() => {
       expect(writeTextSpy).toHaveBeenCalledWith(window.location.href);
     });
+  });
+
+  it("switches to items inventory tab and renders items management", async () => {
+    const user = userEvent.setup();
+    customRender(
+      <ProductViewModal
+        isOpen={true}
+        onClose={vi.fn()}
+        product={mockProduct}
+        categories={mockCategories}
+      />
+    );
+
+    const itemsTabBtn = screen.getByRole("tab", { name: /Kho đồ thực tế/i });
+    await user.click(itemsTabBtn);
+
+    expect(screen.getByText("Kho đồ thực tế")).toBeInTheDocument();
   });
 });

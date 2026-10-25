@@ -216,6 +216,43 @@
       "variants": "Biến thể Size/Màu",
       "images": "Thư viện ảnh"
     }
+  },
+  "productItem": {
+    "title": "Kho đồ thực tế",
+    "subtitle": "Quản lý từng món đồ vật lý, mã barcode và vòng đời trạng thái",
+    "itemCode": "Mã đồ vật lý (Barcode)",
+    "status": "Trạng thái đồ",
+    "rentalCount": "Số lần đã thuê",
+    "note": "Ghi chú hiện trạng",
+    "addItem": "Thêm đồ vào kho",
+    "addItemTitle": "Thêm món đồ vật lý vào kho",
+    "addItemDesc": "Tạo một món đồ thực tế gắn với biến thể, sinh mã barcode theo dõi vòng đời.",
+    "selectVariant": "Chọn biến thể",
+    "autoCodeHint": "Để trống để hệ thống tự động sinh mã Barcode duy nhất",
+    "suggestCode": "Gợi ý mã Barcode",
+    "changeStatus": "Chuyển trạng thái",
+    "changeStatusTitle": "Cập nhật trạng thái vòng đời",
+    "changeStatusDesc": "Chọn trạng thái tiếp theo cho món đồ theo quy tắc vận hành.",
+    "newStatus": "Trạng thái mới",
+    "statusNote": "Lý do / Ghi chú chuyển trạng thái",
+    "statusNotePlaceholder": "Ví dụ: Khách hoàn trả lúc 10h, gửi tiệm giặt hấp...",
+    "status_AVAILABLE": "Sẵn sàng",
+    "status_RENTED": "Đang cho thuê",
+    "status_LAUNDRY": "Đang giặt ủi",
+    "status_MAINTENANCE": "Đang sửa chữa",
+    "status_RETIRED": "Ngừng cho thuê",
+    "deleteTitle": "Xóa món đồ vật lý",
+    "deleteDesc": "Bạn có chắc chắn muốn xóa món đồ này khỏi kho? Món đồ đang cho thuê không thể xóa.",
+    "createSuccess": "Thêm món đồ vào kho thành công!",
+    "updateStatusSuccess": "Cập nhật trạng thái món đồ thành công!",
+    "deleteSuccess": "Xóa món đồ khỏi kho thành công!",
+    "noItems": "Chưa có món đồ vật lý nào trong kho cho sản phẩm này.",
+    "totalItems": "Tổng đồ vật lý",
+    "availableCount": "Sẵn sàng",
+    "rentedCount": "Đang thuê",
+    "laundryCount": "Giặt ủi",
+    "maintenanceCount": "Bảo dưỡng",
+    "maintenanceWarning": "Đã thuê > 15 lần, nên bảo dưỡng"
   }
 }
 

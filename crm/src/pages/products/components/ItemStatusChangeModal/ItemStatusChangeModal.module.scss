@@ -1,0 +1,30 @@
+// ItemStatusChangeModal Scoped Styles
+@use "../../../../styles/tokens" as *;
+
+.form {
+  @apply flex flex-col gap-4 py-1;
+}
+
+.itemSummary {
+  @apply flex items-center justify-between p-3.5 rounded-xl border border-line bg-stone-50;
+}
+
+.itemIdentity {
+  @apply flex flex-col gap-1;
+}
+
+.itemCode {
+  @apply font-mono font-bold text-sm text-ink;
+}
+
+.variantTag {
+  @apply text-xs text-stone-500;
+}
+
+.statusTransitionNotice {
+  @apply p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-start gap-2;
+}
+
+.terminalNotice {
+  @apply p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700;
+}

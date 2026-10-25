@@ -139,6 +139,16 @@ class ApiClient {
     });
   }
 
+  public patch<T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<ApiEnvelope<T>> {
+    const formattedBody =
+      body instanceof FormData ? body : body ? JSON.stringify(body) : undefined;
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "PATCH",
+      body: formattedBody,
+    });
+  }
+
   public delete<T>(endpoint: string, options?: RequestInit): Promise<ApiEnvelope<T>> {
     return this.request<T>(endpoint, { ...options, method: "DELETE" });
   }

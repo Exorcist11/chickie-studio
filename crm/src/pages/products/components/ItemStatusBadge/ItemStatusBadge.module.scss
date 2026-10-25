@@ -1,0 +1,30 @@
+// ItemStatusBadge Scoped Styles
+@use "../../../../styles/tokens" as *;
+
+.badge {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-colors;
+
+  &--available {
+    @apply bg-emerald-50 text-emerald-700 border-emerald-200;
+  }
+
+  &--rented {
+    @apply bg-sky-50 text-sky-700 border-sky-200;
+  }
+
+  &--laundry {
+    @apply bg-amber-50 text-amber-700 border-amber-200;
+  }
+
+  &--maintenance {
+    @apply bg-rose-50 text-rose-700 border-rose-200;
+  }
+
+  &--retired {
+    @apply bg-stone-100 text-stone-600 border-stone-200;
+  }
+}
+
+.icon {
+  @apply w-3.5 h-3.5 shrink-0;
+}
