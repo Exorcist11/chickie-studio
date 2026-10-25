@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Sparkles, Calendar, Ruler } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { BusinessPillar, PILLAR_CONFIGS } from "../product-pillar.config";
@@ -21,9 +22,12 @@ export const StickyBottomCta: React.FC<StickyBottomCtaProps> = ({
   onOpenSizeGuide,
   className,
 }) => {
+  const tProductDetail = useTranslations("productDetail");
+  const tProduct = useTranslations("product");
   const pillarConfig = PILLAR_CONFIGS[pillar];
   const formattedPrice = new Intl.NumberFormat("vi-VN").format(rentalPrice);
   const formattedDeposit = new Intl.NumberFormat("vi-VN").format(depositPrice);
+
 
   const handleScrollToBooking = () => {
     const el = document.getElementById("booking-form-section");
@@ -78,6 +82,8 @@ export const StickyBottomCta: React.FC<StickyBottomCtaProps> = ({
             <Calendar className="w-3.5 h-3.5 mr-1.5" />
             Đặt lịch ngay
           </Button>
+
+
         </div>
       </div>
     </aside>

@@ -2,11 +2,12 @@ import { describe, it, expect } from "vitest";
 import vi from "./messages/vi.json";
 import en from "./messages/en.json";
 
-function getNestedKeys(obj: Record<string, any>, prefix = ""): string[] {
+function getNestedKeys(obj: Record<string, unknown>, prefix = ""): string[] {
   return Object.keys(obj).reduce((res: string[], el: string) => {
     const key = prefix ? `${prefix}.${el}` : el;
-    if (typeof obj[el] === "object" && obj[el] !== null && !Array.isArray(obj[el])) {
-      return [...res, ...getNestedKeys(obj[el], key)];
+    const val = obj[el];
+    if (typeof val === "object" && val !== null && !Array.isArray(val)) {
+      return [...res, ...getNestedKeys(val as Record<string, unknown>, key)];
     }
     return [...res, key];
   }, []);

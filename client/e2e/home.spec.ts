@@ -59,4 +59,24 @@ test.describe("Client Home Page UI Test", () => {
     // Thân trang body sử dụng Be Vietnam Pro
     expect(fontStyles.bodyFont.toLowerCase()).toContain("be vietnam pro");
   });
+
+  test("hiển thị thanh tiến trình loading và điều hướng mượt mà khi click menu", async ({ page }) => {
+    await page.goto("/");
+
+    // Thanh progress bar tồn tại trong DOM
+    const progressBar = page.getByRole("progressbar");
+    await expect(progressBar).toBeAttached();
+
+    // Click vào menu Thuê máy ảnh
+    const cameraMenuLink = page
+      .getByRole("navigation", { name: "Menu chính" })
+      .getByRole("link", { name: /Thuê máy ảnh/i });
+    await expect(cameraMenuLink).toBeVisible();
+
+    // Click chuyển menu
+    await cameraMenuLink.click();
+
+    // URL chuyển sang trang products với type=camera
+    await expect(page).toHaveURL(/products\?type=camera/);
+  });
 });

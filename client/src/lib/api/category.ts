@@ -79,6 +79,7 @@ export async function getPublicCategories(): Promise<Category[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/public/categories`, {
       next: { revalidate: 60 },
+      signal: typeof AbortSignal !== "undefined" && "timeout" in AbortSignal ? AbortSignal.timeout(3000) : undefined,
     });
     if (!res.ok) {
       return DEFAULT_CATEGORIES;

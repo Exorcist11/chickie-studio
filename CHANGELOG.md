@@ -8,6 +8,23 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Hạ Tầng Đa Ngôn Ngữ Song Ngữ Tiếng Việt / Tiếng Anh Cho Client (CNT-007 - ✅ DONE)**:
+  - Tích hợp `next-intl` App Router với phân tầng đường dẫn `src/app/[locale]/` (`vi`/`en`).
+  - Cấu hình middleware `src/middleware.ts` tự động điều hướng locale lạ về mặc định `/vi/...` và giữ nguyên tiền tố locale.
+  - Tự động sinh thẻ alternate quốc tế hoá (`hreflang` / `alternates.languages`) trong `generateMetadata()` cho SEO chuẩn.
+  - Thiết kế `LanguageSwitcher` với các biến thể `pill`, `compact` và biến thể `icon` tối ưu diện tích bằng nút tròn 44x44px chứa icon Globe kèm huy hiệu mini.
+  - Tái cấu trúc Header: tập trung vào các ngành nghề kinh doanh cốt lõi (Thuê trang phục, Thuê máy ảnh, Dịch vụ chụp, Lookbook), bỏ màu nền trong suốt, loại bỏ hoàn toàn hiện tượng ngắt dòng khó coi.
+  - Đồng bộ 100% keys giữa `vi.json` và `en.json`, vượt qua toàn bộ unit tests, accessibility tests và Playwright E2E tests.
+
+- **Client Route Navigation & Loading Feedback Optimization (UI/UX Pro Max)**:
+  - Tích hợp thanh tiến trình điều hướng toàn cục `NavigationProgressBar` (`src/components/common/NavigationProgressBar`) chạy ở cạnh trên màn hình với tông màu Burgundy `#641D2B` và ánh vàng kim sang trọng, animation tăng tốc GPU (`transform: scaleX(...)`), tuân thủ 100% quy tắc cấm inline CSS.
+  - Hiển thị micro-indicator góc trên bên phải khi đang chuyển trang: "Đang chuyển trang..." / "Navigating...", hỗ trợ đầy đủ `role="progressbar"`, `role="status"` và chuẩn trợ năng WCAG.
+  - Bổ sung `src/app/[locale]/loading.tsx` và `src/app/[locale]/products/loading.tsx` hỗ trợ React Suspense streaming: hiển thị khung xương skeleton (banner, bộ lọc danh mục và 8 thẻ sản phẩm) lập tức khi chuyển route thay vì đứng hình.
+  - Tối ưu hóa `Header.tsx`: bật `prefetch={true}` trên toàn bộ liên kết điều hướng mảng kinh doanh, trang tĩnh và mobile drawer; phản hồi click tức thì (<100ms) với trạng thái pending (`pendingHref`) hiển thị hiệu ứng pulse và biểu tượng tải nhỏ trên link được click.
+  - Bổ sung tín hiệu timeout 3 giây (`AbortSignal.timeout(3000)`) cho các lời gọi API công khai (`getPublicCategories`, `getPublicProducts`, `getHomeFeaturedData`) chống nghẽn kết nối khi mạng chậm hoặc backend đang khởi động.
+  - Đồng bộ đa ngôn ngữ `vi.json` và `en.json` với các khóa `navigating` và `progressBarLabel`.
+  - Bộ kiểm thử tự động đạt độ bao phủ 95.98% stmts / 84.38% branch (Vitest 430 tests) và pass 100% 25 kịch bản Playwright E2E.
+
 - **Full Spec Suite Completion (50/50 Features)**:
   - Hoàn tất 100% hồ sơ đặc tả chi tiết (📝 SPEC) cho toàn bộ 50 tính năng của dự án Chickie Studio:
     - [docs/features/catalog/CAT-007-goi-y-phu-kien-di-kem.md](docs/features/catalog/CAT-007-goi-y-phu-kien-di-kem.md): Gợi ý phụ kiện phối kèm thông minh (Cross-selling), Flyway V19.

@@ -512,6 +512,7 @@ export async function getPublicProducts(
     }`;
     const res = await fetch(endpoint, {
       next: { revalidate: 60 },
+      signal: typeof AbortSignal !== "undefined" && "timeout" in AbortSignal ? AbortSignal.timeout(3000) : undefined,
     });
 
     if (!res.ok) {
@@ -578,6 +579,7 @@ export async function getPublicProductDetail(
   try {
     const res = await fetch(`${API_BASE_URL}/api/public/products/${idOrSlug}`, {
       next: { revalidate: 60 },
+      signal: typeof AbortSignal !== "undefined" && "timeout" in AbortSignal ? AbortSignal.timeout(3000) : undefined,
     });
 
     if (res.ok) {

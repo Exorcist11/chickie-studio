@@ -20,8 +20,31 @@
     "fromDate": "From date",
     "toDate": "To date",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "vietnamese": "Vietnamese",
+    "english": "English"
   },
+  "navigation": {
+    "home": "Home",
+    "costumes": "Rent Costumes",
+    "cameras": "Rent Cameras",
+    "photography": "Photo Services",
+    "lookbook": "Lookbook",
+    "tracking": "Track Order",
+    "contact": "Contact",
+    "openMenu": "Open mobile menu",
+    "closeMenu": "Close mobile menu",
+    "search": "Search products",
+    "favorite": "Wishlist",
+    "account": "My Account",
+    "mobileDialogTitle": "Mobile navigation menu",
+    "mainMenu": "Main Menu",
+    "navigating": "Navigating...",
+    "progressBarLabel": "Page navigation progress"
+  },
+
+
   "home": {
     "badge": "Chickie Studio • More than just a dress",
     "heroTitle": "Shine in Every",
@@ -139,12 +162,26 @@
   },
   "footer": {
     "tagline": "More than just a dress",
-    "contactZalo": "Message via Zalo",
-    "contactFacebook": "Chat on Facebook",
+    "description": "Premium designer dresses, traditional graduation Ao Dai, and travel camera combos in Hanoi.",
+    "servicesTitle": "Services",
+    "policiesTitle": "Policies",
+    "contactTitle": "Fast Contact",
+    "dressRental": "Designer dress rentals",
+    "cameraRental": "Travel camera rentals",
+    "comboRental": "Dress & camera combos",
+    "photoPackage": "Graduation photo packages",
+    "policyLink": "Deposit & return policy",
+    "faqLink": "Frequently Asked Questions (FAQ)",
+    "trackingLink": "Online order tracking",
+    "aboutLink": "About Chickie Studio",
+    "contactZalo": "Chat on Zalo",
+    "contactFacebook": "Facebook Fanpage",
     "hotline": "Hotline: 0987.654.321",
-    "address": "Address: Hanoi, Vietnam",
-    "copyright": "© 2026 Chickie Studio. All rights reserved."
+    "address": "No. 12, Lane 80 Chua Lang, Dong Da, Hanoi",
+    "copyright": "© 2026 Chickie Studio. All rights reserved.",
+    "designedFor": "Designed for Chickie Studio"
   },
+
   "productDetail": {
     "sizeGuide": "Size Guide & Measurements",
     "sizeGuideDesc": "Compare your bust, waist, and hip measurements to pick the best fit",

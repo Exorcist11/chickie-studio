@@ -8,3 +8,6 @@ export * from "../ui/Section";
 export * from "../ui/Header";
 export * from "../ui/Footer";
 export * from "../ui/DateRangeField";
+export * from "../ui/LanguageSwitcher";
+export * from "./NavigationProgressBar";
+

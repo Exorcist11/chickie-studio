@@ -1,11 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { Search, Heart, User, Menu, X } from "lucide-react";
+import { Search, Heart, User, Menu, X, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { Logo } from "../Logo";
 import { Container } from "../Container";
+import { LanguageSwitcher } from "../LanguageSwitcher";
+import { useNavigationProgress } from "@/components/common/NavigationProgressBar";
 
 export interface NavItem {
   label: string;
@@ -25,15 +28,7 @@ export interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  navItems = [
-    { label: "Trang chủ", href: "/" },
-    { label: "Thuê trang phục", href: "/products?type=costume" },
-    { label: "Thuê máy ảnh", href: "/products?type=camera" },
-    { label: "Dịch vụ chụp", href: "/products?type=photography" },
-    { label: "Lookbook", href: "/products" },
-    { label: "Tra cứu đơn", href: "/tra-cuu-don" },
-    { label: "Liên hệ", href: "#footer-contact" },
-  ],
+  navItems,
   activeHref,
   currentType,
   onSearchClick,
@@ -42,27 +37,72 @@ export const Header: React.FC<HeaderProps> = ({
   favoriteCount = 0,
   className,
 }) => {
+  const tNav = useTranslations("navigation");
+  const { start: startProgress } = useNavigationProgress();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [pendingHref, setPendingHref] = React.useState<string | null>(null);
 
-  const items = React.useMemo(() => {
-    return navItems.map((item) => {
-      let isActive = item.active;
-      if (activeHref !== undefined) {
-        isActive = item.href === activeHref;
-      } else if (currentType !== undefined) {
-        const type = currentType.toLowerCase();
-        if (type === "costume" && item.href.includes("type=costume")) isActive = true;
-        else if (type === "camera" && item.href.includes("type=camera")) isActive = true;
-        else if (type === "photography" && item.href.includes("type=photography")) isActive = true;
-        else if (!type && item.href === "/products") isActive = true;
-        else isActive = false;
-      }
-      return {
-        ...item,
-        active: isActive,
-      };
-    });
-  }, [navItems, activeHref, currentType]);
+  // Reset pending state when activeHref or currentType changes
+  React.useEffect(() => {
+    setPendingHref(null);
+  }, [activeHref, currentType]);
+
+  const defaultNavItems: NavItem[] = React.useMemo(
+    () => [
+      { label: tNav("costumes"), href: "/products?type=costume" },
+      { label: tNav("cameras"), href: "/products?type=camera" },
+      { label: tNav("photography"), href: "/products?type=photography" },
+      { label: tNav("lookbook"), href: "/products" },
+      { label: tNav("tracking"), href: "/tra-cuu-don" },
+    ],
+    [tNav]
+  );
+
+  const defaultMobileNavItems: NavItem[] = React.useMemo(
+    () => [
+      { label: tNav("home"), href: "/" },
+      { label: tNav("costumes"), href: "/products?type=costume" },
+      { label: tNav("cameras"), href: "/products?type=camera" },
+      { label: tNav("photography"), href: "/products?type=photography" },
+      { label: tNav("lookbook"), href: "/products" },
+      { label: tNav("tracking"), href: "/tra-cuu-don" },
+      { label: tNav("contact"), href: "#footer-contact" },
+    ],
+    [tNav]
+  );
+
+  const resolveActiveItems = React.useCallback(
+    (navItemList: NavItem[]) => {
+      return navItemList.map((item) => {
+        let isActive = item.active;
+        if (activeHref !== undefined) {
+          isActive = item.href === activeHref;
+        } else if (currentType !== undefined) {
+          const type = currentType.toLowerCase();
+          if (type === "costume" && item.href.includes("type=costume")) isActive = true;
+          else if (type === "camera" && item.href.includes("type=camera")) isActive = true;
+          else if (type === "photography" && item.href.includes("type=photography")) isActive = true;
+          else if (!type && item.href === "/products") isActive = true;
+          else isActive = false;
+        }
+        return {
+          ...item,
+          active: isActive,
+        };
+      });
+    },
+    [activeHref, currentType]
+  );
+
+  const desktopItems = React.useMemo(
+    () => resolveActiveItems(navItems || defaultNavItems),
+    [resolveActiveItems, navItems, defaultNavItems]
+  );
+
+  const mobileItems = React.useMemo(
+    () => resolveActiveItems(navItems || defaultMobileNavItems),
+    [resolveActiveItems, navItems, defaultMobileNavItems]
+  );
 
   // Close mobile drawer on Esc
   React.useEffect(() => {
@@ -78,17 +118,17 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full bg-warm-white/95 backdrop-blur-md border-b border-line shadow-xs transition-colors",
+        "sticky top-0 z-40 w-full bg-warm-white border-b border-line shadow-xs transition-colors",
         className
       )}
     >
       <Container className="flex items-center justify-between h-18 md:h-20">
         {/* Left: Mobile hamburger & Logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Mở menu di động"
+            aria-label={tNav("openMenu")}
             aria-expanded={isMobileMenuOpen}
             className="md:hidden flex items-center justify-center w-11 h-11 rounded-btn text-ink hover:bg-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
           >
@@ -98,34 +138,65 @@ export const Header: React.FC<HeaderProps> = ({
           <Logo href="/" />
         </div>
 
-        {/* Center: Desktop Navigation */}
+        {/* Center: Desktop Navigation - Core Business Offerings */}
         <nav
-          className="hidden md:flex items-center gap-6 lg:gap-8"
-          aria-label="Menu chính"
+          className="hidden md:flex items-center gap-5 lg:gap-7 xl:gap-8"
+          aria-label={tNav("mainMenu")}
         >
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-burgundy py-1 relative",
-                item.active
-                  ? "text-burgundy font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-burgundy after:rounded-full"
-                  : "text-ink"
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {desktopItems.map((item) => {
+            const isTracking = item.href === "/tra-cuu-don";
+            const isPending = pendingHref === item.href;
+            return (
+              <React.Fragment key={item.href}>
+                {isTracking && (
+                  <span
+                    className="h-4 w-px bg-line/80 mx-1 select-none hidden lg:block"
+                    aria-hidden="true"
+                  />
+                )}
+                <Link
+                  href={item.href}
+                  prefetch={true}
+                  onClick={() => {
+                    if (!item.active) {
+                      setPendingHref(item.href);
+                      startProgress();
+                    }
+                  }}
+                  className={cn(
+                    "text-sm font-medium whitespace-nowrap transition-colors duration-200 py-1.5 relative group inline-flex items-center gap-1.5",
+                    item.active
+                      ? "text-burgundy font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-burgundy after:rounded-full"
+                      : isPending
+                        ? "text-burgundy font-semibold animate-pulse"
+                        : "text-ink/80 hover:text-burgundy"
+                  )}
+                >
+                  {isPending && (
+                    <Loader2
+                      className="w-3 h-3 animate-spin text-burgundy shrink-0"
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span>{item.label}</span>
+                  {!item.active && !isPending && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-burgundy/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left rounded-full" />
+                  )}
+                </Link>
+              </React.Fragment>
+            );
+          })}
         </nav>
 
-        {/* Right: Actions (Search, Favorite, Account) */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Right: Actions (Language Switcher, Search, Favorite, Account) */}
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          <LanguageSwitcher variant="icon" />
+
           {onSearchClick && (
             <button
               type="button"
               onClick={onSearchClick}
-              aria-label="Tìm kiếm sản phẩm"
+              aria-label={tNav("search")}
               className="flex items-center justify-center w-11 h-11 rounded-full text-ink hover:bg-ivory hover:text-burgundy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
             >
               <Search className="w-5 h-5 stroke-[1.75]" />
@@ -135,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onFavoriteClick}
-            aria-label="Danh sách yêu thích"
+            aria-label={tNav("favorite")}
             className="relative flex items-center justify-center w-11 h-11 rounded-full text-ink hover:bg-ivory hover:text-burgundy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
           >
             <Heart className="w-5 h-5 stroke-[1.75]" />
@@ -149,7 +220,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onAccountClick}
-            aria-label="Tài khoản cá nhân"
+            aria-label={tNav("account")}
             className="flex items-center justify-center w-11 h-11 rounded-full text-ink hover:bg-ivory hover:text-burgundy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
           >
             <User className="w-5 h-5 stroke-[1.75]" />
@@ -168,37 +239,58 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Menu điều hướng di động"
+            aria-label={tNav("mobileDialogTitle")}
           >
             <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between pb-4 border-b border-line">
                 <Logo href="/" showTagline={false} />
-                <button
-                  type="button"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  aria-label="Đóng menu di động"
-                  className="p-2 text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy rounded-btn"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <LanguageSwitcher variant="compact" />
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    aria-label={tNav("closeMenu")}
+                    className="p-2 text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy rounded-btn"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
               </div>
 
               <nav className="flex flex-col gap-3">
-                {items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "text-base font-medium py-2 px-3 rounded-btn transition-colors",
-                      item.active
-                        ? "bg-rose/40 text-burgundy font-semibold"
-                        : "text-ink hover:bg-ivory"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {mobileItems.map((item) => {
+                  const isPending = pendingHref === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={true}
+                      onClick={() => {
+                        if (!item.active) {
+                          setPendingHref(item.href);
+                          startProgress();
+                        }
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={cn(
+                        "text-base font-medium py-2 px-3 rounded-btn transition-colors flex items-center justify-between",
+                        item.active
+                          ? "bg-rose/40 text-burgundy font-semibold"
+                          : isPending
+                            ? "bg-rose/30 text-burgundy font-semibold animate-pulse"
+                            : "text-ink hover:bg-ivory"
+                      )}
+                    >
+                      <span>{item.label}</span>
+                      {isPending && (
+                        <Loader2
+                          className="w-4 h-4 animate-spin text-burgundy shrink-0"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
 

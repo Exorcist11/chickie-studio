@@ -20,8 +20,31 @@
     "fromDate": "Từ ngày",
     "toDate": "Đến ngày",
     "openMenu": "Mở menu",
-    "closeMenu": "Đóng menu"
+    "closeMenu": "Đóng menu",
+    "language": "Ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
   },
+  "navigation": {
+    "home": "Trang chủ",
+    "costumes": "Thuê trang phục",
+    "cameras": "Thuê máy ảnh",
+    "photography": "Dịch vụ chụp",
+    "lookbook": "Lookbook",
+    "tracking": "Tra cứu đơn",
+    "contact": "Liên hệ",
+    "openMenu": "Mở menu di động",
+    "closeMenu": "Đóng menu di động",
+    "search": "Tìm kiếm sản phẩm",
+    "favorite": "Danh sách yêu thích",
+    "account": "Tài khoản cá nhân",
+    "mobileDialogTitle": "Menu điều hướng di động",
+    "mainMenu": "Menu chính",
+    "navigating": "Đang chuyển trang...",
+    "progressBarLabel": "Tiến trình chuyển trang"
+  },
+
+
   "home": {
     "badge": "Chickie Studio • More than just a dress",
     "heroTitle": "Tỏa Sáng Trong Mọi",
@@ -139,12 +162,26 @@
   },
   "footer": {
     "tagline": "More than just a dress",
-    "contactZalo": "Nhắn tin Zalo",
-    "contactFacebook": "Chat Facebook",
+    "description": "Dịch vụ cho thuê váy thiết kế, áo dài kỷ yếu và combo máy ảnh chụp ảnh ngoại cảnh hàng đầu tại Hà Nội.",
+    "servicesTitle": "Dịch vụ",
+    "policiesTitle": "Chính sách",
+    "contactTitle": "Liên hệ nhanh",
+    "dressRental": "Cho thuê váy thiết kế",
+    "cameraRental": "Cho thuê máy ảnh du lịch",
+    "comboRental": "Combo váy & máy ảnh",
+    "photoPackage": "Gói chụp ảnh kỷ yếu",
+    "policyLink": "Chính sách đặt cọc & trả đồ",
+    "faqLink": "Câu hỏi thường gặp (FAQ)",
+    "trackingLink": "Tra cứu đơn thuê online",
+    "aboutLink": "Về Chickie Studio",
+    "contactZalo": "Nhắn tin Zalo tư vấn",
+    "contactFacebook": "Fanpage Facebook",
     "hotline": "Hotline: 0987.654.321",
-    "address": "Địa chỉ: Hà Nội, Việt Nam",
-    "copyright": "© 2026 Chickie Studio. All rights reserved."
+    "address": "Số 12 ngõ 80 Chùa Láng, Đống Đa, Hà Nội",
+    "copyright": "© 2026 Chickie Studio. All rights reserved.",
+    "designedFor": "Designed for Chickie Studio"
   },
+
   "productDetail": {
     "sizeGuide": "Bảng quy đổi kích cỡ",
     "sizeGuideDesc": "Đối chiếu số đo 3 vòng để chọn size vừa vặn nhất",

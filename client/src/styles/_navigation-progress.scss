@@ -1,0 +1,125 @@
+// ========================================================
+// CHICKIE STUDIO - NAVIGATION PROGRESS BAR STYLES
+// Hardware-accelerated, zero inline styles, luxury branding
+// ========================================================
+
+.chickie-nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 99999;
+  pointer-events: none;
+  background-color: var(--color-burgundy);
+  box-shadow: 0 0 10px rgba(100, 29, 43, 0.7), 0 0 4px rgba(184, 145, 79, 0.6);
+  transform-origin: 0% 50%;
+  transition: opacity 250ms ease-out, transform 200ms ease-out;
+
+  &--idle {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  &--loading {
+    opacity: 1;
+    animation: chickieNavIndeterminate 2.5s cubic-bezier(0.1, 0.45, 0.1, 1) forwards;
+  }
+
+  &--completing {
+    opacity: 1;
+    animation: chickieNavFinish 280ms ease-out forwards;
+  }
+}
+
+// Glowing tip on the leading edge of the progress bar
+.chickie-nav-progress-peg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 12px var(--color-gold), 0 0 6px var(--color-burgundy);
+  opacity: 1;
+  transform: rotate(3deg) translate(0px, -2px);
+}
+
+// Subtle brand indicator in the top right during navigation
+.chickie-nav-indicator {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 99999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: rgba(255, 252, 248, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-pill);
+  color: var(--color-burgundy);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: opacity 200ms ease, transform 200ms ease;
+
+  &--hidden {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+    visibility: hidden;
+  }
+
+  &--visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+  }
+}
+
+@keyframes chickieNavIndeterminate {
+  0% {
+    transform: scaleX(0);
+  }
+  15% {
+    transform: scaleX(0.28);
+  }
+  45% {
+    transform: scaleX(0.62);
+  }
+  75% {
+    transform: scaleX(0.82);
+  }
+  100% {
+    transform: scaleX(0.92);
+  }
+}
+
+@keyframes chickieNavFinish {
+  0% {
+    transform: scaleX(0.92);
+    opacity: 1;
+  }
+  40% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chickie-nav-progress--loading {
+    animation: none;
+    transform: scaleX(0.8);
+  }
+  .chickie-nav-progress--completing {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}

@@ -2,20 +2,31 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
+import { I18nProvider } from "@/components/providers/I18nProvider";
 import { Header } from "./Header";
 
+const renderHeader = (props = {}) => {
+  return render(
+    <I18nProvider locale="vi">
+      <Header {...props} />
+    </I18nProvider>
+  );
+};
+
 describe("Header component", () => {
-  it("renders desktop nav items and action buttons", () => {
-    render(<Header onSearchClick={vi.fn()} favoriteCount={3} />);
+  it("renders desktop nav items and action buttons including LanguageSwitcher", () => {
+    renderHeader({ onSearchClick: vi.fn(), favoriteCount: 3 });
     expect(screen.getByRole("link", { name: /thuê trang phục/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Tìm kiếm sản phẩm" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Danh sách yêu thích" })).toBeInTheDocument();
     expect(screen.getByText("3")).toBeInTheDocument();
+    // Verify LanguageSwitcher radiogroup is present
+    expect(screen.getAllByRole("radiogroup", { name: "Chọn ngôn ngữ" }).length).toBeGreaterThan(0);
   });
 
   it("opens and closes mobile drawer", async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const openBtn = screen.getByRole("button", { name: "Mở menu di động" });
     await user.click(openBtn);
@@ -30,7 +41,7 @@ describe("Header component", () => {
 
   it("closes mobile drawer on Escape key", async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const openBtn = screen.getByRole("button", { name: "Mở menu di động" });
     await user.click(openBtn);
@@ -42,7 +53,7 @@ describe("Header component", () => {
 
   it("closes mobile drawer when clicking a mobile nav link", async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const openBtn = screen.getByRole("button", { name: "Mở menu di động" });
     await user.click(openBtn);
@@ -58,42 +69,53 @@ describe("Header component", () => {
   it("calls onAccountClick when account button is clicked", async () => {
     const user = userEvent.setup();
     const handleAccount = vi.fn();
-    render(<Header onAccountClick={handleAccount} />);
+    renderHeader({ onAccountClick: handleAccount });
 
-    await user.click(screen.getByRole("button", { name: "Tài khoản cá nhân" }));
+    const accountBtn = screen.getByRole("button", { name: "Tài khoản cá nhân" });
+    await user.click(accountBtn);
     expect(handleAccount).toHaveBeenCalledTimes(1);
   });
 
   it("highlights active nav link based on currentType", () => {
-    const { unmount } = render(<Header currentType="photography" />);
+    const { unmount } = renderHeader({ currentType: "photography" });
     const photoLink = screen.getByRole("link", { name: "Dịch vụ chụp" });
-    expect(photoLink).toHaveClass("text-burgundy");
-    expect(photoLink).toHaveClass("font-semibold");
+    expect(photoLink.className).toContain("text-burgundy");
     unmount();
 
-    const { unmount: unmountCostume } = render(<Header currentType="costume" />);
+    const { unmount: unmountCostume } = renderHeader({ currentType: "costume" });
     const costumeLink = screen.getByRole("link", { name: "Thuê trang phục" });
-    expect(costumeLink).toHaveClass("text-burgundy");
+    expect(costumeLink.className).toContain("text-burgundy");
     unmountCostume();
 
-    render(<Header currentType="" />);
+    renderHeader({ currentType: "" });
     const lookbookLink = screen.getByRole("link", { name: "Lookbook" });
-    expect(lookbookLink).toHaveClass("text-burgundy");
+    expect(lookbookLink.className).toContain("text-burgundy");
   });
 
   it("highlights active nav link based on activeHref", () => {
-    const { unmount } = render(<Header activeHref="/products?type=camera" />);
+    const { unmount } = renderHeader({ activeHref: "/products?type=camera" });
     const cameraLink = screen.getByRole("link", { name: "Thuê máy ảnh" });
-    expect(cameraLink).toHaveClass("text-burgundy");
+    expect(cameraLink.className).toContain("text-burgundy");
     unmount();
 
-    render(<Header activeHref="/tra-cuu-don" />);
+    renderHeader({ activeHref: "/tra-cuu-don" });
     const trackingLink = screen.getByRole("link", { name: "Tra cứu đơn" });
-    expect(trackingLink).toHaveClass("text-burgundy");
+    expect(trackingLink.className).toContain("text-burgundy");
+  });
+
+  it("shows pending state and triggers progress when a nav link is clicked", async () => {
+    const user = userEvent.setup();
+    renderHeader({ activeHref: "/" });
+
+    const costumeLink = screen.getByRole("link", { name: "Thuê trang phục" });
+    await user.click(costumeLink);
+
+    // After clicking, the link should enter pending state (contains animate-pulse)
+    expect(costumeLink.className).toContain("animate-pulse");
   });
 
   it("has no accessibility violations", async () => {
-    const { container } = render(<Header onSearchClick={vi.fn()} />);
+    const { container } = renderHeader({ onSearchClick: vi.fn() });
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

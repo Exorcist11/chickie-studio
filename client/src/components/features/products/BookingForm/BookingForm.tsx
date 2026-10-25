@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useForm, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import {
   AlertCircle,
   Building2,
@@ -66,6 +67,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 }) => {
   const activePillar = pillar || "COSTUME";
   const pillarConfig = PILLAR_CONFIGS[activePillar].booking;
+  const tProductDetail = useTranslations("productDetail");
+  const tProduct = useTranslations("product");
 
   // Extract Sizes & Colors from variants
   const availableSizes = React.useMemo(() => {
@@ -285,7 +288,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                         className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
                       >
                         <Ruler className="w-3.5 h-3.5 text-burgundy" />
-                        Bảng quy đổi kích cỡ
+                        {tProductDetail("sizeGuide")}
                       </button>
                     }
                   />
@@ -660,7 +663,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           <div className="rounded-xl bg-ivory/50 border border-line p-4 space-y-2.5 text-sm">
             <div className="flex justify-between items-center text-ink-muted text-xs">
               <span>
-                {activePillar === "PHOTOGRAPHY" ? "Chi phí gói:" : "Giá thuê:"}{" "}
+                {activePillar === "PHOTOGRAPHY" ? "Chi phí gói:" : `${tProduct("rentalPrice")}:`}{" "}
                 ({formattedRentalPrice}đ x {rentalDays} {pillarConfig.durationUnitLabel}):
               </span>
               <span className="font-medium text-ink">{formattedTotalRentalFee}đ</span>
@@ -714,6 +717,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             ) : (
               pillarConfig.submitBtnText
             )}
+
           </Button>
         </form>
       </Form>

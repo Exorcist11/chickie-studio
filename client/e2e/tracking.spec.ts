@@ -12,7 +12,8 @@ test.describe("Client Order Tracking E2E Tests (BOK-005)", () => {
     await trackingLink.click();
 
     // Kiểm tra URL và tiêu đề
-    await expect(page).toHaveURL("/tra-cuu-don");
+    await expect(page).toHaveURL(/.*\/tra-cuu-don/);
+
     await expect(
       page.getByRole("heading", { level: 1, name: "Tra Cứu Đơn Thuê Đồ" })
     ).toBeVisible();

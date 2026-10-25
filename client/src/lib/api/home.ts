@@ -108,6 +108,7 @@ export async function getHomeFeaturedData(): Promise<HomeFeaturedData> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/public/home/featured`, {
       next: { revalidate: 60 },
+      signal: typeof AbortSignal !== "undefined" && "timeout" in AbortSignal ? AbortSignal.timeout(3000) : undefined,
     });
     if (!res.ok) {
       return DEFAULT_HOME_FEATURED;
