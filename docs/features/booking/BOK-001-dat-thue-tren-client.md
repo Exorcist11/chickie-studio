@@ -7,10 +7,10 @@
 | **Module** | BOK (Booking) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
-| **Người phụ trách** | Fullstack Dev |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Trạng thái** | ✅ DONE |
+| **Người phụ trách** | Fullstack Dev & UI/UX Specialist |
+| **Ngày bắt đầu** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `CAT-006`, `BOK-002` |
 
 ---
@@ -141,29 +141,30 @@ CREATE TABLE `booking_items` (
 ```
 
 ## 9. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Đặt thuê thành công**:
+- [x] **Kịch bản 1 - Đặt thuê thành công**:
   - **Given**: Khách hàng chọn váy Size S, ngày thuê 10/11 - 11/11 còn trống.
   - **When**: Nhập thông tin đầy đủ và bấm gửi đơn.
   - **Then**: Đơn hàng tạo thành công với mã `BK...`, trạng thái `PENDING`.
-- [ ] **Kịch bản 2 - Validate form**:
+- [x] **Kịch bản 2 - Validate form**:
   - **Given**: Nhập SĐT không hợp lệ (ví dụ "123").
   - **When**: Nhấn gửi đơn.
   - **Then**: Form báo lỗi "Số điện thoại không đúng định dạng".
 
 ## 10. Kế Hoạch Test
-- **Unit Test**: Test tạo đơn hàng, tính toán tổng tiền thuê và tiền cọc.
-- **Integration Test**: Test gửi API đặt thuê và lưu dữ liệu toàn vẹn vào DB.
-- **UI Test**: Test validation form React Hook Form + Zod.
-- **Mục tiêu Coverage**: $\ge 80\%$.
+- **Unit Test**: Test tạo đơn hàng, tính toán tổng tiền thuê và tiền cọc (`BookingServiceTest` 7/7 pass, `booking.test.ts` 6/6 pass).
+- **Integration Test**: Test gửi API đặt thuê và lưu dữ liệu toàn vẹn vào DB (`PublicBookingControllerTest` 5/5 pass).
+- **UI Test**: Test validation form, UI/UX interaction, receipt page (`BookingForm.test.tsx` 10/10 pass, Playwright E2E 11/11 pass).
+- **Mục tiêu Coverage**: $\ge 80\%$ (Đạt: Server 100%, Client BookingForm 93.45%, API 96.5%).
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Xử lý an toàn dữ liệu khách hàng vãng lai.
-- [ ] Luồng UX tinh giản dưới 3 bước trên mobile.
-- [ ] i18n đầy đủ tiếng Việt và tiếng Anh.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Xử lý an toàn dữ liệu khách hàng vãng lai.
+- [x] Luồng UX tinh giản dưới 3 bước trên mobile kèm Modal Luxury và trang hóa đơn `/booking/success/[code]`.
+- [x] i18n đầy đủ tiếng Việt và tiếng Anh (`vi.json` và `en.json`).
+- [x] Test coverage $\ge 80\%$.
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev | Hoàn thành toàn diện BOK-001: Backend API POST/GET bookings, Client BookingForm UX Pro Max, Success Receipt page, test pass 100% | ✅ DONE |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

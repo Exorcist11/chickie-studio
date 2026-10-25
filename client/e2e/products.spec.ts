@@ -210,6 +210,29 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await stickyCta.getByRole("button", { name: "Đặt lịch ngay" }).click();
     await expect(page.locator("#booking-form-section")).toBeInViewport();
   });
+
+  test("hiển thị trang hóa đơn và hướng dẫn chuyển khoản cọc /booking/success/[code] (BOK-001)", async ({
+    page,
+  }) => {
+    await page.goto("/booking/success/BK20261025-DEMO");
+
+    // Tiêu đề biên nhận
+    await expect(
+      page.getByRole("heading", { name: "Biên Nhận Giữ Đồ Chickie Studio" })
+    ).toBeVisible({ timeout: 5000 });
+
+    // Hiển thị mã đơn hàng
+    await expect(page.getByText("BK20261025-DEMO", { exact: true })).toBeVisible();
+
+    // Hướng dẫn chuyển khoản ngân hàng
+    await expect(page.getByText("Hướng Dẫn Chuyển Khoản Cọc")).toBeVisible();
+    await expect(page.getByText("9999 8888 6666")).toBeVisible();
+    await expect(page.getByText("CHICKIE STUDIO - LE THI PHUONG ANH")).toBeVisible();
+
+    // Nút quay lại xem đồ
+    const continueBtn = page.getByRole("button", { name: "Tiếp tục xem đồ" });
+    await expect(continueBtn).toBeVisible();
+  });
 });
 
 

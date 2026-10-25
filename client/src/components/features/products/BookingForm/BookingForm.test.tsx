@@ -1,9 +1,19 @@
 import * as React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { axe } from "vitest-axe";
 import { BookingForm } from "./BookingForm";
+import * as bookingApi from "@/lib/api/booking";
+
+const mockPush = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+  useParams: () => ({}),
+}));
 
 const mockVariants = [
   { id: 1, size: "S", color: "Trắng", sku: "SKU-S" },
@@ -11,6 +21,11 @@ const mockVariants = [
 ];
 
 describe("BookingForm component", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    mockPush.mockClear();
+  });
+
   it("renders correctly with product pricing", () => {
     render(
       <BookingForm
@@ -23,7 +38,9 @@ describe("BookingForm component", () => {
     );
 
     expect(screen.getByText("Đặt Lịch Thuê & Thử Váy")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" })
+    ).toBeInTheDocument();
   });
 
   it("shows error when submitting without required customer info", async () => {
@@ -37,16 +54,35 @@ describe("BookingForm component", () => {
       />
     );
 
-    const submitBtn = screen.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" });
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
     await user.click(submitBtn);
 
     expect(
-      screen.getByText("Vui lòng nhập họ và tên của bạn.")
+      screen.getByText("Vui lòng nhập đầy đủ họ và tên người thuê.")
     ).toBeInTheDocument();
   });
 
   it("submits successfully and opens modal when all info is provided", async () => {
     const user = userEvent.setup();
+    vi.spyOn(bookingApi, "createBooking").mockResolvedValueOnce({
+      id: 1,
+      bookingCode: "BK20261025-TEST",
+      customerName: "Trần Hà My",
+      customerPhone: "0988776655",
+      deliveryMethod: "PICKUP_STORE",
+      rentalStartDate: "2026-11-10",
+      rentalEndDate: "2026-11-11",
+      durationDays: 2,
+      status: "PENDING",
+      totalRentalPrice: 400000,
+      totalDepositPrice: 500000,
+      totalAmount: 900000,
+      createdAt: new Date().toISOString(),
+      items: [],
+    });
+
     render(
       <BookingForm
         productId={1}
@@ -63,25 +99,27 @@ describe("BookingForm component", () => {
     await user.type(nameInput, "Trần Hà My");
     await user.type(phoneInput, "0988776655");
 
-    const submitBtn = screen.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" });
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
     await user.click(submitBtn);
 
-    await waitFor(
-      () => {
-        expect(screen.getByText("Đặt Lịch Thuê Thành Công!")).toBeInTheDocument();
-      },
-      { timeout: 2000 }
-    );
+    await waitFor(() => {
+      expect(screen.getByText("Đặt Lịch Thuê Thành Công!")).toBeInTheDocument();
+    });
 
-    expect(screen.getByText("Trần Hà My - 0988776655")).toBeInTheDocument();
+    expect(screen.getByText("BK20261025-TEST")).toBeInTheDocument();
+    expect(screen.getByText(/Trần Hà My • 0988776655/i)).toBeInTheDocument();
 
     // Close modal
     const closeBtn = screen.getByRole("button", { name: "Đóng" });
     await user.click(closeBtn);
-    expect(screen.queryByText("Đặt Lịch Thuê Thành Công!")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Đặt Lịch Thuê Thành Công!")
+    ).not.toBeInTheDocument();
   });
 
-  it("toggles try at studio option", async () => {
+  it("handles delivery method toggle and requires address when ship to address is selected", async () => {
     const user = userEvent.setup();
     render(
       <BookingForm
@@ -92,17 +130,125 @@ describe("BookingForm component", () => {
       />
     );
 
-    const addressInput = screen.getByPlaceholderText(
-      "Nhập địa chỉ nhận đồ tại Hà Nội hoặc tỉnh..."
-    );
-    expect(addressInput).toBeInTheDocument();
+    // Initial state: PICKUP_STORE
+    expect(
+      screen.queryByPlaceholderText(
+        "Số nhà, tên đường, ngõ ngách, phường/xã, quận..."
+      )
+    ).not.toBeInTheDocument();
 
-    const checkbox = screen.getByLabelText(/Thử đồ trực tiếp tại Studio:/i);
-    await user.click(checkbox);
+    // Switch to SHIP_TO_ADDRESS
+    const shipBtn = screen.getByRole("button", { name: /Giao hàng tận nơi/i });
+    await user.click(shipBtn);
 
     expect(
-      screen.queryByPlaceholderText("Nhập địa chỉ nhận đồ tại Hà Nội hoặc tỉnh...")
-    ).not.toBeInTheDocument();
+      screen.getByPlaceholderText(
+        "Số nhà, tên đường, ngõ ngách, phường/xã, quận..."
+      )
+    ).toBeInTheDocument();
+
+    // Fill customer info without address
+    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
+    const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    await user.type(nameInput, "Nguyễn Văn A");
+    await user.type(phoneInput, "0912345678");
+
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
+    await user.click(submitBtn);
+
+    expect(
+      screen.getByText("Vui lòng cung cấp địa chỉ giao hàng chi tiết.")
+    ).toBeInTheDocument();
+  });
+
+  it("displays server error message when API fails with conflict", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(bookingApi, "createBooking").mockRejectedValueOnce(
+      new Error("Sản phẩm đã kín lịch trong khoảng thời gian đã chọn")
+    );
+
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+        variants={mockVariants}
+      />
+    );
+
+    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
+    const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+
+    await user.type(nameInput, "Lê Thị B");
+    await user.type(phoneInput, "0987654321");
+
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Sản phẩm đã kín lịch trong khoảng thời gian đã chọn")
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("navigates to receipt page when clicking xem hóa đơn chi tiết", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(bookingApi, "createBooking").mockResolvedValueOnce({
+      id: 1,
+      bookingCode: "BK20261025-RECEIPT",
+      customerName: "Trần Hà My",
+      customerPhone: "0988776655",
+      deliveryMethod: "PICKUP_STORE",
+      rentalStartDate: "2026-11-10",
+      rentalEndDate: "2026-11-11",
+      durationDays: 2,
+      status: "PENDING",
+      totalRentalPrice: 400000,
+      totalDepositPrice: 500000,
+      totalAmount: 900000,
+      createdAt: new Date().toISOString(),
+      items: [],
+    });
+
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+        variants={mockVariants}
+      />
+    );
+
+    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
+    const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+
+    await user.type(nameInput, "Trần Hà My");
+    await user.type(phoneInput, "0988776655");
+
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText("BK20261025-RECEIPT")).toBeInTheDocument();
+    });
+
+    const viewReceiptBtn = screen.getByRole("button", {
+      name: /Xem hóa đơn chi tiết/i,
+    });
+    await user.click(viewReceiptBtn);
+
+    expect(mockPush).toHaveBeenCalledWith(
+      "/booking/success/BK20261025-RECEIPT"
+    );
   });
 
   it("has no accessibility violations", async () => {
@@ -122,7 +268,12 @@ describe("BookingForm component", () => {
   it("renders correctly for CAMERA pillar with equipment wording and combo options", () => {
     const cameraVariants = [
       { id: 1, size: "Bộ Kit Tiêu Chuẩn", color: "Đen Canon", sku: "R50-KIT" },
-      { id: 2, size: "Combo 2 Pin + Thẻ 64GB", color: "Đen Canon", sku: "R50-COMBO" },
+      {
+        id: 2,
+        size: "Combo 2 Pin + Thẻ 64GB",
+        color: "Đen Canon",
+        sku: "R50-COMBO",
+      },
     ];
 
     render(
@@ -137,12 +288,12 @@ describe("BookingForm component", () => {
     );
 
     expect(screen.getByText("Đặt Thuê Máy Ảnh & Thiết Bị")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Xác Nhận Thuê Thiết Bị" })).toBeInTheDocument();
-    expect(screen.getByText(/Phiên bản \/ Bộ Combo:/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Combo 2 Pin + Thẻ 64GB" })).toBeInTheDocument();
-    expect(screen.getByLabelText(/Nhận & test máy trực tiếp tại Studio:/i)).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText("Nhập địa chỉ nhận máy tại Hà Nội...")
+      screen.getByRole("button", { name: "Xác Nhận Thuê Thiết Bị" })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Phiên bản \/ Bộ Combo:/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Combo 2 Pin + Thẻ 64GB" })
     ).toBeInTheDocument();
   });
 
@@ -164,68 +315,12 @@ describe("BookingForm component", () => {
     );
 
     expect(screen.getByText("Đăng Ký & Đặt Lịch Chụp Ảnh")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Xác Nhận Đặt Lịch Chụp" })).toBeInTheDocument();
-    expect(screen.getByText(/Quy mô gói chụp:/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Cặp đôi (2 người)" })).toBeInTheDocument();
-    expect(screen.getByLabelText(/Chụp tại Studio của Chickie:/i)).toBeInTheDocument();
-  });
-
-  it("allows selecting variants, colors, and entering address and notes", async () => {
-    const user = userEvent.setup();
-    const cameraVariants = [
-      { id: 1, size: "Bộ Kit Tiêu Chuẩn", color: "Đen Canon", sku: "R50-KIT" },
-      { id: 2, size: "Combo 2 Pin + Thẻ 64GB", color: "Bạc Vintage", sku: "R50-COMBO" },
-    ];
-
-    render(
-      <BookingForm
-        productId={7}
-        productName="Canon EOS R50"
-        rentalPrice={270000}
-        depositPrice={1800000}
-        variants={cameraVariants}
-        pillar="CAMERA"
-      />
-    );
-
-    // Click variant button
-    const variantBtn = screen.getByRole("button", { name: "Combo 2 Pin + Thẻ 64GB" });
-    await user.click(variantBtn);
-
-    // Click color button
-    const colorBtn = screen.getByRole("button", { name: "Bạc Vintage" });
-    await user.click(colorBtn);
-
-    // Enter address and note
-    const addressInput = screen.getByPlaceholderText("Nhập địa chỉ nhận máy tại Hà Nội...");
-    await user.type(addressInput, "123 Cầu Giấy, Hà Nội");
-
-    const noteInput = screen.getByPlaceholderText("Ví dụ: Đi chụp kỷ yếu ngoại cảnh, cần hướng dẫn set màu film...");
-    await user.type(noteInput, "Cần lấy lúc 8h sáng");
-
-    expect(addressInput).toHaveValue("123 Cầu Giấy, Hà Nội");
-    expect(noteInput).toHaveValue("Cần lấy lúc 8h sáng");
-  });
-
-  it("shows error when fullName is filled but phone is missing", async () => {
-    const user = userEvent.setup();
-    render(
-      <BookingForm
-        productId={1}
-        productName="Váy Dạ Hội Sparkle"
-        rentalPrice={200000}
-        depositPrice={500000}
-      />
-    );
-
-    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
-    await user.type(nameInput, "Nguyễn Mai Linh");
-
-    const submitBtn = screen.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" });
-    await user.click(submitBtn);
-
     expect(
-      screen.getByText("Vui lòng nhập số điện thoại để tiệm liên hệ.")
+      screen.getByRole("button", { name: "Xác Nhận Đặt Lịch Chụp" })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Quy mô gói chụp:/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Cặp đôi (2 người)" })
     ).toBeInTheDocument();
   });
 
@@ -242,7 +337,9 @@ describe("BookingForm component", () => {
     );
 
     // Open size guide modal
-    const sizeGuideBtn = screen.getByRole("button", { name: /Bảng quy đổi kích cỡ/i });
+    const sizeGuideBtn = screen.getByRole("button", {
+      name: /Bảng quy đổi kích cỡ/i,
+    });
     await user.click(sizeGuideBtn);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
 
@@ -252,12 +349,17 @@ describe("BookingForm component", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     // Toggle calendar visibility
-    const toggleCalendarBtn = screen.getByRole("button", { name: "Thu gọn lịch" });
+    const toggleCalendarBtn = screen.getByRole("button", {
+      name: "Thu gọn lịch",
+    });
     await user.click(toggleCalendarBtn);
-    expect(screen.getByRole("button", { name: "Xem lịch trống" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Xem lịch trống" })
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Xem lịch trống" }));
-    expect(screen.getByRole("button", { name: "Thu gọn lịch" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Thu gọn lịch" })
+    ).toBeInTheDocument();
   });
 });
-

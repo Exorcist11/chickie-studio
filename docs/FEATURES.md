@@ -41,15 +41,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 0 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 5 | 0 | 0 | 0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 4 | 0 | 1 | 10.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **9** | **0** | **10** | **20.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **8** | **0** | **11** | **22.0%** |
 
-*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -95,7 +95,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ### 4.3. Module BOK (Đặt Thuê & Chống Trùng Lịch)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
-| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | 📝 SPEC | Fullstack Dev | - | - | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
+| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
 | `BOK-002` | Chống trùng lịch & Ngày đệm giặt ủi an toàn | SERVER | P0 | 📝 SPEC | Tech Lead | - | - | [BOK-002](features/booking/BOK-002-chong-trung-lich-ngay-dem.md) |
 | `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | 📝 SPEC | Backend Engineer | - | - | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | 📝 SPEC | Fullstack Dev | - | - | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
@@ -164,6 +164,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `BOK-001` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Backend API POST /api/public/bookings (tạo đơn giữ chỗ, phân bổ item kho an toàn, tự sinh mã BK...), GET /api/public/bookings/{code}, Client BookingForm trực quan với inline validation, phương thức nhận đồ (Tại tiệm/Giao tận nơi), modal Luxury xác nhận đặt cọc và trang hóa đơn `/booking/success/[code]`. Test coverage > 93%, 11/11 Playwright E2E pass |
 | 2026-10-25 | `CAT-006` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện: V8 Migration Flyway, Backend API GET /api/public/products/{idOrSlug}/availability tính toán đệm giặt ủi bufferDays, Client AvailabilityCalendar lưới 7 ngày chọn dải ngày, SizeGuideModal bảng quy đổi kích cỡ chuẩn 3 trụ cột, StickyBottomCta mobile view, test coverage đạt 94.9%, 10/10 Playwright E2E pass |
 | 2026-10-25 | `CAT-003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev | Hoàn thành toàn diện: V7 Flyway migration, ProductItem entity & state machine (AVAILABLE, RENTED, LAUNDRY, MAINTENANCE, RETIRED), AdminProductItemController API CRUD, CRM Item Instance Management, barcode labels, modal chi tiết, test coverage > 88% |
 | 2026-10-24 | `UI-000` | 📝 SPEC $\rightarrow$ ✅ DONE | Senior Frontend Architect | Hoàn thành toàn diện kiến trúc Monorepo Workspace, package `@chickie/ui`, primitives & base Button, ESLint rules, test coverage 100%, docs tại UI_LIBRARIES.md & ADR 0002 |

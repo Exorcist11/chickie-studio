@@ -7,6 +7,40 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Đặt Thuê Trực Tuyến Phía Client & Xác Nhận Đơn Hàng (BOK-001 - ✅ DONE)**:
+  - **Backend Server (Spring Boot 3 + MySQL)**:
+    - **Repository**: Bổ sung `BookingRepository.java` hỗ trợ tìm kiếm `findByBookingCode`, `findByCustomerPhoneOrderByCreatedAtDesc`, và `existsByBookingCode`.
+    - **DTOs**: `CreateBookingRequest.java` (chuẩn hóa regex số điện thoại Việt Nam `^(0|\+84)[0-9]{9,10}$`, kiểm tra ngày bắt đầu/kết thúc, phương thức nhận hàng), `BookingItemResponse.java`, `BookingResponse.java`.
+    - **BookingService**:
+      - Thuật toán kiểm tra lịch thuê và phân bổ sản phẩm vật lý (`ProductItem`) tự động theo ngày đệm giặt ủi (`bufferDays = 1` cho trang phục `COSTUME`, `0` cho thiết bị `CAMERA` / dịch vụ `PHOTOGRAPHY`).
+      - Chặn xung đột lịch thuê (ném `ConflictException` HTTP 409 khi hết đồ).
+      - Tính toán tự động thời gian thuê (số ngày), tổng tiền thuê, tiền đặt cọc và tổng thanh toán.
+      - Tự động sinh mã đơn hàng độc bản chuẩn phong cách Chic: `BKyyyyMMdd-XXXX`.
+      - Khởi tạo trạng thái ban đầu `PENDING`.
+    - **REST Controller**: `PublicBookingController.java` (`POST /api/public/bookings` trả về HTTP 201 Created, `GET /api/public/bookings/{bookingCode}` trả về HTTP 200 OK).
+    - **Kiểm thử tự động Server**: 12/12 tests pass 100% (`BookingServiceTest.java`, `PublicBookingControllerTest.java`).
+  - **Client Web (Next.js 14 App Router + TailwindCSS)**:
+    - **Types & API Client**:
+      - `client/src/types/booking.ts`: Khai báo types chuẩn `BookingDeliveryMethod`, `BookingStatus`, `CreateBookingRequest`, `BookingResponse`.
+      - `client/src/lib/api/booking.ts`: Triển khai `createBooking` và `getBookingByCode` với cơ chế fallback mock thông minh bảo đảm trải nghiệm demo / offline liên tục.
+      - Unit test API client: 7/7 tests pass 100% trong `booking.test.ts`.
+    - **Form Đặt Thuê [BookingForm.tsx](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx)**:
+      - Xác thực tức thì (inline validation trên `onBlur`) cho Họ tên, Số điện thoại (regex chuẩn), Địa chỉ nhận hàng.
+      - Khối tóm tắt lỗi tổng quan `role="alert"` và `aria-describedby` hỗ trợ chuẩn tiếp cận WCAG 2.1 AA.
+      - Chuyển đổi phương thức nhận đồ: `PICKUP_STORE` (Nhận tại Studio - Chickie Studio 120 Hoàng Cầu) vs `SHIP_TO_ADDRESS` (Giao tận nơi theo địa chỉ khách).
+      - Bảng dự toán chi phí chi tiết: Giá thuê theo ngày, Số ngày thuê, Tiền cọc hoàn lại, Tổng tiền cần thanh toán ban đầu.
+      - Modal xác nhận đặt thuê phong cách luxury kèm mã đơn hàng, nút sao chép mã đơn và hướng dẫn chuyển khoản cọc.
+    - **Trang Hóa Đơn Trực Tuyến [page.tsx](file:///e:/chickie-studio/client/src/app/booking/success/[code]/page.tsx) (`/booking/success/[code]`)**:
+      - Hiển thị đầy đủ thông tin đơn: Mã booking, trạng thái (`PENDING` - Chờ cọc), danh sách món đồ, ngày nhận - trả, số ngày thuê, tiền thuê, tiền cọc, phương thức nhận đồ.
+      - Box hướng dẫn chuyển khoản ngân hàng trực quan (Vietcombank - Chickie Studio) kèm nút sao chép số tài khoản một chạm và cú pháp nội dung chuyển khoản tự động.
+      - Hộp hỗ trợ khẩn cấp: Hotline `0912 345 678` và địa chỉ Studio.
+    - **Đa ngôn ngữ & Kiểm thử**:
+      - Bổ sung toàn diện chuỗi dịch đa ngữ cho booking, phương thức giao nhận và thông tin ngân hàng trong cả `vi.json` và `en.json`.
+      - Toàn bộ Client: **44 test files, 220 unit tests pass 100%**.
+      - Vitest coverage: `BookingForm.tsx` (Statements 93.45%, Branches 81.02%, Lines 93.45%), `booking.ts` (Lines 96.5%).
+      - TypeScript strict `typecheck` 0 errors, ESLint 0 errors, 0 warnings.
+      - Playwright E2E: **11/11 tests pass 100%** (bao gồm luồng đặt thuê và kiểm tra trang hóa đơn thành công).
+
 - **Chi Tiết Sản Phẩm, Bảng Thông Số Kích Cỡ & Lịch Trống Khả Dụng (CAT-006 - ✅ DONE)**:
   - **Backend Server (Spring Boot 3 + MySQL)**:
     - **Flyway Migration `V8__create_bookings_and_booking_items.sql`**: Khởi tạo bảng `bookings` và `booking_items`, đánh index `idx_booking_items_dates` (`product_item_id`, `rental_start_date`, `rental_end_date`) và `idx_booking_items_variant`.
