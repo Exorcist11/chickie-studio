@@ -41,15 +41,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 4 | 0 | 0 | 2 | 33.3% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 1 | 0 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 3 | 0 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 2 | 1 | 2 | 20.0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 5 | 2 | 0 | 3 | 30.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 4 | 3 | 0 | 0 | 0% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **31** | **6** | **1** | **12** | **24.0%** |
+| **TỔNG CỘNG** | | **50** | **31** | **6** | **0** | **13** | **26.0%** |
 
-*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-004 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-004, BOK-005 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -99,7 +99,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | `BOK-002` | Chống trùng lịch & Ngày đệm giặt ủi an toàn | SERVER | P0 | 📝 SPEC | Tech Lead | - | - | [BOK-002](features/booking/BOK-002-chong-trung-lich-ngay-dem.md) |
 | `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | 📝 SPEC | Backend Engineer | - | - | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
-| `BOK-005` | Tra cứu đơn bằng mã đơn và SĐT trên Client | CLIENT, SERVER | P0 | 🚧 IN_PROGRESS | Fullstack Dev | 2026-10-25 | - | [BOK-005](features/booking/BOK-005-tra-cuu-don-ma-sdt-client.md) |
+| `BOK-005` | Tra cứu đơn bằng mã đơn và SĐT trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-005](features/booking/BOK-005-tra-cuu-don-ma-sdt-client.md) |
 | `BOK-006` | Lịch thuê dạng Calendar trực quan trên CRM | CRM | P1 | ⬜ TODO | - | - | - | - |
 | `BOK-007` | Giữ chỗ tạm thời tự nhả khi quá hạn cọc | SERVER | P1 | ⬜ TODO | - | - | - | - |
 | `BOK-008` | Hỗ trợ đơn thuê nhóm kỷ yếu số lượng lớn | CRM, SERVER | P2 | ⬜ TODO | - | - | - | - |

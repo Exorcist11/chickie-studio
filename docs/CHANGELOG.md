@@ -7,15 +7,41 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
-- **Hạ Tầng Backend Tra Cứu Đơn Thuê Bằng Mã Đơn & SĐT (BOK-005 - 🚧 BE DONE)**:
-  - **Flyway Migration `V11__add_booking_tracking_index.sql`**: Đánh chỉ mục kép `idx_bookings_tracking (booking_code, customer_phone)` phục vụ tra cứu tốc độ cao.
-  - **DTO & Validation**: `BookingTrackingRequest.java` kiểm tra chặt chẽ bắt buộc mã đơn và định dạng số điện thoại Việt Nam (`^(0|\+84)[0-9]{9,10}$`).
-  - **Service & Bảo Mật Khách Hàng (BR-01, BR-02)**:
-    - `BookingService.java`: Triển khai hàm `trackBooking` với cơ chế chuẩn hóa đối soát SĐT `isPhoneMatching` (tương thích cả đầu `0` lẫn `+84`).
-    - Ném `ResourceNotFoundException` khi không khớp hoặc sai mã để tránh rò rỉ thông tin cá nhân.
-    - Làm sạch thông tin nhạy cảm của nhân viên (`changedBy` của quản trị viên được thay bằng `CHICKIE_STUDIO` trong timeline audit trail gửi cho khách).
-  - **REST Controller**: `PublicBookingController.java` mở endpoint `POST /api/public/bookings/tracking`.
-  - **Kiểm thử tự động Server**: Bổ sung 7 test cases mới cho cả Service và WebMvcTest. Toàn bộ **193/193 tests server pass 100%**, coverage $\ge 90\%$.
+- **Tra Cứu Đơn Thuê Bằng Mã Đơn & SĐT Trực Tuyến Trên Client (BOK-005 - ✅ DONE)**:
+  - **Frontend Client (Next.js 14 App Router + TypeScript + Tailwind + shadcn/ui)**:
+    - **Trang Tra Cứu `/tra-cuu-don`**: Thiết kế theo tiêu chuẩn UI/UX Pro Max với tông màu Warm Chic Burgundy (`#6B1D2F`), Vàng Champagne (`#C5A880`), thẻ nền kem ngà sang trọng, responsive mượt mà từ mobile đến desktop.
+    - **Form Tra Cứu `TrackingSearchForm`**:
+      - Xây dựng bằng React Hook Form + Zod (`tracking.schema.ts`), validate chặt chẽ mã đơn (`BK...`) và định dạng SĐT Việt Nam.
+      - Chống reload trang mặc định bằng explicit `e.preventDefault()`, tự động đồng bộ giá trị khởi tạo khi nhận query params.
+      - Kích thước chạm tối ưu $\ge 44px$, autofocus tiện lợi, nút tra cứu kèm spinner trạng thái đang tải.
+    - **Tiến Trình Trạng Thái `TrackingTimeline`**:
+      - Stepper 6 bước trực quan: Chờ duyệt $\rightarrow$ Đã cọc $\rightarrow$ Đang chuẩn bị $\rightarrow$ Đang thuê $\rightarrow$ Đã trả đồ $\rightarrow$ Hoàn tất.
+      - Tự động phát hiện và hiển thị hộp cảnh báo màu chuyên biệt khi đơn bị hủy (`CANCELLED`) hoặc quá hạn (`OVERDUE`).
+      - Tự động hiển thị thời gian xác nhận từ nhật ký audit trail của hệ thống.
+      - Responsive thông minh: bố cục ngang trên màn hình lớn, chuyển sang luồng dọc thanh lịch trên điện thoại.
+    - **Thẻ Thông Tin Đơn Hàng `TrackingOrderCard`**:
+      - Header hiển thị mã đơn hàng với nút sao chép 1 chạm tiện dụng (`navigator.clipboard`).
+      - Danh sách trang phục chi tiết: ảnh thumbnail, tên váy, phân loại, size và dải ngày nhận/trả đồ.
+      - Bảng chiết tính tài chính minh bạch: tiền thuê, tiền cọc, tổng cộng và trạng thái cọc (Đã thu cọc / Chưa cọc).
+      - **Mã VietQR động**: Tự động sinh mã QR chuyển khoản VietQR chuẩn Napas qua `img.vietqr.io` khi đơn hàng chưa thanh toán cọc, kèm đầy đủ số tài khoản, ngân hàng MB, tên chủ tài khoản và nội dung chuyển khoản đúng mã đơn.
+      - Hộp hỗ trợ nhanh: nút gọi Hotline 1 chạm và nút chat trực tiếp qua Zalo của tiệm.
+    - **Trạng Thái Tải `TrackingSkeleton`**: Shimmer skeleton mượt mà trong lúc chờ phản hồi mạng.
+    - **Đa Ngôn Ngữ i18n & Điều Hướng**:
+      - Bổ sung toàn bộ từ khóa đa ngôn ngữ namespace `tracking.*` cho cả `vi.json` và `en.json`.
+      - Cung cấp `I18nProvider` client wrapper bọc `NextIntlClientProvider` với múi giờ `Asia/Ho_Chi_Minh`.
+      - Tích hợp liên kết "Tra cứu đơn" vào thanh menu chính trên `Header.tsx`.
+    - **Kiểm Thử Tự Động Client**:
+      - Unit / Integration Test: 53 test files, **268/268 tests pass 100%**, coverage toàn dự án Client đạt **94.36% Stmts / 83.31% Branches** (vượt ngưỡng $\ge 80\%$).
+      - E2E Playwright: **4/4 UI tests pass 100%** (`e2e/tracking.spec.ts`) bao gồm điều hướng Header, tra cứu thành công hiển thị Stepper & VietQR, tự động kích hoạt tra cứu từ URL query params (`?code=...&phone=...`), và cảnh báo lỗi 404 khi sai thông tin.
+  - **Hạ Tầng Backend Server (Spring Boot 3 + MySQL)**:
+    - **Flyway Migration `V11__add_booking_tracking_index.sql`**: Đánh chỉ mục kép `idx_bookings_tracking (booking_code, customer_phone)` phục vụ tra cứu tốc độ cao.
+    - **DTO & Validation**: `BookingTrackingRequest.java` kiểm tra chặt chẽ bắt buộc mã đơn và định dạng số điện thoại Việt Nam (`^(0|\+84)[0-9]{9,10}$`).
+    - **Service & Bảo Mật Khách Hàng (BR-01, BR-02)**:
+      - `BookingService.java`: Triển khai hàm `trackBooking` với cơ chế chuẩn hóa đối soát SĐT `isPhoneMatching` (tương thích cả đầu `0` lẫn `+84`).
+      - Ném `ResourceNotFoundException` khi không khớp hoặc sai mã để tránh rò rỉ thông tin cá nhân.
+      - Làm sạch thông tin nhạy cảm của nhân viên (`changedBy` của quản trị viên được thay bằng `CHICKIE_STUDIO` trong timeline audit trail gửi cho khách).
+    - **REST Controller**: `PublicBookingController.java` mở endpoint `POST /api/public/bookings/tracking`.
+    - **Kiểm thử tự động Server**: Bổ sung 7 test cases mới cho cả Service và WebMvcTest. Toàn bộ **193/193 tests server pass 100%**, coverage $\ge 90\%$.
 
 - **Quản Lý Đơn Thuê Tập Trung Trên CRM & API Quản Trị Trạng Thái (BOK-004 - ✅ DONE)**:
   - **Backend Server (Spring Boot 3 + MySQL)**:

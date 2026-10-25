@@ -7,10 +7,10 @@
 | **Module** | BOK (Booking) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 🚧 IN_PROGRESS (BE DONE, Frontend Pending) |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Fullstack Dev |
 | **Ngày bắt đầu** | 2026-10-25 |
-| **Ngày hoàn thành** | - |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `BOK-001`, `BOK-003` |
 
 ---
@@ -106,13 +106,15 @@ ALTER TABLE `bookings` ADD INDEX `idx_bookings_tracking` (`booking_code`, `custo
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
 - [x] Bảo mật thông tin đơn hàng khách vãng lai (BR-01, BR-02 ẩn danh changedBy nhân viên).
-- [ ] Timeline hiển thị trực quan trên màn hình nhỏ (Client UI).
-- [ ] i18n đầy đủ cho cả `vi.json` và `en.json` (Client UI).
+- [x] Timeline hiển thị trực quan trên màn hình nhỏ (Client UI: Stepper 6 bước responsive dọc/ngang).
+- [x] i18n đầy đủ cho cả `vi.json` và `en.json` (Client UI).
 - [x] Backend Test coverage $\ge 80\%$ (193/193 server tests pass).
+- [x] Frontend Test coverage $\ge 80\%$ (94.36% Stmts, 83.31% Branches, 268/268 vitest pass, 4/4 Playwright E2E pass).
 - [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev | Hoàn thành toàn diện Frontend Client Next.js: trang `/tra-cuu-don`, Stepper 6 bước responsive, VietQR động cọc, Zod schema validation, touch target $\ge 44px$, i18n VI/EN, 100% pass E2E & Vitest coverage $\ge 80\%$ | ✅ DONE |
 | 2026-10-25 | Fullstack Dev | Hoàn thành toàn diện Backend API: Flyway V11 migration tạo index kép, DTO `BookingTrackingRequest`, logic chuẩn hóa đối soát SĐT `isPhoneMatching`, cơ chế bảo mật BR-01/BR-02 làm sạch thông tin nhân viên trong timeline, endpoint `POST /api/public/bookings/tracking`, 193/193 tests pass 100% | 🚧 IN_PROGRESS |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |
