@@ -326,6 +326,7 @@ export const CategoriesPage: React.FC = () => {
       {/* Add / Edit Category Modal using TanStack Form & System Components */}
       {isModalOpen && (
         <CategoryModal
+          key={editingCategory?.id ?? "new"}
           open={isModalOpen}
           category={editingCategory}
           displayOrderDefault={categories.length + 1}

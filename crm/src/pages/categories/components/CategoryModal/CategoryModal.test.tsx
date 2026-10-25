@@ -159,4 +159,23 @@ describe("CategoryModal Component", () => {
       expect(screen.getByText("Dữ liệu không hợp lệ")).toBeInTheDocument();
     });
   });
+
+  it("increments and decrements display order using stepper buttons", async () => {
+    const user = userEvent.setup();
+    render(<CategoryModal {...defaultProps} displayOrderDefault={3} />);
+
+    const orderInput = document.getElementById("displayOrder") as HTMLInputElement;
+    expect(orderInput).toBeInTheDocument();
+    expect(orderInput.value).toBe("3");
+
+    // Click increment button
+    const incBtn = screen.getByLabelText("Tăng thứ tự");
+    await user.click(incBtn);
+    expect(orderInput.value).toBe("4");
+
+    // Click decrement button
+    const decBtn = screen.getByLabelText("Giảm thứ tự");
+    await user.click(decBtn);
+    expect(orderInput.value).toBe("3");
+  });
 });

@@ -6,6 +6,10 @@ import {
   Link as LinkIcon,
   RotateCcw,
   Check,
+  Plus,
+  Minus,
+  SlidersHorizontal,
+  CheckCircle2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@tanstack/react-form";
@@ -439,9 +443,9 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             }}
           </form.Field>
 
-          {/* Two-Column: Display Order & Status Switch */}
-          <div className={styles.formGrid}>
-            {/* Display Order */}
+          {/* Coordinated Dual Settings: Display Order Stepper & Active Visibility Switch */}
+          <div className={styles.settingsGrid}>
+            {/* Display Order Stepper Card */}
             <form.Field
               name="displayOrder"
               validators={{
@@ -451,28 +455,74 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             >
               {(field) => {
                 const errorMessage = getErrorMessage(field.state.meta.errors[0]);
+                const orderVal = typeof field.state.value === "number" ? field.state.value : 0;
                 return (
-                  <FormField
-                    name="displayOrder"
-                    label={t("category.displayOrder", "Thứ tự hiển thị")}
-                    error={errorMessage}
-                    helperText={t("category.orderHelper", "Số nhỏ hơn sẽ được ưu tiên hiển thị trước")}
-                  >
-                    <Input
-                      id="displayOrder"
-                      name={field.name}
-                      type="number"
-                      min={0}
-                      value={field.state.value}
-                      onChange={(e) => {
-                        const val = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
-                        field.handleChange(isNaN(val) ? 0 : val);
-                        if (serverError) setServerError(null);
-                      }}
-                      onBlur={field.handleBlur}
-                      disabled={submitting}
-                    />
-                  </FormField>
+                  <div className={styles.settingCard}>
+                    <div className={styles.settingInfo}>
+                      <label htmlFor="displayOrder" className={styles.settingTitle}>
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-burgundy shrink-0" />
+                        <span>{t("category.displayOrder", "Thứ tự hiển thị")}</span>
+                      </label>
+                      <span className={styles.settingSub}>
+                        {errorMessage ? (
+                          <span className="text-red-600 font-medium">{errorMessage}</span>
+                        ) : (
+                          t("category.orderHelper", "Số nhỏ hơn sẽ ưu tiên trước")
+                        )}
+                      </span>
+                    </div>
+
+                    <div className={styles.stepperWrapper}>
+                      <button
+                        type="button"
+                        className={styles.stepperBtn}
+                        onClick={() => {
+                          const next = Math.max(0, orderVal - 1);
+                          field.handleChange(next);
+                          if (serverError) setServerError(null);
+                        }}
+                        disabled={submitting || orderVal <= 0}
+                        aria-label="Giảm thứ tự"
+                        title="Giảm thứ tự"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                      </button>
+
+                      <div className={styles.stepperInputWrapper}>
+                        <span className={styles.orderPrefix} aria-hidden="true">#</span>
+                        <input
+                          id="displayOrder"
+                          name={field.name}
+                          type="number"
+                          min={0}
+                          className={styles.stepperInput}
+                          value={field.state.value}
+                          onChange={(e) => {
+                            const val = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
+                            field.handleChange(isNaN(val) ? 0 : val);
+                            if (serverError) setServerError(null);
+                          }}
+                          onBlur={field.handleBlur}
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        className={styles.stepperBtn}
+                        onClick={() => {
+                          const next = orderVal + 1;
+                          field.handleChange(next);
+                          if (serverError) setServerError(null);
+                        }}
+                        disabled={submitting}
+                        aria-label="Tăng thứ tự"
+                        title="Tăng thứ tự"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
                 );
               }}
             </form.Field>
@@ -480,26 +530,31 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             {/* Active Status Switch Card */}
             <form.Field name="isActive">
               {(field) => (
-                <div className="flex flex-col justify-end">
-                  <div className={styles.switchCard}>
-                    <div className={styles.switchText}>
-                      <span className={styles.switchTitle}>
-                        {t("category.activeLabel", "Kích hoạt hiển thị")}
-                      </span>
-                      <span className={styles.switchSub}>
-                        {field.state.value
-                          ? t("category.active", "Đang hoạt động")
-                          : t("category.inactive", "Tạm ẩn")}
-                      </span>
-                    </div>
-                    <Switch
-                      id="isActive"
-                      name={field.name}
-                      checked={field.state.value}
-                      onCheckedChange={(checked) => field.handleChange(checked)}
-                      disabled={submitting}
-                    />
+                <div className={styles.settingCard}>
+                  <div className={styles.settingInfo}>
+                    <label htmlFor="isActive" className={styles.settingTitle}>
+                      <CheckCircle2
+                        className={cn(
+                          "w-3.5 h-3.5 shrink-0 transition-colors",
+                          field.state.value ? "text-emerald-600" : "text-stone-400"
+                        )}
+                      />
+                      <span>{t("category.activeLabel", "Kích hoạt hiển thị")}</span>
+                    </label>
+                    <span className={styles.settingSub}>
+                      {field.state.value
+                        ? t("category.active", "Đang hoạt động")
+                        : t("category.inactive", "Tạm ẩn")}
+                    </span>
                   </div>
+
+                  <Switch
+                    id="isActive"
+                    name={field.name}
+                    checked={field.state.value}
+                    onCheckedChange={(checked) => field.handleChange(checked)}
+                    disabled={submitting}
+                  />
                 </div>
               )}
             </form.Field>

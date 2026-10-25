@@ -6,7 +6,7 @@
 }
 
 .errorBanner {
-  @apply bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm flex items-center gap-2.5 font-medium shadow-2xs;
+  @apply bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm flex items-center gap-2.5 font-medium shadow-xs;
 }
 
 // Business Pillar 3-Card Interactive Selector
@@ -70,7 +70,13 @@
 }
 
 .iconButton {
-  @apply w-10 h-10 rounded-lg border border-line bg-white flex flex-col items-center justify-center text-stone-600 hover:text-burgundy hover:border-burgundy/40 hover:bg-stone-50 transition-all cursor-pointer relative;
+  @apply w-10 h-10 rounded-lg border border-line bg-white flex flex-col items-center justify-center text-stone-600 transition-all cursor-pointer relative;
+
+  &:hover {
+    color: $burgundy;
+    border-color: rgba(100, 29, 43, 0.4);
+    background-color: #fafaf9;
+  }
 
   &:focus-visible {
     outline: none;
@@ -99,19 +105,71 @@
   @apply text-[11px] font-mono text-stone-600 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200 mt-1 flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap;
 }
 
-// Switch card with helper text
-.switchCard {
-  @apply flex items-center justify-between p-3.5 rounded-xl border border-line bg-white hover:border-stone-300 transition-colors;
+// Coordinated Dual Setting Cards (Display Order Stepper + Status Switch)
+.settingsGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-stretch;
 }
 
-.switchText {
-  @apply flex flex-col gap-0.5;
+.settingCard {
+  @apply flex items-center justify-between p-3.5 rounded-xl border border-line bg-white transition-all shadow-xs min-h-[76px];
+
+  &:hover {
+    border-color: rgba(100, 29, 43, 0.35);
+  }
 }
 
-.switchTitle {
-  @apply text-sm font-medium text-ink;
+.settingInfo {
+  @apply flex flex-col gap-0.5 min-w-0 pr-2;
 }
 
-.switchSub {
-  @apply text-xs text-stone-600;
+.settingTitle {
+  @apply text-xs md:text-sm font-semibold text-ink flex items-center gap-1.5 cursor-pointer;
+}
+
+.settingSub {
+  @apply text-[11px] text-stone-500 leading-tight;
+}
+
+// Order Stepper Control
+.stepperWrapper {
+  @apply flex items-center rounded-lg border border-line bg-stone-50/80 p-1 shrink-0;
+}
+
+.stepperBtn {
+  @apply w-7 h-7 rounded-md bg-white border border-line text-stone-700 flex items-center justify-center transition-all cursor-pointer shadow-xs;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-warm-white, #FAF8F5);
+    color: $burgundy;
+    border-color: rgba(100, 29, 43, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px $burgundy;
+  }
+}
+
+.stepperInputWrapper {
+  @apply flex items-center justify-center px-1.5;
+}
+
+.orderPrefix {
+  @apply text-xs font-mono font-bold text-burgundy select-none mr-0.5;
+}
+
+.stepperInput {
+  @apply w-9 text-center font-mono font-bold text-sm text-ink bg-transparent border-0 focus:outline-none p-0;
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
