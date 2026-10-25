@@ -69,8 +69,9 @@ export async function createBooking(
 export async function getBookingByCode(
   bookingCode: string
 ): Promise<BookingResponse> {
+  let res: Response;
   try {
-    const res = await fetch(
+    res = await fetch(
       `${API_BASE_URL}/api/public/bookings/${encodeURIComponent(bookingCode)}`,
       {
         method: "GET",
@@ -79,47 +80,7 @@ export async function getBookingByCode(
         },
       }
     );
-
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok) {
-      if (res.status === 404) {
-        if (typeof window !== "undefined") {
-          try {
-            const stored: BookingResponse[] = JSON.parse(
-              localStorage.getItem("chickie_guest_bookings") || "[]"
-            );
-            const found = stored.find(
-              (b) => b.bookingCode.toUpperCase() === bookingCode.toUpperCase()
-            );
-            if (found) return found;
-          } catch {
-            // Ignore
-          }
-        }
-        return createMockBookingResponse(
-          {
-            customerName: "Khách Hàng Chickie",
-            customerPhone: "0987654321",
-            deliveryMethod: "PICKUP_STORE",
-            rentalStartDate: new Date().toISOString().slice(0, 10),
-            rentalEndDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
-            variantId: 1,
-          },
-          bookingCode
-        );
-      }
-      throw new Error(
-        data?.message || `Không tìm thấy đơn đặt thuê (Mã lỗi ${res.status})`
-      );
-    }
-
-    if (data?.data) {
-      return data.data;
-    }
-
-    throw new Error("Dữ liệu đơn hàng không tồn tại");
-  } catch (err: unknown) {
+  } catch (_networkErr) {
     if (typeof window !== "undefined") {
       try {
         const stored: BookingResponse[] = JSON.parse(
@@ -145,6 +106,46 @@ export async function getBookingByCode(
       bookingCode
     );
   }
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    if (res.status === 404) {
+      if (typeof window !== "undefined") {
+        try {
+          const stored: BookingResponse[] = JSON.parse(
+            localStorage.getItem("chickie_guest_bookings") || "[]"
+          );
+          const found = stored.find(
+            (b) => b.bookingCode.toUpperCase() === bookingCode.toUpperCase()
+          );
+          if (found) return found;
+        } catch {
+          // Ignore
+        }
+      }
+      return createMockBookingResponse(
+        {
+          customerName: "Khách Hàng Chickie",
+          customerPhone: "0987654321",
+          deliveryMethod: "PICKUP_STORE",
+          rentalStartDate: new Date().toISOString().slice(0, 10),
+          rentalEndDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
+          variantId: 1,
+        },
+        bookingCode
+      );
+    }
+    throw new Error(
+      data?.message || `Không tìm thấy đơn đặt thuê (Mã lỗi ${res.status})`
+    );
+  }
+
+  if (data?.data) {
+    return data.data;
+  }
+
+  throw new Error("Dữ liệu đơn hàng không tồn tại");
 }
 
 /**

@@ -362,4 +362,89 @@ describe("BookingForm component", () => {
       screen.getByRole("button", { name: "Thu gọn lịch" })
     ).toBeInTheDocument();
   });
+
+  it("handles color selection and size selection from modal", async () => {
+    const user = userEvent.setup();
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+        variants={mockVariants}
+      />
+    );
+
+    // Click color option
+    const redColorBtn = screen.getByRole("button", { name: "Đỏ" });
+    await user.click(redColorBtn);
+    expect(redColorBtn).toHaveClass("border-burgundy");
+
+    // Open size guide and select size M
+    const sizeGuideBtn = screen.getByRole("button", {
+      name: /Bảng quy đổi kích cỡ/i,
+    });
+    await user.click(sizeGuideBtn);
+
+    const chooseMBtn = screen.getByRole("button", { name: "Chọn M" });
+    await user.click(chooseMBtn);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("copies booking code in success modal", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(bookingApi, "createBooking").mockResolvedValueOnce({
+      id: 1,
+      bookingCode: "BK20261025-COPY",
+      customerName: "Trần Hà My",
+      customerPhone: "0988776655",
+      deliveryMethod: "PICKUP_STORE",
+      rentalStartDate: "2026-11-10",
+      rentalEndDate: "2026-11-11",
+      durationDays: 2,
+      status: "PENDING",
+      totalRentalPrice: 400000,
+      totalDepositPrice: 500000,
+      totalAmount: 900000,
+      createdAt: new Date().toISOString(),
+      items: [],
+    });
+
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
+        writeText: writeTextMock,
+      },
+      writable: true,
+      configurable: true,
+    });
+
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+        variants={mockVariants}
+      />
+    );
+
+    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
+    const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    await user.type(nameInput, "Trần Hà My");
+    await user.type(phoneInput, "0988776655");
+
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText("BK20261025-COPY")).toBeInTheDocument();
+    });
+
+    const copyBtn = screen.getByTitle("Sao chép mã");
+    await user.click(copyBtn);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("BK20261025-COPY");
+  });
 });

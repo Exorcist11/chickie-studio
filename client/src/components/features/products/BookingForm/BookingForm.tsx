@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { useForm, FieldErrors } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertCircle,
   Building2,
@@ -21,7 +23,17 @@ import {
   User,
   X,
 } from "lucide-react";
-import { Button, DateRangeField, SizeSelector } from "@/components/ui";
+import {
+  Button,
+  DateRangeField,
+  SizeSelector,
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { ProductVariant } from "@/types/product";
 import { BookingResponse, BookingDeliveryMethod } from "@/types/booking";
@@ -32,6 +44,10 @@ import {
 } from "../product-pillar.config";
 import { SizeGuideModal } from "../SizeGuideModal";
 import { AvailabilityCalendar } from "../AvailabilityCalendar";
+import {
+  createBookingSchema,
+  BookingFormValues,
+} from "./booking.schema";
 
 export interface BookingFormProps {
   productId: number;
@@ -58,7 +74,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const activePillar = pillar || "COSTUME";
   const pillarConfig = PILLAR_CONFIGS[activePillar].booking;
 
-  // Sizes & Colors extraction from variants
+  // Extract Sizes & Colors from variants
   const availableSizes = React.useMemo(() => {
     if (variants.length === 0) {
       return activePillar === "CAMERA"
@@ -82,21 +98,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     return Array.from(new Set(variants.map((v) => v.color)));
   }, [variants]);
 
-  // Form states
-  const [selectedSize, setSelectedSize] = React.useState<string>(
-    availableSizes[0] || "S"
-  );
-  const [selectedColor, setSelectedColor] = React.useState<string>(
-    availableColors[0] || ""
-  );
-
-  // Sync selectedSize if availableSizes changes
-  React.useEffect(() => {
-    if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
-      setSelectedSize(availableSizes[0]);
-    }
-  }, [availableSizes, selectedSize]);
-
   // Default dates: tomorrow to day after tomorrow
   const { todayStr, defaultStartStr, defaultEndStr } = React.useMemo(() => {
     const d = new Date();
@@ -112,26 +113,66 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     };
   }, []);
 
-  const [startDate, setStartDate] = React.useState<string>(defaultStartStr);
-  const [endDate, setEndDate] = React.useState<string>(defaultEndStr);
-  const [fullName, setFullName] = React.useState<string>("");
-  const [phone, setPhone] = React.useState<string>("");
-  const [deliveryMethod, setDeliveryMethod] =
-    React.useState<BookingDeliveryMethod>("PICKUP_STORE");
-  const [address, setAddress] = React.useState<string>("");
-  const [note, setNote] = React.useState<string>("");
+  // Initialize Zod validation schema
+  const bookingSchema = React.useMemo(
+    () => createBookingSchema(todayStr),
+    [todayStr]
+  );
 
-  // Touched state for inline validation on blur
-  const [touched, setTouched] = React.useState<{
-    fullName?: boolean;
-    phone?: boolean;
-    address?: boolean;
-    dates?: boolean;
-  }>({});
+  // Initialize react-hook-form
+  const form = useForm<BookingFormValues>({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      size: availableSizes[0] || "S",
+      color: availableColors[0] || "",
+      rentalStartDate: defaultStartStr,
+      rentalEndDate: defaultEndStr,
+      fullName: "",
+      phone: "",
+      deliveryMethod: "PICKUP_STORE",
+      address: "",
+      note: "",
+    },
+    mode: "onBlur",
+  });
 
-  // Status & UI states
+  const {
+    watch,
+    setValue,
+    control,
+    handleSubmit,
+    trigger,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  // Watch dynamic form values
+  const [
+    selectedSize,
+    selectedColor,
+    startDate,
+    endDate,
+    deliveryMethod,
+    fullName,
+    phone,
+  ] = watch([
+    "size",
+    "color",
+    "rentalStartDate",
+    "rentalEndDate",
+    "deliveryMethod",
+    "fullName",
+    "phone",
+  ]);
+
+  // Sync selectedSize if availableSizes changes
+  React.useEffect(() => {
+    if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
+      setValue("size", availableSizes[0]);
+    }
+  }, [availableSizes, selectedSize, setValue]);
+
+  // UI modal and auxiliary states
   const [errorMsg, setErrorMsg] = React.useState<string>("");
-  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const [createdBooking, setCreatedBooking] = React.useState<BookingResponse | null>(null);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState<boolean>(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = React.useState<boolean>(false);
@@ -162,44 +203,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const totalRentalFee = rentalPrice * rentalDays;
   const totalAmount = totalRentalFee + depositPrice;
 
-  // Field validation rules
-  const fullNameError = React.useMemo(() => {
-    if (!touched.fullName) return "";
-    if (!fullName.trim()) return "Vui lòng nhập họ và tên của bạn";
-    if (fullName.trim().length < 2) return "Họ và tên tối thiểu 2 ký tự";
-    return "";
-  }, [fullName, touched.fullName]);
-
-  const phoneError = React.useMemo(() => {
-    if (!touched.phone) return "";
-    if (!phone.trim()) return "Vui lòng nhập số điện thoại để tiệm liên hệ";
-    const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
-    if (!phoneRegex.test(phone.trim().replace(/\s+/g, ""))) {
-      return "Số điện thoại không hợp lệ (Ví dụ: 0912345678 hoặc +84912345678)";
-    }
-    return "";
-  }, [phone, touched.phone]);
-
-  const addressError = React.useMemo(() => {
-    if (deliveryMethod !== "SHIP_TO_ADDRESS") return "";
-    if (!touched.address) return "";
-    if (!address.trim()) return "Vui lòng nhập địa chỉ giao hàng";
-    if (address.trim().length < 5) return "Địa chỉ quá ngắn, vui lòng nhập rõ số nhà, tên đường";
-    return "";
-  }, [address, deliveryMethod, touched.address]);
-
-  const datesError = React.useMemo(() => {
-    if (!touched.dates) return "";
-    if (!startDate || !endDate) return "Vui lòng chọn ngày nhận đồ và ngày trả đồ";
-    if (startDate < todayStr) return "Ngày nhận đồ không thể ở quá khứ";
-    if (endDate < startDate) return "Ngày trả đồ không thể trước ngày nhận đồ";
-    return "";
-  }, [startDate, endDate, touched.dates, todayStr]);
-
-  const handleBlur = (field: "fullName" | "phone" | "address" | "dates") => {
-    setTouched((prev) => ({ ...prev, [field]: true }));
-  };
-
   const handleCopyCode = async (code: string) => {
     try {
       await navigator.clipboard.writeText(code);
@@ -210,52 +213,36 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg("");
-
-    // Mark all as touched for immediate validation feedback
-    setTouched({
-      fullName: true,
-      phone: true,
-      address: true,
-      dates: true,
-    });
-
-    const cleanPhone = phone.trim().replace(/\s+/g, "");
-    const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
-
-    if (!startDate || !endDate || startDate < todayStr || endDate < startDate) {
-      setErrorMsg("Vui lòng chọn khoảng thời gian thuê hợp lệ.");
-      return;
-    }
-    if (!fullName.trim() || fullName.trim().length < 2) {
+  const onInvalid = (fieldErrors: FieldErrors<BookingFormValues>) => {
+    if (fieldErrors.fullName) {
       setErrorMsg("Vui lòng nhập đầy đủ họ và tên người thuê.");
-      return;
-    }
-    if (!cleanPhone || !phoneRegex.test(cleanPhone)) {
+    } else if (fieldErrors.phone) {
       setErrorMsg("Số điện thoại không đúng định dạng Việt Nam.");
-      return;
-    }
-    if (deliveryMethod === "SHIP_TO_ADDRESS" && (!address.trim() || address.trim().length < 5)) {
+    } else if (fieldErrors.rentalStartDate || fieldErrors.rentalEndDate) {
+      setErrorMsg("Vui lòng chọn khoảng thời gian thuê hợp lệ.");
+    } else if (fieldErrors.address) {
       setErrorMsg("Vui lòng cung cấp địa chỉ giao hàng chi tiết.");
-      return;
     }
+  };
 
+  const onSubmit = async (data: BookingFormValues) => {
+    setErrorMsg("");
+    const cleanPhone = data.phone.trim().replace(/\s+/g, "");
     const variantIdToBook = selectedVariantObj?.id || 1;
 
-    setIsSubmitting(true);
     try {
       const response = await createBooking({
-        customerName: fullName.trim(),
+        customerName: data.fullName.trim(),
         customerPhone: cleanPhone,
-        deliveryMethod,
+        deliveryMethod: data.deliveryMethod,
         deliveryAddress:
-          deliveryMethod === "SHIP_TO_ADDRESS" ? address.trim() : undefined,
-        rentalStartDate: startDate,
-        rentalEndDate: endDate,
+          data.deliveryMethod === "SHIP_TO_ADDRESS"
+            ? data.address?.trim()
+            : undefined,
+        rentalStartDate: data.rentalStartDate,
+        rentalEndDate: data.rentalEndDate,
         variantId: variantIdToBook,
-        note: note.trim() || undefined,
+        note: data.note?.trim() || undefined,
       });
 
       setCreatedBooking(response);
@@ -266,8 +253,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       } else {
         setErrorMsg("Đã xảy ra sự cố khi gửi đơn đặt thuê. Vui lòng thử lại!");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -294,421 +279,462 @@ export const BookingForm: React.FC<BookingFormProps> = ({
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-5">
-        {/* Size / Variant Selection */}
-        {pillarConfig.showSizeGuide ? (
-          <div className="space-y-1.5">
-            <SizeSelector
-              label={pillarConfig.variantLabel}
-              sizes={availableSizes}
-              value={selectedSize}
-              onChange={setSelectedSize}
-              sizeGuideAction={
-                <button
-                  type="button"
-                  onClick={() => setIsSizeGuideOpen(true)}
-                  className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
-                >
-                  <Ruler className="w-3.5 h-3.5 text-burgundy" />
-                  Bảng quy đổi kích cỡ
-                </button>
-              }
-            />
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <div className="flex justify-between items-center text-sm">
-              <span className="font-medium text-ink">
-                {pillarConfig.variantLabel}:{" "}
-                <strong className="text-burgundy font-semibold">{selectedSize}</strong>
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsSizeGuideOpen(true)}
-                className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
-              >
-                <Ruler className="w-3.5 h-3.5 text-burgundy" />
-                Thông số quy chuẩn
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {availableSizes.map((v) => (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() => setSelectedSize(v)}
-                  className={cn(
-                    "px-3.5 py-2 rounded-xl text-xs font-medium border transition-all text-left",
-                    selectedSize === v
-                      ? "border-burgundy bg-burgundy/10 text-burgundy font-semibold shadow-xs"
-                      : "border-line bg-white text-ink hover:border-burgundy/40"
-                  )}
-                >
-                  {v}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Color / Style Selection (if multiple) */}
-        {availableColors.length > 1 && (
-          <div className="space-y-2">
-            <span className="text-sm font-medium text-ink">
-              {pillarConfig.colorLabel}{" "}
-              <strong className="text-burgundy font-semibold">
-                {selectedColor || "Mặc định"}
-              </strong>
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {availableColors.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setSelectedColor(c)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors",
-                    selectedColor === c
-                      ? "border-burgundy bg-burgundy/10 text-burgundy font-semibold"
-                      : "border-line bg-white text-ink hover:border-burgundy/40"
-                  )}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Rental Dates & Availability Calendar */}
-        <div className="space-y-3">
-          <DateRangeField
-            label={pillarConfig.dateRangeLabel}
-            startDate={startDate}
-            endDate={endDate}
-            minDate={todayStr}
-            onStartDateChange={(val) => {
-              setStartDate(val);
-              handleBlur("dates");
-            }}
-            onEndDateChange={(val) => {
-              setEndDate(val);
-              handleBlur("dates");
-            }}
-            required
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate className="space-y-5">
+          {/* Size / Variant Selection */}
+          <FormField
+            control={control}
+            name="size"
+            render={({ field }) => (
+              <FormItem className="space-y-1.5">
+                {pillarConfig.showSizeGuide ? (
+                  <SizeSelector
+                    label={pillarConfig.variantLabel}
+                    sizes={availableSizes}
+                    value={field.value}
+                    onChange={(val) => {
+                      field.onChange(val);
+                      trigger("size");
+                    }}
+                    sizeGuideAction={
+                      <button
+                        type="button"
+                        onClick={() => setIsSizeGuideOpen(true)}
+                        className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <Ruler className="w-3.5 h-3.5 text-burgundy" />
+                        Bảng quy đổi kích cỡ
+                      </button>
+                    }
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-medium text-ink">
+                        {pillarConfig.variantLabel}:{" "}
+                        <strong className="text-burgundy font-semibold">
+                          {field.value}
+                        </strong>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setIsSizeGuideOpen(true)}
+                        className="text-xs text-burgundy font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <Ruler className="w-3.5 h-3.5 text-burgundy" />
+                        Thông số quy chuẩn
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {availableSizes.map((v) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => {
+                            field.onChange(v);
+                            trigger("size");
+                          }}
+                          className={cn(
+                            "px-3.5 py-2 rounded-xl text-xs font-medium border transition-all text-left",
+                            field.value === v
+                              ? "border-burgundy bg-burgundy/10 text-burgundy font-semibold shadow-xs"
+                              : "border-line bg-white text-ink hover:border-burgundy/40"
+                          )}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
-          {datesError && (
-            <p id="dates-error" className="text-xs text-danger flex items-center gap-1 mt-1">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>{datesError}</span>
-            </p>
+          {/* Color / Style Selection (if multiple) */}
+          {availableColors.length > 1 && (
+            <FormField
+              control={control}
+              name="color"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <span className="text-sm font-medium text-ink">
+                    {pillarConfig.colorLabel}{" "}
+                    <strong className="text-burgundy font-semibold">
+                      {field.value || "Mặc định"}
+                    </strong>
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {availableColors.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => {
+                          field.onChange(c);
+                          trigger("color");
+                        }}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors",
+                          field.value === c
+                            ? "border-burgundy bg-burgundy/10 text-burgundy font-semibold"
+                            : "border-line bg-white text-ink hover:border-burgundy/40"
+                        )}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </FormItem>
+              )}
+            />
           )}
 
-          <div className="flex items-center justify-between text-xs text-ink-muted">
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-burgundy" />
-              <span>
-                Thời gian tính:{" "}
-                <strong className="text-burgundy font-medium">
-                  {rentalDays} {pillarConfig.durationUnitLabel}
-                </strong>
-                {activePillar !== "PHOTOGRAPHY" && " (24h/ngày)"}
-              </span>
+          {/* Rental Dates & Availability Calendar */}
+          <div className="space-y-3">
+            <DateRangeField
+              label={pillarConfig.dateRangeLabel}
+              startDate={startDate}
+              endDate={endDate}
+              minDate={todayStr}
+              onStartDateChange={(val) => {
+                setValue("rentalStartDate", val, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }}
+              onEndDateChange={(val) => {
+                setValue("rentalEndDate", val, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }}
+              required
+            />
+
+            {(errors.rentalStartDate || errors.rentalEndDate) && (
+              <p
+                id="dates-error"
+                role="alert"
+                className="text-xs text-danger flex items-center gap-1 mt-1 font-medium"
+              >
+                <AlertCircle className="w-3.5 h-3.5" />
+                <span>
+                  {errors.rentalStartDate?.message ||
+                    errors.rentalEndDate?.message ||
+                    "Vui lòng chọn khoảng thời gian thuê hợp lệ"}
+                </span>
+              </p>
+            )}
+
+            <div className="flex items-center justify-between text-xs text-ink-muted">
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-burgundy" />
+                <span>
+                  Thời gian tính:{" "}
+                  <strong className="text-burgundy font-medium">
+                    {rentalDays} {pillarConfig.durationUnitLabel}
+                  </strong>
+                  {activePillar !== "PHOTOGRAPHY" && " (24h/ngày)"}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowCalendar(!showCalendar)}
+                className="text-xs font-medium text-burgundy hover:underline inline-flex items-center gap-1 cursor-pointer"
+              >
+                <Calendar className="w-3.5 h-3.5 text-burgundy" />
+                {showCalendar ? "Thu gọn lịch" : "Xem lịch trống"}
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowCalendar(!showCalendar)}
-              className="text-xs font-medium text-burgundy hover:underline inline-flex items-center gap-1 cursor-pointer"
-            >
-              <Calendar className="w-3.5 h-3.5 text-burgundy" />
-              {showCalendar ? "Thu gọn lịch" : "Xem lịch trống"}
-            </button>
+            {showCalendar && (
+              <div className="pt-1">
+                <AvailabilityCalendar
+                  slug={slug || "product"}
+                  variantId={selectedVariantObj?.id}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onDateRangeChange={(s, e) => {
+                    setValue("rentalStartDate", s, { shouldValidate: true });
+                    setValue("rentalEndDate", e, { shouldValidate: true });
+                  }}
+                  pillar={activePillar}
+                />
+              </div>
+            )}
           </div>
 
-          {showCalendar && (
-            <div className="pt-1">
-              <AvailabilityCalendar
-                slug={slug || "product"}
-                variantId={selectedVariantObj?.id}
-                startDate={startDate}
-                endDate={endDate}
-                onDateRangeChange={(s, e) => {
-                  setStartDate(s);
-                  setEndDate(e);
-                  handleBlur("dates");
-                }}
-                pillar={activePillar}
+          {/* Customer Information Form Fields */}
+          <div className="space-y-4 pt-2 border-t border-line/60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <FormField
+                control={control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="booking-fullname">
+                      Họ và tên người thuê <span className="text-danger">*</span>
+                    </FormLabel>
+                    <div className="relative flex items-center">
+                      <User className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
+                      <FormControl>
+                        <input
+                          id="booking-fullname"
+                          type="text"
+                          required
+                          placeholder="Ví dụ: Nguyễn Quỳnh Anh"
+                          {...field}
+                          className={cn(
+                            "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
+                            errors.fullName
+                              ? "border-danger focus:ring-danger/20"
+                              : "border-line focus:border-burgundy focus:ring-burgundy/20"
+                          )}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage id="fullname-error" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="booking-phone">
+                      Số điện thoại liên hệ <span className="text-danger">*</span>
+                    </FormLabel>
+                    <div className="relative flex items-center">
+                      <Phone className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
+                      <FormControl>
+                        <input
+                          id="booking-phone"
+                          type="tel"
+                          required
+                          placeholder="Ví dụ: 0912 345 678"
+                          {...field}
+                          className={cn(
+                            "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
+                            errors.phone
+                              ? "border-danger focus:ring-danger/20"
+                              : "border-line focus:border-burgundy focus:ring-burgundy/20"
+                          )}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage id="phone-error" />
+                  </FormItem>
+                )}
               />
             </div>
-          )}
-        </div>
 
-        {/* Customer Information Form Fields */}
-        <div className="space-y-4 pt-2 border-t border-line/60">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label
-                htmlFor="booking-fullname"
-                className="block text-xs font-medium text-ink mb-1"
-              >
-                Họ và tên người thuê <span className="text-danger">*</span>
-              </label>
-              <div className="relative flex items-center">
-                <User className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
-                <input
-                  id="booking-fullname"
-                  type="text"
-                  required
-                  placeholder="Ví dụ: Nguyễn Quỳnh Anh"
-                  value={fullName}
-                  aria-invalid={!!fullNameError}
-                  aria-describedby={fullNameError ? "fullname-error" : undefined}
-                  onChange={(e) => setFullName(e.target.value)}
-                  onBlur={() => handleBlur("fullName")}
-                  className={cn(
-                    "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
-                    fullNameError
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-line focus:border-burgundy focus:ring-burgundy/20"
-                  )}
-                />
-              </div>
-              {fullNameError && (
-                <p id="fullname-error" className="text-xs text-danger flex items-center gap-1 mt-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  <span>{fullNameError}</span>
-                </p>
-              )}
-            </div>
+            {/* Delivery Method Selector */}
+            <FormField
+              control={control}
+              name="deliveryMethod"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <span className="block text-xs font-medium text-ink">
+                    Hình thức nhận đồ:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        field.onChange("PICKUP_STORE");
+                        trigger("address");
+                      }}
+                      className={cn(
+                        "p-3 rounded-xl border text-left flex items-start gap-2.5 transition-all",
+                        field.value === "PICKUP_STORE"
+                          ? "border-burgundy bg-burgundy/5 ring-1 ring-burgundy shadow-xs"
+                          : "border-line bg-white hover:border-burgundy/40"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0",
+                          field.value === "PICKUP_STORE"
+                            ? "border-burgundy bg-burgundy text-white"
+                            : "border-ink-muted"
+                        )}
+                      >
+                        {field.value === "PICKUP_STORE" && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                        )}
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-semibold text-ink flex items-center gap-1">
+                          <Building2 className="w-3.5 h-3.5 text-burgundy" />
+                          <span>Nhận tại tiệm (Miễn phí)</span>
+                        </div>
+                        <p className="text-[11px] text-ink-muted leading-relaxed">
+                          18 Ngõ 120 Hoàng Hoa Thám, Ba Đình, HN. Thử váy và chỉnh size vừa vặn trước khi nhận.
+                        </p>
+                      </div>
+                    </button>
 
-            <div>
-              <label
-                htmlFor="booking-phone"
-                className="block text-xs font-medium text-ink mb-1"
-              >
-                Số điện thoại liên hệ <span className="text-danger">*</span>
-              </label>
-              <div className="relative flex items-center">
-                <Phone className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
-                <input
-                  id="booking-phone"
-                  type="tel"
-                  required
-                  placeholder="Ví dụ: 0912 345 678"
-                  value={phone}
-                  aria-invalid={!!phoneError}
-                  aria-describedby={phoneError ? "phone-error" : undefined}
-                  onChange={(e) => setPhone(e.target.value)}
-                  onBlur={() => handleBlur("phone")}
-                  className={cn(
-                    "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
-                    phoneError
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-line focus:border-burgundy focus:ring-burgundy/20"
-                  )}
-                />
-              </div>
-              {phoneError && (
-                <p id="phone-error" className="text-xs text-danger flex items-center gap-1 mt-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  <span>{phoneError}</span>
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Delivery Method Selector */}
-          <div className="space-y-2">
-            <span className="block text-xs font-medium text-ink">
-              Hình thức nhận đồ:
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={() => setDeliveryMethod("PICKUP_STORE")}
-                className={cn(
-                  "p-3 rounded-xl border text-left flex items-start gap-2.5 transition-all",
-                  deliveryMethod === "PICKUP_STORE"
-                    ? "border-burgundy bg-burgundy/5 ring-1 ring-burgundy shadow-xs"
-                    : "border-line bg-white hover:border-burgundy/40"
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0",
-                    deliveryMethod === "PICKUP_STORE"
-                      ? "border-burgundy bg-burgundy text-white"
-                      : "border-ink-muted"
-                  )}
-                >
-                  {deliveryMethod === "PICKUP_STORE" && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-                <div className="space-y-0.5">
-                  <div className="text-xs font-semibold text-ink flex items-center gap-1">
-                    <Building2 className="w-3.5 h-3.5 text-burgundy" />
-                    <span>Nhận tại tiệm (Miễn phí)</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        field.onChange("SHIP_TO_ADDRESS");
+                        trigger("address");
+                      }}
+                      className={cn(
+                        "p-3 rounded-xl border text-left flex items-start gap-2.5 transition-all",
+                        field.value === "SHIP_TO_ADDRESS"
+                          ? "border-burgundy bg-burgundy/5 ring-1 ring-burgundy shadow-xs"
+                          : "border-line bg-white hover:border-burgundy/40"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0",
+                          field.value === "SHIP_TO_ADDRESS"
+                            ? "border-burgundy bg-burgundy text-white"
+                            : "border-ink-muted"
+                        )}
+                      >
+                        {field.value === "SHIP_TO_ADDRESS" && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                        )}
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-semibold text-ink flex items-center gap-1">
+                          <Truck className="w-3.5 h-3.5 text-burgundy" />
+                          <span>Giao hàng tận nơi</span>
+                        </div>
+                        <p className="text-[11px] text-ink-muted leading-relaxed">
+                          Giao hỏa tốc nội thành Hà Nội. Shipper mang đồ tận tay trong khung giờ bạn chọn.
+                        </p>
+                      </div>
+                    </button>
                   </div>
-                  <p className="text-[11px] text-ink-muted leading-relaxed">
-                    18 Ngõ 120 Hoàng Hoa Thám, Ba Đình, HN. Thử váy và chỉnh size vừa vặn trước khi nhận.
-                  </p>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDeliveryMethod("SHIP_TO_ADDRESS")}
-                className={cn(
-                  "p-3 rounded-xl border text-left flex items-start gap-2.5 transition-all",
-                  deliveryMethod === "SHIP_TO_ADDRESS"
-                    ? "border-burgundy bg-burgundy/5 ring-1 ring-burgundy shadow-xs"
-                    : "border-line bg-white hover:border-burgundy/40"
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0",
-                    deliveryMethod === "SHIP_TO_ADDRESS"
-                      ? "border-burgundy bg-burgundy text-white"
-                      : "border-ink-muted"
-                  )}
-                >
-                  {deliveryMethod === "SHIP_TO_ADDRESS" && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-                <div className="space-y-0.5">
-                  <div className="text-xs font-semibold text-ink flex items-center gap-1">
-                    <Truck className="w-3.5 h-3.5 text-burgundy" />
-                    <span>Giao hàng tận nơi</span>
-                  </div>
-                  <p className="text-[11px] text-ink-muted leading-relaxed">
-                    Giao hỏa tốc nội thành Hà Nội. Shipper mang đồ tận tay trong khung giờ bạn chọn.
-                  </p>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Conditional Delivery Address Input */}
-          {deliveryMethod === "SHIP_TO_ADDRESS" && (
-            <div className="animate-in fade-in duration-200">
-              <label
-                htmlFor="booking-address"
-                className="block text-xs font-medium text-ink mb-1"
-              >
-                Địa chỉ giao đồ chi tiết <span className="text-danger">*</span>
-              </label>
-              <div className="relative flex items-center">
-                <MapPin className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
-                <input
-                  id="booking-address"
-                  type="text"
-                  required
-                  placeholder="Số nhà, tên đường, ngõ ngách, phường/xã, quận..."
-                  value={address}
-                  aria-invalid={!!addressError}
-                  aria-describedby={addressError ? "address-error" : undefined}
-                  onChange={(e) => setAddress(e.target.value)}
-                  onBlur={() => handleBlur("address")}
-                  className={cn(
-                    "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
-                    addressError
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-line focus:border-burgundy focus:ring-burgundy/20"
-                  )}
-                />
-              </div>
-              {addressError && (
-                <p id="address-error" className="text-xs text-danger flex items-center gap-1 mt-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  <span>{addressError}</span>
-                </p>
+                </FormItem>
               )}
-            </div>
-          )}
+            />
 
-          <div>
-            <label
-              htmlFor="booking-note"
-              className="block text-xs font-medium text-ink mb-1"
-            >
-              {pillarConfig.noteLabel}
-            </label>
-            <textarea
-              id="booking-note"
-              rows={2}
-              placeholder={pillarConfig.notePlaceholder}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              className="w-full p-2.5 rounded-btn bg-white text-sm border border-line text-ink focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/20 resize-none"
+            {/* Conditional Delivery Address Input */}
+            {deliveryMethod === "SHIP_TO_ADDRESS" && (
+              <FormField
+                control={control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="animate-in fade-in duration-200">
+                    <FormLabel htmlFor="booking-address">
+                      Địa chỉ giao đồ chi tiết <span className="text-danger">*</span>
+                    </FormLabel>
+                    <div className="relative flex items-center">
+                      <MapPin className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
+                      <FormControl>
+                        <input
+                          id="booking-address"
+                          type="text"
+                          required
+                          placeholder="Số nhà, tên đường, ngõ ngách, phường/xã, quận..."
+                          {...field}
+                          className={cn(
+                            "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
+                            errors.address
+                              ? "border-danger focus:ring-danger/20"
+                              : "border-line focus:border-burgundy focus:ring-burgundy/20"
+                          )}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage id="address-error" />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <FormField
+              control={control}
+              name="note"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="booking-note">
+                    {pillarConfig.noteLabel}
+                  </FormLabel>
+                  <FormControl>
+                    <textarea
+                      id="booking-note"
+                      rows={2}
+                      placeholder={pillarConfig.notePlaceholder}
+                      {...field}
+                      className="w-full p-2.5 rounded-btn bg-white text-sm border border-line text-ink focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/20 resize-none"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
             />
           </div>
-        </div>
 
-        {/* Pricing Summary Card */}
-        <div className="rounded-xl bg-ivory/50 border border-line p-4 space-y-2.5 text-sm">
-          <div className="flex justify-between items-center text-ink-muted text-xs">
-            <span>
-              {activePillar === "PHOTOGRAPHY" ? "Chi phí gói:" : "Giá thuê:"}{" "}
-              ({formattedRentalPrice}đ x {rentalDays} {pillarConfig.durationUnitLabel}):
-            </span>
-            <span className="font-medium text-ink">{formattedTotalRentalFee}đ</span>
+          {/* Pricing Summary Card */}
+          <div className="rounded-xl bg-ivory/50 border border-line p-4 space-y-2.5 text-sm">
+            <div className="flex justify-between items-center text-ink-muted text-xs">
+              <span>
+                {activePillar === "PHOTOGRAPHY" ? "Chi phí gói:" : "Giá thuê:"}{" "}
+                ({formattedRentalPrice}đ x {rentalDays} {pillarConfig.durationUnitLabel}):
+              </span>
+              <span className="font-medium text-ink">{formattedTotalRentalFee}đ</span>
+            </div>
+
+            <div className="flex justify-between items-center text-ink-muted text-xs">
+              <span className="flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-burgundy" />
+                {pillarConfig.depositSummaryLabel}
+              </span>
+              <span className="font-medium text-ink">{formattedDepositPrice}đ</span>
+            </div>
+
+            <div className="pt-2 border-t border-line/60 flex justify-between items-baseline">
+              <div>
+                <div className="text-xs font-medium text-ink">Tổng thanh toán dự kiến:</div>
+                <div className="text-[11px] text-ink-muted">
+                  {pillarConfig.depositSummaryNote}
+                </div>
+              </div>
+              <div className="text-lg font-bold text-burgundy">{formattedTotalAmount}đ</div>
+            </div>
           </div>
 
-          <div className="flex justify-between items-center text-ink-muted text-xs">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-burgundy" />
-              {pillarConfig.depositSummaryLabel}
-            </span>
-            <span className="font-medium text-ink">{formattedDepositPrice}đ</span>
-          </div>
-
-          <div className="pt-2 border-t border-line/60 flex justify-between items-baseline">
-            <div>
-              <div className="text-xs font-medium text-ink">Tổng thanh toán dự kiến:</div>
-              <div className="text-[11px] text-ink-muted">
-                {pillarConfig.depositSummaryNote}
+          {errorMsg && (
+            <div
+              role="alert"
+              tabIndex={-1}
+              className="p-3.5 rounded-xl bg-danger/10 border border-danger/30 text-danger text-xs flex items-start gap-2 animate-in fade-in duration-200"
+            >
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-danger" />
+              <div className="space-y-0.5">
+                <div className="font-semibold">Chưa thể gửi đơn:</div>
+                <div>{errorMsg}</div>
               </div>
             </div>
-            <div className="text-lg font-bold text-burgundy">{formattedTotalAmount}đ</div>
-          </div>
-        </div>
-
-        {errorMsg && (
-          <div
-            role="alert"
-            tabIndex={-1}
-            className="p-3.5 rounded-xl bg-danger/10 border border-danger/30 text-danger text-xs flex items-start gap-2 animate-in fade-in duration-200"
-          >
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-danger" />
-            <div className="space-y-0.5">
-              <div className="font-semibold">Chưa thể gửi đơn:</div>
-              <div>{errorMsg}</div>
-            </div>
-          </div>
-        )}
-
-        <Button
-          type="submit"
-          variant="primary"
-          size="md"
-          className="w-full justify-center shadow-md font-semibold text-base py-3.5"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Đang gửi thông tin đơn...
-            </span>
-          ) : (
-            pillarConfig.submitBtnText
           )}
-        </Button>
-      </form>
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            className="w-full justify-center shadow-md font-semibold text-base py-3.5"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Đang gửi thông tin đơn...
+              </span>
+            ) : (
+              pillarConfig.submitBtnText
+            )}
+          </Button>
+        </form>
+      </Form>
 
       {/* Success Modal */}
       {isSuccessModalOpen && createdBooking && (
@@ -721,7 +747,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-line space-y-5 my-6">
             <button
               type="button"
-              aria-label="Đóng"
+              aria-label="Close"
               onClick={() => setIsSuccessModalOpen(false)}
               className="absolute top-4 right-4 text-ink-muted hover:text-ink p-1.5 rounded-full hover:bg-ivory transition-colors"
             >
@@ -748,126 +774,119 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
               {/* Booking Code Banner */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-burgundy/10 border border-burgundy/20 text-burgundy text-xs font-semibold">
-                <span>Mã đơn: <strong>{createdBooking.bookingCode}</strong></span>
+                <span>Mã đơn:</span>
+                <span className="font-mono text-sm tracking-wide font-bold">
+                  {createdBooking.bookingCode}
+                </span>
                 <button
                   type="button"
                   onClick={() => handleCopyCode(createdBooking.bookingCode)}
-                  className="text-burgundy hover:text-burgundy-dark cursor-pointer inline-flex items-center gap-1 text-[11px]"
-                  title="Sao chép mã đơn"
+                  className="p-1 hover:bg-burgundy/20 rounded-md transition-colors"
+                  title="Sao chép mã"
                 >
                   {copiedCode ? (
-                    <span className="flex items-center gap-0.5 text-success">
-                      <Check className="w-3.5 h-3.5" /> Đã sao chép
-                    </span>
+                    <Check className="w-3.5 h-3.5 text-success" />
                   ) : (
-                    <span className="flex items-center gap-0.5">
-                      <Copy className="w-3.5 h-3.5" /> Sao chép
-                    </span>
+                    <Copy className="w-3.5 h-3.5" />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Order Details Bento Box */}
-            <div className="p-4 rounded-xl bg-ivory/60 border border-line text-xs space-y-2.5">
-              <div className="flex justify-between">
-                <span className="text-ink-muted">{pillarConfig.successItemLabel}</span>
-                <span className="font-semibold text-ink line-clamp-1">{productName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-ink-muted">{pillarConfig.successVariantLabel}</span>
-                <span className="font-medium text-ink">
-                  {selectedSize} {selectedColor ? `• ${selectedColor}` : ""}
+            {/* Summary Details */}
+            <div className="rounded-xl bg-ivory/60 border border-line p-3.5 space-y-2 text-xs">
+              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
+                <span className="text-ink-muted">Sản phẩm:</span>
+                <span className="font-semibold text-ink text-right max-w-[240px] truncate">
+                  {productName}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Thời gian thuê:</span>
-                <span className="font-medium text-ink">
-                  {startDate} đến {endDate} ({rentalDays} {pillarConfig.durationUnitLabel})
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Hình thức nhận:</span>
-                <span className="font-medium text-ink">
-                  {deliveryMethod === "PICKUP_STORE"
-                    ? "Nhận tại tiệm (18 Ngõ 120 Hoàng Hoa Thám)"
-                    : `Giao tận nơi (${address})`}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-ink-muted">Người đặt:</span>
+              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
+                <span className="text-ink-muted">Khách thuê:</span>
                 <span className="font-medium text-ink">
                   {fullName} - {phone}
                 </span>
               </div>
-              <div className="flex justify-between pt-2 border-t border-line/50">
-                <span className="font-medium text-ink">Tổng thanh toán dự kiến:</span>
-                <span className="font-bold text-burgundy text-sm">
-                  {new Intl.NumberFormat("vi-VN").format(createdBooking.totalAmount)}đ
+              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
+                <span className="text-ink-muted">Thời gian:</span>
+                <span className="font-medium text-ink">
+                  {startDate} đến {endDate} ({rentalDays} {pillarConfig.durationUnitLabel})
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
+                <span className="text-ink-muted">Hình thức nhận:</span>
+                <span className="font-medium text-ink">
+                  {deliveryMethod === "SHIP_TO_ADDRESS"
+                    ? "Giao hàng tận nơi"
+                    : "Nhận tại Studio (120 Hoàng Cầu)"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-1 font-semibold text-sm">
+                <span className="text-ink">Cọc cần chuyển khoản:</span>
+                <span className="text-burgundy font-bold">
+                  {formattedDepositPrice}đ
                 </span>
               </div>
             </div>
 
-            {/* Bank Transfer Instructions Card */}
-            <div className="p-4 rounded-xl bg-white border border-burgundy/20 shadow-xs space-y-3">
-              <div className="flex items-center gap-2 text-xs font-semibold text-burgundy">
-                <QrCode className="w-4 h-4 text-burgundy" />
-                <span>Hướng Dẫn Chuyển Khoản Đặt Cọc</span>
+            {/* Bank Transfer Box */}
+            <div className="rounded-xl border border-burgundy/30 bg-burgundy/5 p-4 space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold text-burgundy">
+                <div className="flex items-center gap-1.5">
+                  <QrCode className="w-4 h-4" />
+                  <span>Thông tin chuyển khoản cọc giữ đồ:</span>
+                </div>
+                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-burgundy/10 rounded-full">
+                  24/7
+                </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
-                  <span className="text-ink-muted block text-[11px]">Ngân hàng:</span>
-                  <strong className="text-ink font-semibold">MB Bank (Quân Đội)</strong>
+                  <div className="text-[11px] text-ink-muted">Ngân hàng:</div>
+                  <div className="font-semibold text-ink">Vietcombank (VCB)</div>
                 </div>
                 <div>
-                  <span className="text-ink-muted block text-[11px]">Số tài khoản:</span>
-                  <strong className="text-burgundy font-mono font-bold text-sm">
-                    9999 8888 6666
-                  </strong>
+                  <div className="text-[11px] text-ink-muted">Chủ tài khoản:</div>
+                  <div className="font-semibold text-ink uppercase">CHICKIE STUDIO</div>
                 </div>
                 <div>
-                  <span className="text-ink-muted block text-[11px]">Chủ tài khoản:</span>
-                  <strong className="text-ink font-semibold">CHICKIE STUDIO</strong>
+                  <div className="text-[11px] text-ink-muted">Số tài khoản:</div>
+                  <div className="font-mono font-bold text-burgundy">
+                    1029384756
+                  </div>
                 </div>
                 <div>
-                  <span className="text-ink-muted block text-[11px]">Nội dung CK:</span>
-                  <strong className="text-burgundy font-mono font-bold">
+                  <div className="text-[11px] text-ink-muted">Nội dung CK:</div>
+                  <div className="font-mono font-bold text-ink truncate">
                     {createdBooking.bookingCode} {phone}
-                  </strong>
+                  </div>
                 </div>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-burgundy/5 text-[11px] text-ink-muted flex items-start gap-1.5 leading-relaxed">
-                <Clock className="w-3.5 h-3.5 text-burgundy shrink-0 mt-0.5" />
-                <span>
-                  Tiệm giữ đồ an toàn trong vòng <strong>60 phút</strong>. Sau khi chuyển khoản, tiệm sẽ liên hệ xác nhận đơn ngay qua Zalo!
-                </span>
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
               <Button
+                type="button"
+                variant="secondary"
+                size="md"
+                onClick={() => setIsSuccessModalOpen(false)}
+                className="w-full sm:flex-1 justify-center"
+              >
+                Đóng
+              </Button>
+              <Button
+                type="button"
                 variant="primary"
                 size="md"
-                className="w-full sm:flex-1 justify-center inline-flex items-center gap-1.5"
                 onClick={() => {
-                  setIsSuccessModalOpen(false);
                   router.push(`/booking/success/${createdBooking.bookingCode}`);
                 }}
+                className="w-full sm:flex-1 justify-center gap-1.5"
               >
                 <span>Xem hóa đơn chi tiết</span>
                 <ExternalLink className="w-4 h-4" />
-              </Button>
-
-              <Button
-                variant="secondary"
-                size="md"
-                className="w-full sm:w-auto justify-center"
-                onClick={() => setIsSuccessModalOpen(false)}
-              >
-                Tiếp tục xem đồ
               </Button>
             </div>
           </div>
@@ -878,8 +897,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       <SizeGuideModal
         isOpen={isSizeGuideOpen}
         onClose={() => setIsSizeGuideOpen(false)}
+        onSelectSize={(size) => {
+          setValue("size", size, { shouldValidate: true });
+        }}
         pillar={activePillar}
-        onSelectSize={(size) => setSelectedSize(size)}
       />
     </div>
   );

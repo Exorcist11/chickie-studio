@@ -10,6 +10,7 @@ export * from "./Checkbox";
 export * from "./RadioGroup";
 export * from "./Switch";
 export * from "./DateRangeField";
+export * from "./primitives/form";
 
 // Selection & Tags
 export * from "./Chip";

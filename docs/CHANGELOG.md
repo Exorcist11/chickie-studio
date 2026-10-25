@@ -24,22 +24,18 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
       - `client/src/types/booking.ts`: Khai báo types chuẩn `BookingDeliveryMethod`, `BookingStatus`, `CreateBookingRequest`, `BookingResponse`.
       - `client/src/lib/api/booking.ts`: Triển khai `createBooking` và `getBookingByCode` với cơ chế fallback mock thông minh bảo đảm trải nghiệm demo / offline liên tục.
       - Unit test API client: 7/7 tests pass 100% trong `booking.test.ts`.
-    - **Form Đặt Thuê [BookingForm.tsx](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx)**:
-      - Xác thực tức thì (inline validation trên `onBlur`) cho Họ tên, Số điện thoại (regex chuẩn), Địa chỉ nhận hàng.
-      - Khối tóm tắt lỗi tổng quan `role="alert"` và `aria-describedby` hỗ trợ chuẩn tiếp cận WCAG 2.1 AA.
-      - Chuyển đổi phương thức nhận đồ: `PICKUP_STORE` (Nhận tại Studio - Chickie Studio 120 Hoàng Cầu) vs `SHIP_TO_ADDRESS` (Giao tận nơi theo địa chỉ khách).
-      - Bảng dự toán chi phí chi tiết: Giá thuê theo ngày, Số ngày thuê, Tiền cọc hoàn lại, Tổng tiền cần thanh toán ban đầu.
-      - Modal xác nhận đặt thuê phong cách luxury kèm mã đơn hàng, nút sao chép mã đơn và hướng dẫn chuyển khoản cọc.
-    - **Trang Hóa Đơn Trực Tuyến [page.tsx](file:///e:/chickie-studio/client/src/app/booking/success/[code]/page.tsx) (`/booking/success/[code]`)**:
-      - Hiển thị đầy đủ thông tin đơn: Mã booking, trạng thái (`PENDING` - Chờ cọc), danh sách món đồ, ngày nhận - trả, số ngày thuê, tiền thuê, tiền cọc, phương thức nhận đồ.
-      - Box hướng dẫn chuyển khoản ngân hàng trực quan (Vietcombank - Chickie Studio) kèm nút sao chép số tài khoản một chạm và cú pháp nội dung chuyển khoản tự động.
-      - Hộp hỗ trợ khẩn cấp: Hotline `0912 345 678` và địa chỉ Studio.
-    - **Đa ngôn ngữ & Kiểm thử**:
-      - Bổ sung toàn diện chuỗi dịch đa ngữ cho booking, phương thức giao nhận và thông tin ngân hàng trong cả `vi.json` và `en.json`.
-      - Toàn bộ Client: **44 test files, 220 unit tests pass 100%**.
-      - Vitest coverage: `BookingForm.tsx` (Statements 93.45%, Branches 81.02%, Lines 93.45%), `booking.ts` (Lines 96.5%).
-      - TypeScript strict `typecheck` 0 errors, ESLint 0 errors, 0 warnings.
-      - Playwright E2E: **11/11 tests pass 100%** (bao gồm luồng đặt thuê và kiểm tra trang hóa đơn thành công).
+    - **Quản Lý Form với React Hook Form & Zod Schema**:
+      - Thư viện: Cài đặt và tích hợp `react-hook-form`, `zod@^3.23.8`, và `@hookform/resolvers/zod`.
+      - **Shadcn UI Form Primitives [form.tsx](file:///e:/chickie-studio/client/src/components/ui/primitives/form.tsx)**: Xây dựng bộ component chuẩn `Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormDescription`, `FormMessage` tuân thủ nghiêm ngặt shadcn/ui và hỗ trợ đồng bộ ID thông minh cho Accessible Labels (WCAG 2.1 AA).
+      - **Zod Validation Schema [booking.schema.ts](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/booking.schema.ts)**: Định nghĩa schema xác thực tự động cho họ tên, số điện thoại regex Việt Nam, ngày nhận/trả đồ không ở quá khứ, và điều kiện địa chỉ giao hàng khi chọn `SHIP_TO_ADDRESS`.
+      - **Refactor [BookingForm.tsx](file:///e:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx)**: Chuyển đổi toàn bộ từ các `useState` rời rạc sang `useForm<BookingFormValues>` kết hợp `zodResolver`, lắng nghe động qua `watch`, và liên kết các trường qua `<FormField />`.
+      - **Độ phủ kiểm thử & Chất lượng**:
+        - Toàn bộ Client: **46 test files, 233 unit tests pass 100%**.
+        - Vitest coverage: `BookingForm.tsx` (Statements 93.23%, Branches 83.16%, Lines 93.23%), `booking.schema.ts` (100% Statements/Branches/Lines).
+        - Tổng thể toàn bộ Client vượt ngưỡng dự án: **Statements 94.38%, Lines 94.38%, Branches 84.27%, Functions 82.51%** ($\ge 80\%$).
+        - TypeScript strict `typecheck` 0 errors, ESLint 0 errors.
+        - Next.js production build (`npm run build`) thành công 100%.
+        - Playwright E2E: **11/11 tests pass 100%** (`npm run test:e2e`).
 
 - **Chi Tiết Sản Phẩm, Bảng Thông Số Kích Cỡ & Lịch Trống Khả Dụng (CAT-006 - ✅ DONE)**:
   - **Backend Server (Spring Boot 3 + MySQL)**:
