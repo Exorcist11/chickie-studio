@@ -1,6 +1,7 @@
 package com.chickiestudio.booking.controller;
 
 import com.chickiestudio.booking.dto.BookingResponse;
+import com.chickiestudio.booking.dto.BookingTrackingRequest;
 import com.chickiestudio.booking.dto.CreateBookingRequest;
 import com.chickiestudio.booking.service.BookingService;
 import com.chickiestudio.common.dto.ApiResponse;
@@ -37,5 +38,13 @@ public class PublicBookingController {
     ) {
         BookingResponse response = bookingService.getBookingByCode(bookingCode);
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PostMapping("/tracking")
+    public ResponseEntity<ApiResponse<BookingResponse>> trackBooking(
+            @Valid @RequestBody BookingTrackingRequest request
+    ) {
+        BookingResponse response = bookingService.trackBooking(request);
+        return ResponseEntity.ok(ApiResponse.success("Tra cứu đơn thuê thành công", response));
     }
 }

@@ -5,6 +5,7 @@ import com.chickiestudio.auth.security.JwtTokenProvider;
 import com.chickiestudio.auth.security.SecurityConfig;
 import com.chickiestudio.booking.dto.BookingItemResponse;
 import com.chickiestudio.booking.dto.BookingResponse;
+import com.chickiestudio.booking.dto.BookingTrackingRequest;
 import com.chickiestudio.booking.dto.CreateBookingRequest;
 import com.chickiestudio.booking.entity.BookingStatus;
 import com.chickiestudio.booking.service.BookingService;
@@ -177,6 +178,71 @@ class PublicBookingControllerTest {
                 .thenThrow(new ResourceNotFoundException("Không tìm thấy đơn đặt thuê"));
 
         mockMvc.perform(get("/api/public/bookings/NOT-FOUND"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value(404));
+    }
+
+    @Test
+    @DisplayName("POST /api/public/bookings/tracking - Tra cứu đơn bằng mã và số điện thoại thành công (200 OK)")
+    void trackBooking_Success() throws Exception {
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("BK20261025-9988")
+                .phone("0901234567")
+                .build();
+
+        BookingResponse response = BookingResponse.builder()
+                .id(1L)
+                .bookingCode("BK20261025-9988")
+                .customerName("Lê Hải Yến")
+                .customerPhone("0901234567")
+                .deliveryMethod("PICKUP_STORE")
+                .rentalStartDate(LocalDate.now().plusDays(1))
+                .rentalEndDate(LocalDate.now().plusDays(2))
+                .status(BookingStatus.CONFIRMED)
+                .totalAmount(new BigDecimal("860000"))
+                .build();
+
+        when(bookingService.trackBooking(any(BookingTrackingRequest.class))).thenReturn(response);
+
+        mockMvc.perform(post("/api/public/bookings/tracking")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.message").value("Tra cứu đơn thuê thành công"))
+                .andExpect(jsonPath("$.data.bookingCode").value("BK20261025-9988"))
+                .andExpect(jsonPath("$.data.status").value("CONFIRMED"));
+    }
+
+    @Test
+    @DisplayName("POST /api/public/bookings/tracking - Báo lỗi 400 Bad Request khi thiếu mã đơn hoặc SĐT sai format")
+    void trackBooking_ValidationFailure() throws Exception {
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("")
+                .phone("123")
+                .build();
+
+        mockMvc.perform(post("/api/public/bookings/tracking")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400));
+    }
+
+    @Test
+    @DisplayName("POST /api/public/bookings/tracking - Báo lỗi 404 khi không tìm thấy đơn hoặc SĐT không khớp")
+    void trackBooking_NotFound() throws Exception {
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("BK20261025-0000")
+                .phone("0901234567")
+                .build();
+
+        when(bookingService.trackBooking(any(BookingTrackingRequest.class)))
+                .thenThrow(new ResourceNotFoundException("Không tìm thấy đơn đặt thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại"));
+
+        mockMvc.perform(post("/api/public/bookings/tracking")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value(404));
     }

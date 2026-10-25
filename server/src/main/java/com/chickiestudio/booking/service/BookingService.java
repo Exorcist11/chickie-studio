@@ -3,6 +3,7 @@ package com.chickiestudio.booking.service;
 import com.chickiestudio.booking.dto.BookingItemResponse;
 import com.chickiestudio.booking.dto.BookingResponse;
 import com.chickiestudio.booking.dto.BookingStatusHistoryResponse;
+import com.chickiestudio.booking.dto.BookingTrackingRequest;
 import com.chickiestudio.booking.dto.CreateBookingRequest;
 import com.chickiestudio.booking.dto.UpdateBookingStatusRequest;
 import com.chickiestudio.booking.entity.Booking;
@@ -330,6 +331,52 @@ public class BookingService {
         if (durationDays < 1) durationDays = 1;
 
         return mapToResponse(booking, durationDays);
+    }
+
+    @Transactional(readOnly = true)
+    public BookingResponse trackBooking(BookingTrackingRequest request) {
+        String code = request.getBookingCode() != null ? request.getBookingCode().trim() : "";
+        Booking booking = bookingRepository.findByBookingCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn đặt thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại"));
+
+        // Match phone with normalization (BR-01)
+        if (!isPhoneMatching(booking.getCustomerPhone(), request.getPhone())) {
+            throw new ResourceNotFoundException("Không tìm thấy đơn đặt thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại");
+        }
+
+        int durationDays = (int) ChronoUnit.DAYS.between(booking.getRentalStartDate(), booking.getRentalEndDate()) + 1;
+        if (durationDays < 1) durationDays = 1;
+
+        BookingResponse response = mapToResponse(booking, durationDays);
+
+        // Sanitize sensitive admin/staff info for guest customer tracking (BR-02)
+        if (response.getStatusHistories() != null) {
+            List<BookingStatusHistoryResponse> sanitizedHistories = response.getStatusHistories().stream()
+                    .map(h -> {
+                        String displayActor = "CUSTOMER".equalsIgnoreCase(h.getChangedBy()) ? "CUSTOMER" : "CHICKIE_STUDIO";
+                        return BookingStatusHistoryResponse.builder()
+                                .id(h.getId())
+                                .fromStatus(h.getFromStatus())
+                                .toStatus(h.getToStatus())
+                                .changedBy(displayActor)
+                                .note(h.getNote())
+                                .createdAt(h.getCreatedAt())
+                                .build();
+                    })
+                    .toList();
+            response.setStatusHistories(sanitizedHistories);
+        }
+
+        return response;
+    }
+
+    private boolean isPhoneMatching(String phone1, String phone2) {
+        if (phone1 == null || phone2 == null) return false;
+        String p1 = phone1.replaceAll("[^0-9]", "");
+        String p2 = phone2.replaceAll("[^0-9]", "");
+        if (p1.startsWith("84")) p1 = "0" + p1.substring(2);
+        if (p2.startsWith("84")) p2 = "0" + p2.substring(2);
+        return p1.equals(p2);
     }
 
     private String generateUniqueBookingCode() {

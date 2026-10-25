@@ -1,6 +1,7 @@
 package com.chickiestudio.booking.service;
 
 import com.chickiestudio.booking.dto.BookingResponse;
+import com.chickiestudio.booking.dto.BookingTrackingRequest;
 import com.chickiestudio.booking.dto.CreateBookingRequest;
 import com.chickiestudio.booking.dto.UpdateBookingStatusRequest;
 import com.chickiestudio.booking.entity.Booking;
@@ -458,5 +459,122 @@ class BookingServiceTest {
         assertThatThrownBy(() -> bookingService.updateBookingStatus(5L, req, "staff1"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Không thể chuyển đổi trạng thái đơn thuê từ PENDING sang COMPLETED");
+    }
+
+    @Test
+    @DisplayName("trackBooking - Tra cứu thành công với số điện thoại chuẩn xác và che thông tin nhân viên")
+    void trackBooking_Success() {
+        Booking booking = Booking.builder()
+                .id(10L)
+                .bookingCode("BK20261025-ABCD")
+                .customerName("Trần Mỹ Linh")
+                .customerPhone("0901234567")
+                .rentalStartDate(LocalDate.now().plusDays(1))
+                .rentalEndDate(LocalDate.now().plusDays(3))
+                .status(BookingStatus.CONFIRMED)
+                .totalRentalPrice(new BigDecimal("500000"))
+                .totalDepositPrice(new BigDecimal("1000000"))
+                .build();
+
+        BookingStatusHistory history1 = BookingStatusHistory.builder()
+                .id(1L)
+                .fromStatus(null)
+                .toStatus(BookingStatus.PENDING)
+                .changedBy("CUSTOMER")
+                .note("Đơn đặt qua web")
+                .build();
+
+        BookingStatusHistory history2 = BookingStatusHistory.builder()
+                .id(2L)
+                .fromStatus(BookingStatus.PENDING)
+                .toStatus(BookingStatus.CONFIRMED)
+                .changedBy("admin_user_secret")
+                .note("Đã xác nhận cọc")
+                .build();
+
+        when(bookingRepository.findByBookingCode("BK20261025-ABCD")).thenReturn(Optional.of(booking));
+        when(bookingStatusHistoryRepository.findByBookingIdOrderByCreatedAtDesc(10L))
+                .thenReturn(List.of(history2, history1));
+
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("BK20261025-ABCD")
+                .phone("0901234567")
+                .build();
+
+        BookingResponse response = bookingService.trackBooking(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getBookingCode()).isEqualTo("BK20261025-ABCD");
+        assertThat(response.getCustomerName()).isEqualTo("Trần Mỹ Linh");
+        assertThat(response.getStatus()).isEqualTo(BookingStatus.CONFIRMED);
+        assertThat(response.getStatusHistories()).hasSize(2);
+        // Kiểm tra bảo mật BR-02: Nhân viên bị thay bằng CHICKIE_STUDIO, khách vẫn là CUSTOMER
+        assertThat(response.getStatusHistories().get(0).getChangedBy()).isEqualTo("CHICKIE_STUDIO");
+        assertThat(response.getStatusHistories().get(1).getChangedBy()).isEqualTo("CUSTOMER");
+    }
+
+    @Test
+    @DisplayName("trackBooking - Khách nhập số điện thoại với tiền tố +84 vẫn đối soát thành công")
+    void trackBooking_WithPlus84Prefix_Success() {
+        Booking booking = Booking.builder()
+                .id(11L)
+                .bookingCode("BK20261025-PLUS84")
+                .customerName("Đỗ Hoàng Yến")
+                .customerPhone("0987654321")
+                .rentalStartDate(LocalDate.now().plusDays(2))
+                .rentalEndDate(LocalDate.now().plusDays(4))
+                .status(BookingStatus.PENDING)
+                .build();
+
+        when(bookingRepository.findByBookingCode("BK20261025-PLUS84")).thenReturn(Optional.of(booking));
+        when(bookingStatusHistoryRepository.findByBookingIdOrderByCreatedAtDesc(11L))
+                .thenReturn(Collections.emptyList());
+
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("BK20261025-PLUS84")
+                .phone("+84987654321")
+                .build();
+
+        BookingResponse response = bookingService.trackBooking(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getBookingCode()).isEqualTo("BK20261025-PLUS84");
+        assertThat(response.getCustomerName()).isEqualTo("Đỗ Hoàng Yến");
+    }
+
+    @Test
+    @DisplayName("trackBooking - Sai số điện thoại ném ResourceNotFoundException bảo mật")
+    void trackBooking_WrongPhone_ThrowsNotFound() {
+        Booking booking = Booking.builder()
+                .id(12L)
+                .bookingCode("BK20261025-WRONG")
+                .customerPhone("0901234567")
+                .build();
+
+        when(bookingRepository.findByBookingCode("BK20261025-WRONG")).thenReturn(Optional.of(booking));
+
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("BK20261025-WRONG")
+                .phone("0988888888")
+                .build();
+
+        assertThatThrownBy(() -> bookingService.trackBooking(request))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Không tìm thấy đơn đặt thuê phù hợp");
+    }
+
+    @Test
+    @DisplayName("trackBooking - Mã đơn không tồn tại ném ResourceNotFoundException")
+    void trackBooking_CodeNotFound_ThrowsNotFound() {
+        when(bookingRepository.findByBookingCode("BK-UNKNOWN")).thenReturn(Optional.empty());
+
+        BookingTrackingRequest request = BookingTrackingRequest.builder()
+                .bookingCode("BK-UNKNOWN")
+                .phone("0901234567")
+                .build();
+
+        assertThatThrownBy(() -> bookingService.trackBooking(request))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Không tìm thấy đơn đặt thuê phù hợp");
     }
 }
