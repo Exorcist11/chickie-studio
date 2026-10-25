@@ -45,11 +45,11 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **PAY** | Thanh toán & Cọc | 5 | 5 | 0 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 3 | 1 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 3 | 0 | 0 | 0 | 0% |
-| **CNT** | Nội dung & SEO | 7 | 4 | 2 | 0 | 1 | 14.3% |
+| **CNT** | Nội dung & SEO | 7 | 4 | 1 | 0 | 2 | 28.6% |
 | **SET** | Cấu hình hệ thống | 3 | 3 | 0 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **29** | **3** | **0** | **18** | **36.0%** |
+| **TỔNG CỘNG** | | **50** | **29** | **2** | **0** | **19** | **38.0%** |
 
-*(Lưu ý: UI-000, UI-001, UI-002, UI-003, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-003, BOK-004, BOK-005, CNT-001 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: UI-000, UI-001, UI-002, UI-003, AUTH-001/002/003, CAT-001, CAT-002, CAT-003, CAT-005, CAT-006, BOK-001, BOK-002, BOK-003, BOK-004, BOK-005, CNT-001, CNT-002 đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; các tính năng cốt lõi P0 còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -142,7 +142,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
 | `CNT-001` | Trang chủ website Client (Landing Page) | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev & UI/UX Specialist | 2026-10-25 | 2026-10-25 | [CNT-001](features/content-seo/CNT-001-trang-chu-client.md) |
-| `CNT-002` | Các trang tĩnh: Chính sách thuê, FAQ, Liên hệ | CLIENT | P0 | 📝 SPEC | Content Lead | - | - | [CNT-002](features/content-seo/CNT-002-trang-tinh-chinh-sach-faq-lien-he.md) |
+| `CNT-002` | Các trang tĩnh: Chính sách thuê, FAQ, Liên hệ | CLIENT | P0 | ✅ DONE | Fullstack Dev & UI/UX Specialist | 2026-10-25 | 2026-10-25 | [CNT-002](features/content-seo/CNT-002-trang-tinh-chinh-sach-faq-lien-he.md) |
 | `CNT-003` | Cấu hình SEO Metadata, Sitemap XML & Structured Data | CLIENT | P2 | ⬜ TODO | - | - | - | - |
 | `CNT-004` | Blog chia sẻ kinh nghiệm chụp ảnh & chọn đồ | CLIENT, CRM | P2 | ⬜ TODO | - | - | - | - |
 | `CNT-005` | Lookbook bộ sưu tập ảnh phối đồ theo mùa | CLIENT, CRM | P2 | ⬜ TODO | - | - | - | - |
@@ -164,6 +164,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-25 | `CNT-002` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Component Accordion & Breadcrumbs chuẩn WAI-ARIA; 4 routes tĩnh SSG (/chinh-sach-thue-do, /faq, /gioi-thieu, /lien-he); bộ từ điển song ngữ vi/en đầy đủ; 354/354 unit tests pass & 4/4 Playwright E2E tests pass 100% |
 | 2026-10-25 | `BOK-003` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện: State Transition Guard (canTransitionTo, getValidNextStatuses), đồng bộ vòng đời món đồ vật lý (RENTED -> LAUNDRY -> AVAILABLE), bảng Audit Trail booking_status_histories, API PATCH /api/admin/bookings/{id}/status, API POST /api/admin/bookings/check-overdue, 203/203 tests pass 100% |
 | 2026-10-25 | `BOK-002` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện: Khóa bi quan Pessimistic Write Lock findActiveItemsForUpdate trong ProductItemRepository ngăn chặn triệt để Race condition / trùng lịch; chuẩn hóa thuật toán tính bufferDays theo loại danh mục (1 ngày cho trang phục, 0 ngày cho máy ảnh/dịch vụ); kiểm tra giao thoa khoảng thời gian đối xứng; 198/198 tests pass 100% |
 | 2026-10-25 | `CNT-001` | 🚧 IN_PROGRESS $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Backend API GET /api/public/home/featured tổng hợp 6 khối nội dung; Client HomePage SSR kết nối API, bổ sung ProcessSteps (4 bước thuê đồ trực quan), FloatingContact (Hotline 1 chạm & Zalo chat), JSON-LD ClothingStore SEO, 273/273 unit tests & 16/16 Playwright tests pass 100% |

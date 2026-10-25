@@ -259,82 +259,57 @@ export function ContactClientPage() {
                   <form onSubmit={handleSubmit} noValidate className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Full Name */}
-                      <div>
-                        <label
-                          htmlFor="fullName"
-                          className="block text-xs font-medium text-ink mb-1.5"
-                        >
-                          {t("nameLabel")} <span className="text-danger">*</span>
-                        </label>
-                        <TextField
-                          id="fullName"
-                          type="text"
-                          placeholder={t("namePlaceholder")}
-                          value={fullName}
-                          onChange={(e) => {
-                            setFullName(e.target.value);
-                            if (errors.fullName) {
-                              setErrors((prev) => ({ ...prev, fullName: "" }));
-                            }
-                          }}
-                          className={errors.fullName ? "border-danger focus-visible:ring-danger" : ""}
-                        />
-                        {errors.fullName && (
-                          <p className="text-xs text-danger mt-1">{errors.fullName}</p>
-                        )}
-                      </div>
+                      <TextField
+                        id="fullName"
+                        label={t("nameLabel")}
+                        required
+                        type="text"
+                        placeholder={t("namePlaceholder")}
+                        value={fullName}
+                        onChange={(e) => {
+                          setFullName(e.target.value);
+                          if (errors.fullName) {
+                            setErrors((prev) => ({ ...prev, fullName: "" }));
+                          }
+                        }}
+                        error={errors.fullName}
+                      />
 
                       {/* Phone Number */}
-                      <div>
-                        <label
-                          htmlFor="phone"
-                          className="block text-xs font-medium text-ink mb-1.5"
-                        >
-                          {t("phoneLabel")} <span className="text-danger">*</span>
-                        </label>
-                        <TextField
-                          id="phone"
-                          type="tel"
-                          inputMode="tel"
-                          placeholder={t("phonePlaceholder")}
-                          value={phone}
-                          onChange={(e) => {
-                            setPhone(e.target.value);
-                            if (errors.phone) {
-                              setErrors((prev) => ({ ...prev, phone: "" }));
-                            }
-                          }}
-                          className={errors.phone ? "border-danger focus-visible:ring-danger" : ""}
-                        />
-                        {errors.phone && (
-                          <p className="text-xs text-danger mt-1">{errors.phone}</p>
-                        )}
-                      </div>
+                      <TextField
+                        id="phone"
+                        label={t("phoneLabel")}
+                        required
+                        type="tel"
+                        inputMode="tel"
+                        placeholder={t("phonePlaceholder")}
+                        value={phone}
+                        onChange={(e) => {
+                          setPhone(e.target.value);
+                          if (errors.phone) {
+                            setErrors((prev) => ({ ...prev, phone: "" }));
+                          }
+                        }}
+                        error={errors.phone}
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Email */}
-                      <div>
-                        <label
-                          htmlFor="email"
-                          className="block text-xs font-medium text-ink mb-1.5"
-                        >
-                          {t("emailLabel")}
-                        </label>
-                        <TextField
-                          id="email"
-                          type="email"
-                          placeholder={t("emailPlaceholder")}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                      </div>
+                      <TextField
+                        id="email"
+                        label={t("emailLabel")}
+                        type="email"
+                        placeholder={t("emailPlaceholder")}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
 
                       {/* Service */}
-                      <div>
+                      <div className="w-full flex flex-col gap-1.5 text-left">
                         <label
                           htmlFor="service"
-                          className="block text-xs font-medium text-ink mb-1.5"
+                          className="block text-sm font-medium text-ink cursor-pointer"
                         >
                           {t("serviceLabel")}
                         </label>
@@ -342,7 +317,7 @@ export function ContactClientPage() {
                           id="service"
                           value={service}
                           onChange={(e) => setService(e.target.value)}
-                          className="w-full h-11 px-3.5 rounded-btn border border-line bg-warm-white text-ink text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
+                          className="w-full h-10 px-3 py-2 rounded-md border border-line bg-warm-white text-ink text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
                         >
                           <option value="dress">{t("serviceDress")}</option>
                           <option value="camera">{t("serviceCamera")}</option>

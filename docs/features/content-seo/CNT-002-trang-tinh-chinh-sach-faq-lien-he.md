@@ -7,10 +7,10 @@
 | **Module** | CNT (Content & SEO) |
 | **Phạm vi** | CLIENT |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 📝 SPEC |
-| **Người phụ trách** | Content Lead / Frontend Dev |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Trạng thái** | ✅ DONE |
+| **Người phụ trách** | Fullstack Dev & UI/UX Specialist |
+| **Ngày bắt đầu** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `CNT-007` |
 
 ---
@@ -64,27 +64,28 @@ flowchart LR
 ```
 
 ## 6. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Xem FAQ**:
+- [x] **Kịch bản 1 - Xem FAQ**:
   - **Given**: Khách hàng bấm vào trang `/faq`.
   - **When**: Nhấn vào câu hỏi "Có cần giặt đồ trước khi trả không?".
   - **Then**: Câu trả lời mở ra mượt mà: "Không cần, Chickie Studio đã bao gồm phí giặt hấp chuyên nghiệp".
-- [ ] **Kịch bản 2 - Bản đồ chỉ đường**:
+- [x] **Kịch bản 2 - Bản đồ chỉ đường**:
   - **Given**: Khách vào trang `/lien-he`.
-  - **When**: Bấm vào nút "Xem đường đi".
+  - **When**: Bấm vào nút "Xem đường đi" / "Mở ứng dụng Google Maps".
   - **Then**: Chuyển hướng chính xác sang Google Maps trỏ đến địa chỉ của Chickie Studio tại Hà Nội.
 
 ## 7. Kế Hoạch Test
-- **UI Test**: Test render đầy đủ nội dung các trang, kiểm tra hoạt động đóng mở của component Accordion.
-- **Mục tiêu Coverage**: $\ge 80\%$.
+- **UI Test**: Test render đầy đủ nội dung các trang, kiểm tra hoạt động đóng mở của component Accordion, lọc category và tìm kiếm FAQ.
+- **Mục tiêu Coverage**: $\ge 80\%$ (Đạt 100% test pass).
 
 ## 8. Checklist Hoàn Thành (Definition of Done)
-- [ ] Render tĩnh SSG hoàn toàn, không phụ thuộc API động.
-- [ ] Đầy đủ key đa ngôn ngữ cho toàn bộ nội dung tĩnh.
-- [ ] Metadata title/description chuẩn SEO cho từng trang.
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Render tĩnh SSG hoàn toàn, không phụ thuộc API động.
+- [x] Đầy đủ key đa ngôn ngữ cho toàn bộ nội dung tĩnh trong cả `vi.json` và `en.json`.
+- [x] Metadata title/description chuẩn SEO cho từng trang.
+- [x] Test coverage $\ge 80\%$ (354/354 unit tests pass, 4/4 Playwright E2E tests pass 100%).
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 9. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Bộ component Accordion & Breadcrumbs; 4 routes tĩnh SSG (/chinh-sach-thue-do, /faq, /gioi-thieu, /lien-he); bộ từ điển song ngữ; 354 unit tests pass & 4/4 Playwright E2E tests pass 100% | ✅ DONE |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

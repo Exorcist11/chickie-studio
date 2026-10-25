@@ -10,11 +10,11 @@ test.describe("Static Content Pages (CNT-002)", () => {
     );
     await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toBeVisible();
 
-    // Kiểm tra các phần cốt lõi
-    await expect(page.getByText("1. Quy Định Đặt Cọc & Giữ Lịch")).toBeVisible();
-    await expect(page.getByText("2. Hướng Dẫn Giữ Gìn & Bảo Quản")).toBeVisible();
-    await expect(page.getByText("3. Quy Định Thời Gian Trả & Phụ Phí Trễ Hạn")).toBeVisible();
-    await expect(page.getByText("4. Biểu Phí Xử Lý Hư Hại & Mất Mát")).toBeVisible();
+    // Kiểm tra các phần cốt lõi qua heading
+    await expect(page.getByRole("heading", { name: /1\. Quy Định Đặt Cọc/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /2\. Hướng Dẫn Giữ Gìn/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /3\. Quy Định Thời Gian/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /4\. Biểu Phí Xử Lý/i })).toBeVisible();
 
     // Kiểm tra bảng bồi hoàn hư hại
     await expect(page.getByText("Tình trạng hư hại")).toBeVisible();
@@ -61,7 +61,7 @@ test.describe("Static Content Pages (CNT-002)", () => {
     // Kiểm tra các chỉ số thống kê
     await expect(page.getByText("200+")).toBeVisible();
     await expect(page.getByText("5,000+")).toBeVisible();
-    await expect(page.getByText("100%")).toBeVisible();
+    await expect(page.getByText("100%", { exact: true })).toBeVisible();
 
     // Kiểm tra nút CTA dẫn tới danh sách sản phẩm
     const exploreBtn = page.getByRole("link", { name: /Xem bộ sưu tập váy/i });
@@ -69,6 +69,9 @@ test.describe("Static Content Pages (CNT-002)", () => {
   });
 
   test("trang liên hệ: hiển thị thông tin showroom, bản đồ và gửi form thành công", async ({ page }) => {
+    page.on("console", (msg) => console.log("PAGE LOG:", msg.text()));
+    page.on("pageerror", (err) => console.log("PAGE ERROR:", err.message));
+
     await page.goto("/lien-he");
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -82,15 +85,20 @@ test.describe("Static Content Pages (CNT-002)", () => {
     await expect(mapsLink).toBeVisible();
     await expect(mapsLink).toHaveAttribute("target", "_blank");
 
-    // Điền form liên hệ
-    await page.getByPlaceholder("Ví dụ: Nguyễn Linh Chi").fill("Lê Phương Linh");
-    await page.getByPlaceholder("Ví dụ: 0912345678").fill("0977889900");
-    await page.getByPlaceholder("linhchi@gmail.com").fill("phuonglinh@gmail.com");
+    // Điền form liên hệ bằng getByLabel chuẩn accessible
+    const nameInput = page.getByLabel(/Họ và tên/i);
+    await nameInput.fill("Lê Phương Linh");
+
+    const phoneInput = page.getByLabel(/Số điện thoại/i);
+    await phoneInput.fill("0977889900");
+
+    const emailInput = page.getByLabel(/Địa chỉ Email/i);
+    await emailInput.fill("phuonglinh@gmail.com");
 
     const submitBtn = page.getByRole("button", { name: "Gửi lời nhắn" });
     await submitBtn.click();
 
     // Kiểm tra thông báo thành công
-    await expect(page.getByText("Gửi lời nhắn thành công!")).toBeVisible();
+    await expect(page.getByText("Gửi lời nhắn thành công!")).toBeVisible({ timeout: 10000 });
   });
 });

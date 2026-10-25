@@ -7,6 +7,41 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Triển Khai Trọn Gói Các Trang Thông Tin Tĩnh: Chính Sách Thuê, FAQ, Giới Thiệu & Liên Hệ (CNT-002 - ✅ DONE)**:
+  - **Triển Khai Bộ Component Dùng Chung Mới (@/components/ui)**:
+    - **Accordion (`Accordion.tsx`)**:
+      - Compound component: `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`.
+      - Hỗ trợ cả 2 chế độ `single` (đóng/mở đơn) và `multiple` (mở nhiều mục đồng thời), tùy biến `collapsible`.
+      - Tuân thủ WAI-ARIA `role="region"`, `aria-expanded`, `aria-controls`, `aria-labelledby`, icon xoay 180° mượt mà, hỗ trợ disabled state.
+    - **Breadcrumbs (`Breadcrumbs.tsx`)**:
+      - Điều hướng phân cấp chuẩn ngữ nghĩa `<nav aria-label="Breadcrumb">` với `ol`, `li`, `aria-current="page"` và icon phân cách `ChevronRight`.
+  - **4 Trang Tĩnh Tối Ưu SSG (Static Site Generation)**:
+    - **Chính Sách Thuê Đồ & Đặt Cọc (`/chinh-sach-thue-do`)**:
+      - Bố cục 2 cột hiện đại: Cột trái Sidebar Sticky Table of Contents (TOC) cuộn mượt tới các phần; cột phải 5 mục nội dung chi tiết.
+      - Quy định cọc (50-100% hoặc giấy tờ tùy thân, hoàn cọc 1-2h), Hướng dẫn giữ gìn & cam kết giặt hấp khử khuẩn UV miễn phí của tiệm.
+      - Quy định trễ hạn (trả trước 21h, trễ <3h: 50.000đ/h, trễ >3h: 1 ngày thuê).
+      - Bảng biểu phí bồi hoàn hư hại minh bạch (bung cúc, vết ố giặt tẩy, rách nhỏ, cháy rách hỏng lớn).
+      - Chính sách dời lịch miễn phí trước 24h và hoàn cọc 100% trước 48h.
+    - **Câu Hỏi Thường Gặp FAQ (`/faq`)**:
+      - Ô tìm kiếm từ khóa câu hỏi thời gian thực kèm icon `Search`.
+      - Thanh lọc theo danh mục dạng pill (Tất cả, Quy trình thuê, Thử đồ & Giao nhận, Giặt ủi & Giữ gìn, Đặt cọc & Thanh toán).
+      - Accordion câu trả lời chi tiết và banner hotline/Zalo trợ giúp trực tiếp.
+    - **Về Chúng Tôi (`/gioi-thieu`)**:
+      - Câu chuyện thương hiệu "More Than Just A Dress", sứ mệnh thời trang thiết kế tiếp cận học sinh - sinh viên.
+      - Lưới 4 chỉ số ấn tượng (200+ mẫu thiết kế, 5.000+ khách hàng, 100% giặt hấp y tế, 4.9/5 đánh giá).
+      - Lưới 4 giá trị cốt lõi (Chất lượng vượt trội, Chuẩn form tôn dáng, Khử khuẩn an toàn, Tận tâm đồng hành).
+      - Giới thiệu không gian showroom Chùa Láng và các nút CTA liên kết bộ sưu tập.
+    - **Liên Hệ & Ghé Thăm Showroom (`/lien-he`)**:
+      - Khối thông tin chi tiết: Địa chỉ (Số 12 ngõ 80 Chùa Láng), Giờ mở cửa (08:30 - 21:30), Hotline, Email.
+      - Thẻ bản đồ chỉ đường tích hợp nút mở trực tiếp ứng dụng Google Maps.
+      - Form gửi lời nhắn / đặt lịch thử đồ tích hợp inline validation, submit phản hồi tức thì với `notify.success` và màn hình hoàn tất thân thiện.
+  - **Đa Ngôn Ngữ & Chuẩn Kỹ Thuật (DoD)**:
+    - 100% chuỗi văn bản khai báo đầy đủ qua bộ từ điển `vi.json` và `en.json` (0% hardcode text trong JSX).
+    - 0% inline CSS (`style={{ ... }}` = 0), 100% sử dụng Tailwind tokens và CSS modules.
+    - Đầy đủ SEO Metadata (Title, Description, OpenGraph) cho cả 4 route.
+    - 354/354 unit tests pass 100% và 4/4 Playwright E2E tests pass 100% (`e2e/static-pages.spec.ts`).
+    - Build production tĩnh SSG (`next build`) thành công 11/11 routes.
+
 - **Triển Khai Bộ Component Ngày Tháng & Form Chuyên Biệt UI-3 (UI-003 - ✅ DONE)**:
   - **Triển Khai Bộ Component Date & Form Chuyên Dụng (@chickie/ui)**:
     - **CurrencyField (`CurrencyField.tsx`, `CurrencyField.utils.ts`)**:
