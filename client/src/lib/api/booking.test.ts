@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createBooking, getBookingByCode } from "./booking";
+import { createBooking, getBookingByCode, trackBooking } from "./booking";
 import { CreateBookingRequest, BookingResponse } from "@/types/booking";
 
 describe("Booking API Client", () => {
@@ -147,6 +147,75 @@ describe("Booking API Client", () => {
       await expect(getBookingByCode("BK-ERROR")).rejects.toThrow(
         "Lỗi hệ thống máy chủ"
       );
+    });
+  });
+
+  describe("trackBooking", () => {
+    it("returns booking response when tracking API succeeds", async () => {
+      vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          code: 200,
+          data: mockBookingResponse,
+        }),
+      } as Response);
+
+      const result = await trackBooking({
+        bookingCode: "BK20261110-8888",
+        phone: "0912345678",
+      });
+      expect(result.bookingCode).toBe("BK20261110-8888");
+      expect(result.customerName).toBe("Nguyễn Quỳnh Anh");
+    });
+
+    it("throws not found message when tracking API returns 404", async () => {
+      vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        json: async () => ({
+          code: 404,
+          message: "Không tìm thấy đơn đặt thuê phù hợp",
+        }),
+      } as Response);
+
+      await expect(
+        trackBooking({
+          bookingCode: "BK-WRONG",
+          phone: "0999999999",
+        })
+      ).rejects.toThrow("Không tìm thấy đơn đặt thuê phù hợp");
+    });
+
+    it("returns mock response on network error if code starts with BK", async () => {
+      vi.spyOn(global, "fetch").mockRejectedValueOnce(
+        new TypeError("Failed to fetch")
+      );
+
+      const result = await trackBooking({
+        bookingCode: "BK20261025-OFFLINE",
+        phone: "0912345678",
+      });
+
+      expect(result.bookingCode).toBe("BK20261025-OFFLINE");
+      expect(result.customerPhone).toBe("0912345678");
+    });
+
+    it("throws error when API returns 500 server error", async () => {
+      vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({
+          code: 500,
+          message: "Lỗi máy chủ",
+        }),
+      } as Response);
+
+      await expect(
+        trackBooking({
+          bookingCode: "BK-ERR",
+          phone: "0912345678",
+        })
+      ).rejects.toThrow("Lỗi máy chủ");
     });
   });
 });

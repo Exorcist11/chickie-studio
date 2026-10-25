@@ -163,5 +163,103 @@
     "slotsLeft": "{count} items left",
     "checkAvailability": "View Calendar",
     "closeCalendar": "Collapse Calendar"
+  },
+  "tracking": {
+    "title": "Track Rental Order",
+    "subtitle": "Check your order progress, pickup schedule, and deposit reservation details",
+    "breadcrumb": "Order Tracking",
+    "form": {
+      "bookingCodeLabel": "Booking Code",
+      "bookingCodePlaceholder": "e.g., BK20261025-XXXX",
+      "bookingCodeHelp": "The booking code sent in your rental confirmation receipt",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "e.g., 0987654321 or +84...",
+      "phoneHelp": "The exact phone number used to place the booking",
+      "submitButton": "Track Order",
+      "submitting": "Tracking...",
+      "errorNotFound": "No matching rental booking found. Please check your booking code and phone number.",
+      "codeRequired": "Please enter your booking code",
+      "phoneRequired": "Please enter your phone number",
+      "phoneInvalid": "Invalid phone number (must be 10 digits starting with 0 or +84)"
+    },
+    "result": {
+      "orderInfo": "Booking Details",
+      "bookingCode": "Booking Code",
+      "copyCode": "Copy code",
+      "copied": "Copied!",
+      "createdAt": "Booking Date",
+      "customerName": "Customer Name",
+      "customerPhone": "Phone Number",
+      "deliveryMethod": "Delivery Method",
+      "deliveryAddress": "Shipping Address",
+      "pickupStore": "Store Pickup at Chickie Showroom",
+      "shipAddress": "Doorstep Delivery via Courier",
+      "rentalTime": "Rental Period",
+      "duration": "{days} days",
+      "timelineTitle": "Order Progress",
+      "itemsTitle": "Reserved Outfits & Equipment",
+      "pricingTitle": "Payment Summary",
+      "rentalFee": "Rental Fee",
+      "depositFee": "Security Deposit",
+      "totalAmount": "Total Amount",
+      "depositStatus": "Deposit Status",
+      "depositPaid": "Security Deposit Paid",
+      "depositPaidDesc": "Your reservation is secured! We look forward to seeing you on pickup day.",
+      "depositPending": "Deposit Pending",
+      "depositPendingDesc": "Please scan VietQR or transfer deposit within 24h to lock your reservation.",
+      "qrInstruction": "Scan with your banking app or e-wallet for quick deposit transfer",
+      "accountOwner": "Account Holder",
+      "accountNumber": "Account Number",
+      "bankName": "Bank",
+      "transferContent": "Transfer Note",
+      "copyContent": "Copy Note",
+      "needHelp": "Need Assistance?",
+      "helpDesc": "Reach out to our stylists via Zalo or Hotline to adjust dates, switch sizes, or update delivery details",
+      "chatZalo": "Message via Zalo",
+      "callHotline": "Call Hotline"
+    },
+    "timeline": {
+      "PENDING": {
+        "title": "Pending Confirmation",
+        "desc": "Booking has been registered in the system"
+      },
+      "CONFIRMED": {
+        "title": "Confirmed",
+        "desc": "Chickie verified item availability"
+      },
+      "DEPOSITED": {
+        "title": "Deposit Received",
+        "desc": "Deposit confirmed, items locked and prepared"
+      },
+      "DELIVERED": {
+        "title": "Active Rental",
+        "desc": "Outfits are currently with you"
+      },
+      "RETURNED": {
+        "title": "Returned",
+        "desc": "Items received and under inspection"
+      },
+      "COMPLETED": {
+        "title": "Completed",
+        "desc": "Order closed and security deposit refunded"
+      },
+      "CANCELLED": {
+        "title": "Cancelled",
+        "desc": "This booking has been cancelled"
+      },
+      "OVERDUE": {
+        "title": "Overdue Return",
+        "desc": "Return date passed, please contact studio immediately"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": "What if I forgot my booking code?",
+      "a1": "You can check your SMS/Zalo confirmation or call our hotline 0987.654.321 to search by phone number.",
+      "q2": "When is my reservation officially confirmed?",
+      "a2": "Once your deposit is transferred, your status updates to 'Deposit Received' within 15-30 minutes.",
+      "q3": "Can I change rental dates or dress size?",
+      "a3": "Yes, please message Chickie on Zalo at least 2 days in advance for complimentary rescheduling."
+    }
   }
 }

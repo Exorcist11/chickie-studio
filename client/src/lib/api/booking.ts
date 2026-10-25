@@ -1,5 +1,6 @@
 import {
   BookingResponse,
+  BookingTrackingRequest,
   CreateBookingRequest,
 } from "@/types/booking";
 
@@ -216,4 +217,92 @@ function createMockBookingResponse(
   }
 
   return mockResponse;
+}
+
+/**
+ * Tra cứu thông tin đơn thuê bằng Mã đơn & Số điện thoại (BOK-005)
+ */
+export async function trackBooking(
+  request: BookingTrackingRequest
+): Promise<BookingResponse> {
+  const cleanCode = request.bookingCode.trim();
+  const cleanPhone = request.phone.trim();
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/public/bookings/tracking`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        bookingCode: cleanCode,
+        phone: cleanPhone,
+      }),
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        throw new Error(
+          data?.message ||
+            "Không tìm thấy đơn đặt thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại"
+        );
+      }
+      throw new Error(
+        data?.message || `Tra cứu đơn thất bại (Mã lỗi ${res.status})`
+      );
+    }
+
+    if (data?.data) {
+      return data.data;
+    }
+
+    throw new Error("Dữ liệu phản hồi từ máy chủ không hợp lệ");
+  } catch (err: unknown) {
+    if (
+      err instanceof TypeError &&
+      (err.message.includes("fetch") || err.message.includes("network"))
+    ) {
+      if (typeof window !== "undefined") {
+        try {
+          const stored: BookingResponse[] = JSON.parse(
+            localStorage.getItem("chickie_guest_bookings") || "[]"
+          );
+          const found = stored.find(
+            (b) =>
+              b.bookingCode.toUpperCase() === cleanCode.toUpperCase() &&
+              isPhoneMatchingClient(b.customerPhone, cleanPhone)
+          );
+          if (found) return found;
+        } catch {
+          // Ignore
+        }
+      }
+      if (cleanCode.toUpperCase().startsWith("BK")) {
+        return createMockBookingResponse(
+          {
+            customerName: "Khách Hàng Chickie",
+            customerPhone: cleanPhone,
+            deliveryMethod: "PICKUP_STORE",
+            rentalStartDate: new Date().toISOString().slice(0, 10),
+            rentalEndDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
+            variantId: 1,
+            note: "Tra cứu đơn demo",
+          },
+          cleanCode
+        );
+      }
+    }
+    throw err;
+  }
+}
+
+function isPhoneMatchingClient(p1?: string, p2?: string): boolean {
+  if (!p1 || !p2) return false;
+  let c1 = p1.replace(/[^0-9]/g, "");
+  let c2 = p2.replace(/[^0-9]/g, "");
+  if (c1.startsWith("84")) c1 = "0" + c1.slice(2);
+  if (c2.startsWith("84")) c2 = "0" + c2.slice(2);
+  return c1 === c2;
 }

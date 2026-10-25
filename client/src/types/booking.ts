@@ -7,7 +7,8 @@ export type BookingStatus =
   | "DELIVERED"
   | "RETURNED"
   | "COMPLETED"
-  | "CANCELLED";
+  | "CANCELLED"
+  | "OVERDUE";
 
 export interface CreateBookingRequest {
   customerName: string;
@@ -18,6 +19,20 @@ export interface CreateBookingRequest {
   rentalEndDate: string; // YYYY-MM-DD
   variantId: number;
   note?: string;
+}
+
+export interface BookingTrackingRequest {
+  bookingCode: string;
+  phone: string;
+}
+
+export interface BookingStatusHistoryResponse {
+  id: number;
+  fromStatus?: BookingStatus;
+  toStatus: BookingStatus;
+  changedBy: string;
+  note?: string;
+  createdAt: string;
 }
 
 export interface BookingItemResponse {
@@ -52,4 +67,5 @@ export interface BookingResponse {
   note?: string;
   createdAt: string;
   items: BookingItemResponse[];
+  statusHistories?: BookingStatusHistoryResponse[];
 }

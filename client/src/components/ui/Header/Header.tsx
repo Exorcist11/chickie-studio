@@ -31,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
     { label: "Thuê máy ảnh", href: "/products?type=camera" },
     { label: "Dịch vụ chụp", href: "/products?type=photography" },
     { label: "Lookbook", href: "/products" },
+    { label: "Tra cứu đơn", href: "/tra-cuu-don" },
     { label: "Liên hệ", href: "#footer-contact" },
   ],
   activeHref,

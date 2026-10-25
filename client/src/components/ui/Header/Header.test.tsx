@@ -82,9 +82,14 @@ describe("Header component", () => {
   });
 
   it("highlights active nav link based on activeHref", () => {
-    render(<Header activeHref="/products?type=camera" />);
+    const { unmount } = render(<Header activeHref="/products?type=camera" />);
     const cameraLink = screen.getByRole("link", { name: "Thuê máy ảnh" });
     expect(cameraLink).toHaveClass("text-burgundy");
+    unmount();
+
+    render(<Header activeHref="/tra-cuu-don" />);
+    const trackingLink = screen.getByRole("link", { name: "Tra cứu đơn" });
+    expect(trackingLink).toHaveClass("text-burgundy");
   });
 
   it("has no accessibility violations", async () => {

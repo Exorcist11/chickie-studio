@@ -163,5 +163,103 @@
     "slotsLeft": "Còn {count} chiếc",
     "checkAvailability": "Xem lịch trống",
     "closeCalendar": "Thu gọn lịch"
+  },
+  "tracking": {
+    "title": "Tra Cứu Đơn Thuê Đồ",
+    "subtitle": "Kiểm tra tiến độ đơn hàng, lịch nhận đồ và thông tin chuyển khoản giữ chỗ",
+    "breadcrumb": "Tra cứu đơn hàng",
+    "form": {
+      "bookingCodeLabel": "Mã đơn thuê",
+      "bookingCodePlaceholder": "Ví dụ: BK20261025-XXXX",
+      "bookingCodeHelp": "Mã đơn được gửi trong biên nhận khi bạn đặt thuê",
+      "phoneLabel": "Số điện thoại đặt đồ",
+      "phonePlaceholder": "Ví dụ: 0987654321 hoặc +84...",
+      "phoneHelp": "Số điện thoại chính xác đã dùng để đăng ký đơn",
+      "submitButton": "Tra cứu đơn hàng",
+      "submitting": "Đang tra cứu...",
+      "errorNotFound": "Không tìm thấy đơn đặt thuê phù hợp. Vui lòng kiểm tra lại mã đơn và số điện thoại.",
+      "codeRequired": "Vui lòng nhập mã đơn thuê",
+      "phoneRequired": "Vui lòng nhập số điện thoại",
+      "phoneInvalid": "Số điện thoại không hợp lệ (gồm 10 số, bắt đầu bằng 0 hoặc +84)"
+    },
+    "result": {
+      "orderInfo": "Thông tin đơn thuê",
+      "bookingCode": "Mã đơn",
+      "copyCode": "Sao chép mã",
+      "copied": "Đã chép!",
+      "createdAt": "Ngày đặt",
+      "customerName": "Khách hàng",
+      "customerPhone": "Số điện thoại",
+      "deliveryMethod": "Hình thức nhận đồ",
+      "deliveryAddress": "Địa chỉ giao hàng",
+      "pickupStore": "Nhận trực tiếp tại Showroom Chickie",
+      "shipAddress": "Giao tận nơi qua dịch vụ chuyển phát",
+      "rentalTime": "Thời gian thuê đồ",
+      "duration": "{days} ngày",
+      "timelineTitle": "Tiến trình xử lý đơn",
+      "itemsTitle": "Trang phục & Thiết bị đã chọn",
+      "pricingTitle": "Chi tiết thanh toán",
+      "rentalFee": "Tiền thuê đồ",
+      "depositFee": "Tiền cọc giữ đồ",
+      "totalAmount": "Tổng chi phí",
+      "depositStatus": "Tình trạng đặt cọc",
+      "depositPaid": "Đã thanh toán cọc thành công",
+      "depositPaidDesc": "Tiệm đã giữ trang phục cho bạn, hẹn gặp bạn vào ngày nhận đồ!",
+      "depositPending": "Chưa thanh toán cọc",
+      "depositPendingDesc": "Vui lòng quét mã VietQR hoặc chuyển khoản giữ đồ trước 24h để tiệm khóa lịch trống.",
+      "qrInstruction": "Mở ứng dụng ngân hàng hoặc ví điện tử để quét mã thanh toán cọc nhanh",
+      "accountOwner": "Chủ tài khoản",
+      "accountNumber": "Số tài khoản",
+      "bankName": "Ngân hàng",
+      "transferContent": "Nội dung chuyển khoản",
+      "copyContent": "Sao chép nội dung",
+      "needHelp": "Bạn cần hỗ trợ thêm?",
+      "helpDesc": "Liên hệ ngay với chuyên viên tư vấn qua Zalo hoặc Hotline để đổi ngày, đổi size hoặc cập nhật địa chỉ",
+      "chatZalo": "Nhắn tin Zalo",
+      "callHotline": "Gọi hotline"
+    },
+    "timeline": {
+      "PENDING": {
+        "title": "Chờ xác nhận",
+        "desc": "Đơn thuê đã được ghi nhận trên hệ thống"
+      },
+      "CONFIRMED": {
+        "title": "Đã xác nhận",
+        "desc": "Chickie đã kiểm tra đồ và xác nhận khả dụng"
+      },
+      "DEPOSITED": {
+        "title": "Đã nhận cọc",
+        "desc": "Tiệm đã nhận cọc và khóa đồ sẵn sàng giao"
+      },
+      "DELIVERED": {
+        "title": "Đang thuê đồ",
+        "desc": "Trang phục đang cùng bạn tỏa sáng"
+      },
+      "RETURNED": {
+        "title": "Đã trả đồ",
+        "desc": "Tiệm đã nhận lại trang phục và kiểm tra hiện trạng"
+      },
+      "COMPLETED": {
+        "title": "Hoàn tất đơn",
+        "desc": "Đơn thuê hoàn tất và đã hoàn cọc cho bạn"
+      },
+      "CANCELLED": {
+        "title": "Đã hủy đơn",
+        "desc": "Đơn thuê đã bị hủy"
+      },
+      "OVERDUE": {
+        "title": "Quá hạn trả",
+        "desc": "Đơn thuê đã quá ngày hẹn trả đồ, vui lòng liên hệ tiệm"
+      }
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp khi tra cứu",
+      "q1": "Nếu tôi quên mã đơn thì phải làm sao?",
+      "a1": "Bạn có thể kiểm tra lại tin nhắn Zalo/SMS hoặc gọi hotline 0987.654.321, nhân viên sẽ hỗ trợ tra cứu theo số điện thoại.",
+      "q2": "Khi nào thì đơn đặt thuê được duyệt chính thức?",
+      "a2": "Sau khi nhận được tiền cọc giữ đồ, tiệm sẽ tự động cập nhật trạng thái sang 'Đã nhận cọc' trong vòng 15-30 phút.",
+      "q3": "Tôi có thể đổi ngày hoặc đổi size trang phục không?",
+      "a3": "Có, bạn hãy nhắn tin Zalo cho Chickie trước ít nhất 2 ngày để tiệm kiểm tra lịch trống và đổi mẫu miễn phí."
+    }
   }
 }
