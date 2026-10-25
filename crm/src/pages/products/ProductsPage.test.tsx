@@ -2,6 +2,7 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProductsPage } from "./ProductsPage";
 import { productService } from "../../services/product.service";
@@ -43,7 +44,11 @@ const renderWithProviders = (ui: React.ReactElement) => {
       queries: { retry: false },
     },
   });
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>
+  );
 };
 
 describe("ProductsPage", () => {
@@ -199,6 +204,12 @@ describe("ProductsPage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Chi tiết sản phẩm")).toBeInTheDocument();
+    });
+
+    const variantsTab = screen.getByRole("tab", { name: /Biến thể/i });
+    await user.click(variantsTab);
+
+    await waitFor(() => {
       expect(screen.getByText("PRD-LUA-01-S-TRAN")).toBeInTheDocument();
     });
   });

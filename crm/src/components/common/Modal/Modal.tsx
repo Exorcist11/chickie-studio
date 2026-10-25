@@ -13,7 +13,7 @@ export interface ModalProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
   variant?: "modal" | "drawer";
-  maxWidth?: "sm" | "md" | "lg" | "xl" | "full";
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
   className?: string;
   bodyClassName?: string;
   headerClassName?: string;

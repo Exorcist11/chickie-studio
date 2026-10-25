@@ -1,5 +1,18 @@
 import React from "react";
-import { Sparkles, Flower2, Camera, Layers, Tag, Shirt } from "lucide-react";
+import {
+  Sparkles,
+  Flower2,
+  Camera,
+  Layers,
+  Tag,
+  Shirt,
+  Crown,
+  Heart,
+  Palette,
+  Scissors,
+  Gem,
+  Film,
+} from "lucide-react";
 import { CategoryType } from "../../types/category";
 
 // Icon mapping for rich visual indicators across categories
@@ -10,7 +23,34 @@ export const ICON_MAP: Record<string, React.ComponentType<{ className?: string }
   Layers,
   Tag,
   Shirt,
+  Crown,
+  Heart,
+  Palette,
+  Scissors,
+  Gem,
+  Film,
 };
+
+export interface SuggestedIcon {
+  name: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+export const SUGGESTED_ICONS: SuggestedIcon[] = [
+  { name: "Sparkles", label: "Lấp lánh", icon: Sparkles },
+  { name: "Shirt", label: "Trang phục", icon: Shirt },
+  { name: "Camera", label: "Máy ảnh", icon: Camera },
+  { name: "Flower2", label: "Hoa cỏ nghệ thuật", icon: Flower2 },
+  { name: "Crown", label: "Dạ hội hoàng gia", icon: Crown },
+  { name: "Heart", label: "Cưới & Tình yêu", icon: Heart },
+  { name: "Palette", label: "Màu sắc nghệ thuật", icon: Palette },
+  { name: "Scissors", label: "May đo thiết kế", icon: Scissors },
+  { name: "Gem", label: "Cao cấp & Sang trọng", icon: Gem },
+  { name: "Film", label: "Quay chụp & Phim", icon: Film },
+  { name: "Tag", label: "Nhãn mác", icon: Tag },
+  { name: "Layers", label: "Tổng hợp", icon: Layers },
+];
 
 export interface CategoryTypeConfig {
   value: CategoryType;

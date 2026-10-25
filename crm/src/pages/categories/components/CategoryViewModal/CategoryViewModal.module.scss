@@ -1,36 +1,54 @@
-// CategoryViewModal Scoped Detail Styles with @apply
+// CategoryViewModal Luxury Detail Card Styles
 @use "../../../../styles/tokens" as *;
 
-.infoGrid {
-  @apply grid grid-cols-2 gap-4 bg-warm-white p-4 rounded-lg border border-line;
+.viewModal {
+  @apply flex flex-col gap-5;
 }
 
-.fieldLabel {
-  @apply text-xs text-ink-muted block font-medium mb-1;
+// Hero Identity Header inside modal
+.heroBanner {
+  @apply flex items-start gap-4 p-4.5 rounded-xl border border-line bg-warm-white relative overflow-hidden;
+  background: linear-gradient(135deg, rgba(253, 251, 247, 0.95) 0%, rgba(247, 242, 235, 0.9) 100%);
 }
 
-.fieldValue {
-  @apply text-sm font-semibold text-ink block;
+.heroIconBadge {
+  @apply w-14 h-14 rounded-xl flex items-center justify-center shrink-0 border shadow-xs;
+  transition: transform 0.2s ease;
+
+  &--costume {
+    background-color: rgba(100, 29, 43, 0.08);
+    color: $burgundy;
+    border-color: rgba(100, 29, 43, 0.25);
+  }
+
+  &--camera {
+    background-color: rgba(184, 145, 79, 0.12);
+    color: #8C682A;
+    border-color: rgba(184, 145, 79, 0.35);
+  }
+
+  &--photography {
+    background-color: rgba(74, 106, 138, 0.1);
+    color: #2F4D6D;
+    border-color: rgba(74, 106, 138, 0.3);
+  }
 }
 
-.fieldCode {
-  @apply text-xs font-mono bg-white text-stone-700 px-2 py-0.5 rounded border border-line;
+.heroContent {
+  @apply flex-1 min-w-0 flex flex-col gap-1.5;
 }
 
-.fieldOrder {
-  @apply text-sm font-mono font-medium text-stone-700;
+.heroTitleRow {
+  @apply flex items-center justify-between gap-3;
 }
 
-.fieldIcon {
-  @apply text-sm text-stone-700 flex items-center gap-1.5 font-mono;
+.heroTitle {
+  @apply text-lg font-semibold text-ink tracking-tight truncate;
+  font-family: var(--font-heading, "Playfair Display", serif);
 }
 
-.fieldTime {
-  @apply text-xs text-stone-600 font-mono;
-}
-
-.descBox {
-  @apply text-sm text-stone-700 bg-white p-3 rounded-lg border border-line min-h-[64px] leading-relaxed;
+.heroBadges {
+  @apply flex items-center flex-wrap gap-2 pt-0.5;
 }
 
 .typeBadge {
@@ -54,4 +72,65 @@
     color: #2F4D6D;
     border-color: rgba(74, 106, 138, 0.3);
   }
+}
+
+.orderBadge {
+  @apply inline-flex items-center text-xs font-mono font-semibold px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 border border-stone-200;
+}
+
+// Slug copy pill
+.slugPill {
+  @apply inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-lg border border-line bg-white/80 hover:bg-white text-xs font-mono text-stone-700 transition-colors w-fit;
+  cursor: pointer;
+
+  &:hover {
+    border-color: rgba(100, 29, 43, 0.3);
+    color: $burgundy;
+  }
+}
+
+.copySuccess {
+  @apply text-emerald-600 font-sans font-medium text-xs flex items-center gap-1;
+}
+
+// Bento Grid Detail Section
+.bentoGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-3.5;
+}
+
+.bentoCard {
+  @apply p-3.5 rounded-lg border border-line bg-white flex flex-col justify-between gap-2 shadow-xs transition-shadow;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+}
+
+.cardHeader {
+  @apply flex items-center gap-2 text-xs font-medium text-ink-muted;
+}
+
+.cardValue {
+  @apply text-sm font-semibold text-ink flex items-center gap-2;
+}
+
+.cardSub {
+  @apply text-xs text-stone-500 font-normal;
+}
+
+// Description callout card
+.descCard {
+  @apply p-4 rounded-lg border border-line bg-stone-50/60 flex flex-col gap-1.5;
+}
+
+.descHeader {
+  @apply flex items-center gap-1.5 text-xs font-medium text-ink-muted;
+}
+
+.descText {
+  @apply text-sm text-stone-700 leading-relaxed italic;
+}
+
+.emptyDesc {
+  @apply text-sm text-stone-400 italic;
 }

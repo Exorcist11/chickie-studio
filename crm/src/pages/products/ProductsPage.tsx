@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Plus, Edit2, Trash2, Eye, Image as ImageIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -21,6 +22,8 @@ import styles from "./ProductsPage.module.scss";
 
 export const ProductsPage: React.FC = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const lastViewIdRef = useRef<string | null>(null);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<ProductListResponse[]>([]);
@@ -62,6 +65,29 @@ export const ProductsPage: React.FC = () => {
     fetchProducts();
   }, [fetchCategories, fetchProducts]);
 
+  // Handle URL deep-linking (?view=id)
+  useEffect(() => {
+    const viewIdParam = searchParams.get("view");
+    if (viewIdParam === lastViewIdRef.current) return;
+    lastViewIdRef.current = viewIdParam;
+
+    if (viewIdParam) {
+      const parsedId = Number(viewIdParam);
+      if (!isNaN(parsedId)) {
+        productService
+          .getProductById(parsedId)
+          .then((detail) => setViewingProduct(detail))
+          .catch(() => {
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete("view");
+            setSearchParams(newParams, { replace: true });
+          });
+      }
+    } else {
+      setViewingProduct(null);
+    }
+  }, [searchParams, setSearchParams]);
+
   const handleFilterChange = (filters: FilterValues) => {
     const params: ProductQueryParams = {
       search: filters.search || undefined,
@@ -96,12 +122,32 @@ export const ProductsPage: React.FC = () => {
     try {
       setActionLoading(true);
       const detail = await productService.getProductById(prod.id);
+      lastViewIdRef.current = String(prod.id);
       setViewingProduct(detail);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("view", String(prod.id));
+      setSearchParams(newParams);
     } catch {
       // Handled
     } finally {
       setActionLoading(false);
     }
+  };
+
+  const handleCloseViewModal = () => {
+    lastViewIdRef.current = null;
+    setViewingProduct(null);
+    if (searchParams.has("view")) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("view");
+      setSearchParams(newParams, { replace: true });
+    }
+  };
+
+  const handleViewToEdit = (prod: ProductDetailResponse) => {
+    handleCloseViewModal();
+    setEditingProduct(prod);
+    setIsModalOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
@@ -298,9 +344,10 @@ export const ProductsPage: React.FC = () => {
       {/* Modal Xem Chi Tiết */}
       <ProductViewModal
         isOpen={Boolean(viewingProduct)}
-        onClose={() => setViewingProduct(null)}
+        onClose={handleCloseViewModal}
         product={viewingProduct}
         categories={categories}
+        onEdit={handleViewToEdit}
       />
 
       {/* Modal Xác Nhận Xóa */}
