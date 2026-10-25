@@ -7,6 +7,23 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Thuật Toán Chống Trùng Lịch & Ngày Đệm Giặt Ủi Concurrency Safe (BOK-002 - ✅ DONE)**:
+  - **Hạ Tầng Backend Server (Spring Boot 3 + MySQL)**:
+    - **Khóa bi quan Pessimistic Write Lock (`@Lock(LockModeType.PESSIMISTIC_WRITE)`)**:
+      - Bổ sung phương thức `findActiveItemsForUpdate(@Param("variantId") Long variantId)` và `findAvailableItemsForUpdate(...)` trong `ProductItemRepository`.
+      - Khi bắt đầu transaction đặt thuê (`BookingService.createBooking`), hệ thống thực thi câu lệnh SQL `SELECT ... FOR UPDATE` khóa danh sách món đồ vật lý (`ProductItem`) thuộc biến thể.
+      - Ngăn chặn triệt để hiện tượng tranh chấp đồng thời (Race Condition / Zero Double-Booking): nếu nhiều khách hàng bấm đặt đồ cùng mili-giây cho món đồ duy nhất, chỉ 1 request đầu tiên thành công (201 Created), các request sau sẽ đọc trạng thái đã giữ và nhận lỗi `409 Conflict` ("đã kín lịch").
+    - **Thuật Toán Ngày Đệm Giặt Ủi (`bufferDays`)**:
+      - Chuẩn hóa hàm `calculateBufferDays(Product product)` theo quy tắc BR-01: 1 ngày đệm đối với trang phục (`COSTUME`) để giặt hấp sấy, 0 ngày đối với máy ảnh (`CAMERA`) hoặc dịch vụ chụp ảnh (`PHOTOGRAPHY`).
+      - Chuẩn hóa hàm kiểm tra giao thoa khoảng thời gian đối xứng `isIntervalOverlappingWithBuffer(startA, endA, startB, endB, bufferDays)`:
+        $$(Start_A \le End_B + \text{buffer}) \land (Start_B \le End_A + \text{buffer})$$
+    - **Kiểm thử tự động Server**:
+      - Bổ sung 3 test cases chuyên biệt trong `BookingServiceTest`:
+        - `bok002_calculateBufferDays_Rules`: Kiểm chứng phân bổ đúng số ngày đệm cho từng loại danh mục.
+        - `bok002_isIntervalOverlappingWithBuffer_Scenarios`: Kiểm chứng 5 kịch bản va chạm giao thoa (ngày đệm kế tiếp, khoảng cách an toàn, đệm trước, máy ảnh 0 ngày đệm).
+        - `bok002_concurrencyRaceCondition_OnlyOneSucceeds`: Mô phỏng 2 request đặt đồng thời cho chiếc váy duy nhất, kiểm chứng request 2 nhận `409 Conflict` khi đồ đã bị giữ.
+      - Toàn bộ **198/198 tests Server pass 100%**.
+
 - **Trang Chủ Website Phía Client & Hạ Tầng API Tổng Hợp (CNT-001 - ✅ DONE)**:
   - **Giao diện Client (Next.js 14 App Router + Tailwind + UI/UX Pro Max)**:
     - **Tối ưu Server Component SSR**: Kết nối API `GET /api/public/home/featured` qua `getHomeFeaturedData()` trong 1 request duy nhất, tối ưu thời gian tải trang đạt chuẩn Core Web Vitals (LCP < 2.5s).

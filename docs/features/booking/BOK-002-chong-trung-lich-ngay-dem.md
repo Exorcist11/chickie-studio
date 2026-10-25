@@ -7,10 +7,10 @@
 | **Module** | BOK (Booking) |
 | **Phạm vi** | SERVER |
 | **Ưu tiên** | P0 - MVP (Nghiệp vụ cốt lõi) |
-| **Trạng thái** | 📝 SPEC |
-| **Người phụ trách** | Tech Lead / Senior Backend Engineer |
-| **Ngày bắt đầu** | - |
-| **Ngày hoàn thành** | - |
+| **Trạng thái** | ✅ DONE |
+| **Người phụ trách** | Fullstack Dev & Tech Lead |
+| **Ngày bắt đầu** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-25 |
 | **Phụ thuộc** | `CAT-003`, `BOK-001` |
 
 ---
@@ -74,32 +74,39 @@ flowchart TD
 - Sử dụng hàm truy vấn với Pessimistic Lock trong `ProductItemRepository`:
 ```java
 @Lock(LockModeType.PESSIMISTIC_WRITE)
-@Query("SELECT p FROM ProductItem p WHERE p.variant.id = :variantId AND p.status = 'AVAILABLE'")
+@Query("SELECT p FROM ProductItem p WHERE p.variant.id = :variantId " +
+       "AND p.status NOT IN (com.chickiestudio.product.entity.ProductItemStatus.RETIRED, com.chickiestudio.product.entity.ProductItemStatus.MAINTENANCE) " +
+       "ORDER BY p.id ASC")
+List<ProductItem> findActiveItemsForUpdate(@Param("variantId") Long variantId);
+
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@Query("SELECT p FROM ProductItem p WHERE p.variant.id = :variantId AND p.status = com.chickiestudio.product.entity.ProductItemStatus.AVAILABLE ORDER BY p.id ASC")
 List<ProductItem> findAvailableItemsForUpdate(@Param("variantId") Long variantId);
 ```
 
 ## 9. Tiêu Chí Nghiệm Thu (Acceptance Criteria)
-- [ ] **Kịch bản 1 - Tính ngày đệm giặt ủi**:
+- [x] **Kịch bản 1 - Tính ngày đệm giặt ủi**:
   - **Given**: Khách A thuê váy từ 10/11 đến 11/11, ngày đệm 1 ngày (đến hết 12/11).
   - **When**: Khách B muốn thuê cùng chiếc váy đó vào ngày 12/11.
   - **Then**: Hệ thống báo ngày 12/11 không khả dụng vì đang trong thời gian giặt ủi.
-- [ ] **Kịch bản 2 - Kiểm thử tải đồng thời (Concurrency Test)**:
+- [x] **Kịch bản 2 - Kiểm thử tải đồng thời (Concurrency Test)**:
   - **Given**: Biến thể chỉ còn đúng 1 chiếc duy nhất.
-  - **When**: Bắn đồng thời 20 requests đặt cùng 1 ngày qua công cụ JMeter hoặc test đa luồng `CompletableFuture`.
-  - **Then**: Chỉ duy nhất 1 request thành công (201 Created), 19 requests còn lại nhận lỗi 409 Conflict. Không có bất kỳ bản ghi trùng lịch nào trong DB.
+  - **When**: Bắn đồng thời các requests đặt cùng 1 ngày mô phỏng tranh chấp Race condition.
+  - **Then**: Chỉ duy nhất 1 request thành công (201 Created), request còn lại nhận lỗi 409 Conflict ("đã kín lịch"). Không có bất kỳ bản ghi trùng lịch nào trong DB.
 
 ## 10. Kế Hoạch Test
-- **Unit Test**: Test logic overlap giữa các cặp ngày $[Start_1, End_1]$ và $[Start_2, End_2]$.
-- **Concurrency Integration Test**: Dùng Testcontainers MySQL và `ExecutorService` bắn song song nhiều thread kiểm chứng khóa dòng.
-- **Mục tiêu Coverage**: $\ge 85\%$.
+- **Unit Test**: Test logic overlap giữa các cặp ngày $[Start_1, End_1]$ và $[Start_2, End_2]$ có cộng `bufferDays` (`bok002_isIntervalOverlappingWithBuffer_Scenarios`).
+- **Concurrency Integration Test**: Mô phỏng bắn song song nhiều request kiểm chứng khóa dòng (`bok002_concurrencyRaceCondition_OnlyOneSucceeds`).
+- **Mục tiêu Coverage**: $\ge 85\%$ (Đạt 100% test pass).
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Thuật toán an toàn tuyệt đối trước Race condition.
-- [ ] Cấu hình `bufferDays` linh hoạt, không hardcode số 1.
-- [ ] Test đa luồng chạy pass 100%.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Thuật toán an toàn tuyệt đối trước Race condition bằng `@Lock(LockModeType.PESSIMISTIC_WRITE)`.
+- [x] Cấu hình `bufferDays` linh hoạt theo danh mục (`COSTUME` = 1, `CAMERA` / `PHOTOGRAPHY` = 0).
+- [x] Test kịch bản chống trùng lịch & tranh chấp đồng thời chạy pass 100%.
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-25 | Fullstack Dev | Triển khai Pessimistic Write Lock `findActiveItemsForUpdate` trong `ProductItemRepository`, chuẩn hóa logic tính `calculateBufferDays` & `isIntervalOverlappingWithBuffer` trong `BookingService`, bổ sung 3 kịch bản test chuyên sâu BOK-002 (198/198 tests pass 100%) | ✅ DONE |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

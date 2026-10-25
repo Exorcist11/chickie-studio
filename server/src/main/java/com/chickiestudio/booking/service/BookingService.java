@@ -74,44 +74,35 @@ public class BookingService {
             durationDays = 1;
         }
 
-        // Determine buffer days (1 for costume/dress, 0 for camera/photography)
-        int bufferDays = 1;
-        if (product.getCategory() != null && product.getCategory().getType() != null) {
-            CategoryType type = product.getCategory().getType();
-            if (type == CategoryType.PHOTOGRAPHY || type == CategoryType.CAMERA) {
-                bufferDays = 0;
-            }
-        }
+        // Determine buffer days (1 for costume/dress, 0 for camera/photography) (BOK-002)
+        int bufferDays = calculateBufferDays(product);
 
-        // Active physical items
-        List<ProductItem> allItems = productItemRepository.findByVariantIdOrderByIdAsc(variant.getId());
-        List<ProductItem> activeItems = allItems.stream()
-                .filter(i -> i.getStatus() != ProductItemStatus.RETIRED && i.getStatus() != ProductItemStatus.MAINTENANCE)
-                .toList();
+        // Active physical items with Pessimistic Write Lock (BOK-002) to prevent concurrent double-booking
+        List<ProductItem> activeItems = productItemRepository.findActiveItemsForUpdate(variant.getId());
 
-        if (allItems.isEmpty()) {
-            ProductItem autoItem1 = ProductItem.builder()
-                    .variant(variant)
-                    .itemCode(variant.getSku() + "-01")
-                    .status(ProductItemStatus.AVAILABLE)
-                    .rentalCount(0)
-                    .note("Sẵn sàng tại Studio Chickie")
-                    .build();
-            ProductItem autoItem2 = ProductItem.builder()
-                    .variant(variant)
-                    .itemCode(variant.getSku() + "-02")
-                    .status(ProductItemStatus.AVAILABLE)
-                    .rentalCount(1)
-                    .note("Món đồ dự phòng sẵn sàng tại Studio Chickie")
-                    .build();
-            try {
-                allItems = productItemRepository.saveAll(List.of(autoItem1, autoItem2));
-                activeItems = allItems;
-            } catch (Exception ex) {
-                allItems = productItemRepository.findByVariantIdOrderByIdAsc(variant.getId());
-                activeItems = allItems.stream()
-                        .filter(i -> i.getStatus() != ProductItemStatus.RETIRED && i.getStatus() != ProductItemStatus.MAINTENANCE)
-                        .toList();
+        if (activeItems.isEmpty()) {
+            List<ProductItem> allItems = productItemRepository.findByVariantIdOrderByIdAsc(variant.getId());
+            if (allItems.isEmpty()) {
+                ProductItem autoItem1 = ProductItem.builder()
+                        .variant(variant)
+                        .itemCode(variant.getSku() + "-01")
+                        .status(ProductItemStatus.AVAILABLE)
+                        .rentalCount(0)
+                        .note("Sẵn sàng tại Studio Chickie")
+                        .build();
+                ProductItem autoItem2 = ProductItem.builder()
+                        .variant(variant)
+                        .itemCode(variant.getSku() + "-02")
+                        .status(ProductItemStatus.AVAILABLE)
+                        .rentalCount(1)
+                        .note("Món đồ dự phòng sẵn sàng tại Studio Chickie")
+                        .build();
+                try {
+                    productItemRepository.saveAll(List.of(autoItem1, autoItem2));
+                    activeItems = productItemRepository.findActiveItemsForUpdate(variant.getId());
+                } catch (Exception ex) {
+                    activeItems = productItemRepository.findActiveItemsForUpdate(variant.getId());
+                }
             }
         }
 
@@ -131,12 +122,11 @@ public class BookingService {
         Set<Long> busyItemIds = new HashSet<>();
         for (BookingItem bi : overlappingBookings) {
             if (bi.getProductItem() == null) continue;
-            LocalDate blockedEnd = bi.getRentalEndDate().plusDays(bufferDays);
-            LocalDate newBlockedEnd = request.getRentalEndDate().plusDays(bufferDays);
-
-            // Check mutual overlap with buffer
-            boolean overlaps = !request.getRentalStartDate().isAfter(blockedEnd) &&
-                               !newBlockedEnd.isBefore(bi.getRentalStartDate());
+            boolean overlaps = isIntervalOverlappingWithBuffer(
+                    request.getRentalStartDate(), request.getRentalEndDate(),
+                    bi.getRentalStartDate(), bi.getRentalEndDate(),
+                    bufferDays
+            );
             if (overlaps) {
                 busyItemIds.add(bi.getProductItem().getId());
             }
@@ -457,5 +447,35 @@ public class BookingService {
                 .items(itemResponses)
                 .statusHistories(historyResponses)
                 .build();
+    }
+
+    /**
+     * Tính toán số ngày đệm giặt ủi an toàn (BR-01, BOK-002):
+     * - Trang phục (Váy, Áo dài): 1 ngày đệm sau ngày trả để giặt hấp sấy.
+     * - Máy ảnh, thiết bị hoặc dịch vụ chụp ảnh: 0 ngày đệm (chỉ kiểm tra pin/thẻ nhớ).
+     */
+    public int calculateBufferDays(Product product) {
+        if (product != null && product.getCategory() != null && product.getCategory().getType() != null) {
+            CategoryType type = product.getCategory().getType();
+            if (type == CategoryType.PHOTOGRAPHY || type == CategoryType.CAMERA) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * Kiểm tra giao thoa giữa 2 khoảng thời gian thuê có tính ngày đệm giặt ủi (BOK-002).
+     * Hai khoảng thời gian [StartA, EndA + buffer] và [StartB, EndB + buffer] giao thoa khi:
+     * StartA <= EndB + buffer VÀ StartB <= EndA + buffer.
+     */
+    public boolean isIntervalOverlappingWithBuffer(
+            LocalDate startA, LocalDate endA,
+            LocalDate startB, LocalDate endB,
+            int bufferDays
+    ) {
+        LocalDate blockedEndA = endA.plusDays(bufferDays);
+        LocalDate blockedEndB = endB.plusDays(bufferDays);
+        return !startA.isAfter(blockedEndB) && !startB.isAfter(blockedEndA);
     }
 }

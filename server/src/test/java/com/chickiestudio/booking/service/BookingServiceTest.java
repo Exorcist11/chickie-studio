@@ -129,10 +129,10 @@ class BookingServiceTest {
     }
 
     @Test
-    @DisplayName("Tạo đơn đặt thuê thành công khi còn đồ khả dụng")
+    @DisplayName("Tạo đơn đặt thuê thành công khi còn đồ khả dụng (sử dụng findActiveItemsForUpdate khóa bi quan BOK-002)")
     void createBooking_Success() {
         when(productVariantRepository.findById(100L)).thenReturn(Optional.of(variant));
-        when(productItemRepository.findByVariantIdOrderByIdAsc(100L)).thenReturn(List.of(item1, item2));
+        when(productItemRepository.findActiveItemsForUpdate(100L)).thenReturn(List.of(item1, item2));
         when(bookingItemRepository.findOverlappingItems(anyLong(), any(), any(), any())).thenReturn(Collections.emptyList());
         when(bookingRepository.existsByBookingCode(anyString())).thenReturn(false);
 
@@ -184,6 +184,7 @@ class BookingServiceTest {
     @DisplayName("Ném lỗi ConflictException khi kho không có món đồ vật lý nào")
     void createBooking_NoInventory_ThrowsException() {
         when(productVariantRepository.findById(100L)).thenReturn(Optional.of(variant));
+        when(productItemRepository.findActiveItemsForUpdate(100L)).thenReturn(Collections.emptyList());
         when(productItemRepository.findByVariantIdOrderByIdAsc(100L)).thenReturn(Collections.emptyList());
 
         assertThatThrownBy(() -> bookingService.createBooking(request))
@@ -195,7 +196,7 @@ class BookingServiceTest {
     @DisplayName("Ném lỗi ConflictException khi tất cả các món đồ đều đã kín lịch")
     void createBooking_AllItemsBooked_ThrowsException() {
         when(productVariantRepository.findById(100L)).thenReturn(Optional.of(variant));
-        when(productItemRepository.findByVariantIdOrderByIdAsc(100L)).thenReturn(List.of(item1));
+        when(productItemRepository.findActiveItemsForUpdate(100L)).thenReturn(List.of(item1));
 
         Booking existingBooking = Booking.builder()
                 .id(2L)
@@ -576,5 +577,126 @@ class BookingServiceTest {
         assertThatThrownBy(() -> bookingService.trackBooking(request))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Không tìm thấy đơn đặt thuê phù hợp");
+    }
+
+    // =========================================================================
+    // BOK-002: Thuật Toán Chống Trùng Lịch & Ngày Đệm Giặt Ủi Tests
+    // =========================================================================
+
+    @Test
+    @DisplayName("BOK-002 [BR-01]: Cấu hình bufferDays = 1 cho Trang phục (Váy cưới, Áo dài) và 0 cho Máy ảnh/Dịch vụ")
+    void bok002_calculateBufferDays_Rules() {
+        // Trang phục COSTUME -> bufferDays = 1
+        Product costumeProduct = Product.builder()
+                .category(Category.builder().type(CategoryType.COSTUME).build())
+                .build();
+        assertThat(bookingService.calculateBufferDays(costumeProduct)).isEqualTo(1);
+
+        // Máy ảnh CAMERA -> bufferDays = 0
+        Product cameraProduct = Product.builder()
+                .category(Category.builder().type(CategoryType.CAMERA).build())
+                .build();
+        assertThat(bookingService.calculateBufferDays(cameraProduct)).isEqualTo(0);
+
+        // Dịch vụ chụp PHOTOGRAPHY -> bufferDays = 0
+        Product photoProduct = Product.builder()
+                .category(Category.builder().type(CategoryType.PHOTOGRAPHY).build())
+                .build();
+        assertThat(bookingService.calculateBufferDays(photoProduct)).isEqualTo(0);
+
+        // Null category / default -> bufferDays = 1 (an toàn)
+        Product defaultProduct = Product.builder().build();
+        assertThat(bookingService.calculateBufferDays(defaultProduct)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("BOK-002: Kiểm tra va chạm giao thoa ngày đệm giặt ủi (Acceptance Criteria 1)")
+    void bok002_isIntervalOverlappingWithBuffer_Scenarios() {
+        LocalDate startExist = LocalDate.of(2026, 11, 10);
+        LocalDate endExist = LocalDate.of(2026, 11, 11);
+        int bufferDays = 1; // Chiếm dụng đến hết 12/11
+
+        // Kịch bản 1: Khách B muốn thuê vào ngày 12/11 (chính là ngày đệm) -> BỊ TRÙNG LỊCH
+        boolean overlapsOnBufferDay = bookingService.isIntervalOverlappingWithBuffer(
+                LocalDate.of(2026, 11, 12), LocalDate.of(2026, 11, 13),
+                startExist, endExist,
+                bufferDays
+        );
+        assertThat(overlapsOnBufferDay).isTrue();
+
+        // Kịch bản 2: Khách B muốn thuê vào ngày 13/11 (đã qua ngày đệm 12/11) -> HỢP LỆ, KHÔNG TRÙNG
+        boolean noOverlapAfterBuffer = bookingService.isIntervalOverlappingWithBuffer(
+                LocalDate.of(2026, 11, 13), LocalDate.of(2026, 11, 14),
+                startExist, endExist,
+                bufferDays
+        );
+        assertThat(noOverlapAfterBuffer).isFalse();
+
+        // Kịch bản 3: Khách B thuê trước đó nhưng ngày đệm của B chạm vào ngày nhận của A (8/11 - 9/11 + buffer 1 = 10/11) -> BỊ TRÙNG
+        boolean overlapsBefore = bookingService.isIntervalOverlappingWithBuffer(
+                LocalDate.of(2026, 11, 8), LocalDate.of(2026, 11, 9),
+                startExist, endExist,
+                bufferDays
+        );
+        assertThat(overlapsBefore).isTrue();
+
+        // Kịch bản 4: Khách B thuê sớm hẳn (7/11 - 8/11 + buffer 1 = 9/11) -> HỢP LỆ, KHÔNG TRÙNG
+        boolean noOverlapBefore = bookingService.isIntervalOverlappingWithBuffer(
+                LocalDate.of(2026, 11, 7), LocalDate.of(2026, 11, 8),
+                startExist, endExist,
+                bufferDays
+        );
+        assertThat(noOverlapBefore).isFalse();
+
+        // Kịch bản 5: Máy ảnh bufferDays = 0, thuê ngay 12/11 sau khi đơn trước trả 11/11 -> HỢP LỆ
+        boolean cameraNextDay = bookingService.isIntervalOverlappingWithBuffer(
+                LocalDate.of(2026, 11, 12), LocalDate.of(2026, 11, 13),
+                startExist, endExist,
+                0 // 0 buffer
+        );
+        assertThat(cameraNextDay).isFalse();
+    }
+
+    @Test
+    @DisplayName("BOK-002: Mô phỏng Race Condition khi 2 khách đặt đồng thời cho món đồ duy nhất - Request 2 nhận 409 Conflict")
+    void bok002_concurrencyRaceCondition_OnlyOneSucceeds() throws Exception {
+        when(productVariantRepository.findById(100L)).thenReturn(Optional.of(variant));
+        // Chỉ có duy nhất 1 món đồ vật lý khả dụng
+        when(productItemRepository.findActiveItemsForUpdate(100L)).thenReturn(List.of(item1));
+        when(bookingRepository.existsByBookingCode(anyString())).thenReturn(false);
+
+        java.util.concurrent.atomic.AtomicInteger bookingCounter = new java.util.concurrent.atomic.AtomicInteger(0);
+        java.util.List<BookingItem> activeBookings = new java.util.concurrent.CopyOnWriteArrayList<>();
+
+        when(bookingItemRepository.findOverlappingItems(anyLong(), any(), any(), any()))
+                .thenAnswer(inv -> new java.util.ArrayList<>(activeBookings));
+
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(inv -> {
+            Booking b = inv.getArgument(0);
+            b.setId((long) bookingCounter.incrementAndGet());
+            if (!b.getItems().isEmpty()) {
+                activeBookings.addAll(b.getItems());
+            }
+            return b;
+        });
+
+        // Request 1 từ khách hàng A
+        BookingResponse res1 = bookingService.createBooking(request);
+        assertThat(res1).isNotNull();
+        assertThat(res1.getItems().get(0).getProductItemId()).isEqualTo(item1.getId());
+
+        // Request 2 từ khách hàng B cùng thời điểm cho cùng khoảng ngày
+        CreateBookingRequest request2 = CreateBookingRequest.builder()
+                .customerName("Khách Hàng B")
+                .customerPhone("0987654321")
+                .variantId(100L)
+                .rentalStartDate(request.getRentalStartDate())
+                .rentalEndDate(request.getRentalEndDate())
+                .build();
+
+        // Request 2 phải bị ConflictException (409) do item duy nhất đã bị giữ bởi Request 1
+        assertThatThrownBy(() -> bookingService.createBooking(request2))
+                .isInstanceOf(ConflictException.class)
+                .hasMessageContaining("đã kín lịch");
     }
 }
