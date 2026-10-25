@@ -1,27 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { useForm, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertCircle,
   Building2,
   Calendar,
-  Check,
-  CheckCircle2,
   Clock,
-  Copy,
-  ExternalLink,
   MapPin,
   Phone,
-  QrCode,
   Ruler,
   ShieldCheck,
   Sparkles,
   Truck,
   User,
-  X,
 } from "lucide-react";
 import {
   Button,
@@ -44,6 +37,7 @@ import {
 } from "../product-pillar.config";
 import { SizeGuideModal } from "../SizeGuideModal";
 import { AvailabilityCalendar } from "../AvailabilityCalendar";
+import { BookingSuccessModal } from "../BookingSuccessModal";
 import {
   createBookingSchema,
   BookingFormValues,
@@ -70,7 +64,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   pillar = "COSTUME",
   className,
 }) => {
-  const router = useRouter();
   const activePillar = pillar || "COSTUME";
   const pillarConfig = PILLAR_CONFIGS[activePillar].booking;
 
@@ -177,7 +170,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState<boolean>(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = React.useState<boolean>(false);
   const [showCalendar, setShowCalendar] = React.useState<boolean>(true);
-  const [copiedCode, setCopiedCode] = React.useState<boolean>(false);
 
   // Match selected variant object
   const selectedVariantObj = React.useMemo(() => {
@@ -202,16 +194,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
   const totalRentalFee = rentalPrice * rentalDays;
   const totalAmount = totalRentalFee + depositPrice;
-
-  const handleCopyCode = async (code: string) => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2000);
-    } catch {
-      // Fallback
-    }
-  };
 
   const onInvalid = (fieldErrors: FieldErrors<BookingFormValues>) => {
     if (fieldErrors.fullName) {
@@ -736,162 +718,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
         </form>
       </Form>
 
-      {/* Success Modal */}
-      {isSuccessModalOpen && createdBooking && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="success-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto"
-        >
-          <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-line space-y-5 my-6">
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={() => setIsSuccessModalOpen(false)}
-              className="absolute top-4 right-4 text-ink-muted hover:text-ink p-1.5 rounded-full hover:bg-ivory transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Header Icon & Title */}
-            <div className="text-center space-y-2">
-              <div className="w-14 h-14 mx-auto rounded-full bg-success/10 text-success flex items-center justify-center">
-                <CheckCircle2 className="w-8 h-8 text-success" />
-              </div>
-
-              <div className="space-y-1">
-                <h3
-                  id="success-modal-title"
-                  className="font-serif text-xl sm:text-2xl font-bold text-ink"
-                >
-                  {pillarConfig.successModalTitle}
-                </h3>
-                <p className="text-xs text-ink-muted">
-                  {pillarConfig.successModalSubtitle}
-                </p>
-              </div>
-
-              {/* Booking Code Banner */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-burgundy/10 border border-burgundy/20 text-burgundy text-xs font-semibold">
-                <span>Mã đơn:</span>
-                <span className="font-mono text-sm tracking-wide font-bold">
-                  {createdBooking.bookingCode}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleCopyCode(createdBooking.bookingCode)}
-                  className="p-1 hover:bg-burgundy/20 rounded-md transition-colors"
-                  title="Sao chép mã"
-                >
-                  {copiedCode ? (
-                    <Check className="w-3.5 h-3.5 text-success" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Summary Details */}
-            <div className="rounded-xl bg-ivory/60 border border-line p-3.5 space-y-2 text-xs">
-              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
-                <span className="text-ink-muted">Sản phẩm:</span>
-                <span className="font-semibold text-ink text-right max-w-[240px] truncate">
-                  {productName}
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
-                <span className="text-ink-muted">Khách thuê:</span>
-                <span className="font-medium text-ink">
-                  {fullName} - {phone}
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
-                <span className="text-ink-muted">Thời gian:</span>
-                <span className="font-medium text-ink">
-                  {startDate} đến {endDate} ({rentalDays} {pillarConfig.durationUnitLabel})
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-line/40">
-                <span className="text-ink-muted">Hình thức nhận:</span>
-                <span className="font-medium text-ink">
-                  {deliveryMethod === "SHIP_TO_ADDRESS"
-                    ? "Giao hàng tận nơi"
-                    : "Nhận tại Studio (120 Hoàng Cầu)"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-1 font-semibold text-sm">
-                <span className="text-ink">Cọc cần chuyển khoản:</span>
-                <span className="text-burgundy font-bold">
-                  {formattedDepositPrice}đ
-                </span>
-              </div>
-            </div>
-
-            {/* Bank Transfer Box */}
-            <div className="rounded-xl border border-burgundy/30 bg-burgundy/5 p-4 space-y-3">
-              <div className="flex items-center justify-between text-xs font-semibold text-burgundy">
-                <div className="flex items-center gap-1.5">
-                  <QrCode className="w-4 h-4" />
-                  <span>Thông tin chuyển khoản cọc giữ đồ:</span>
-                </div>
-                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-burgundy/10 rounded-full">
-                  24/7
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <div className="text-[11px] text-ink-muted">Ngân hàng:</div>
-                  <div className="font-semibold text-ink">Vietcombank (VCB)</div>
-                </div>
-                <div>
-                  <div className="text-[11px] text-ink-muted">Chủ tài khoản:</div>
-                  <div className="font-semibold text-ink uppercase">CHICKIE STUDIO</div>
-                </div>
-                <div>
-                  <div className="text-[11px] text-ink-muted">Số tài khoản:</div>
-                  <div className="font-mono font-bold text-burgundy">
-                    1029384756
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[11px] text-ink-muted">Nội dung CK:</div>
-                  <div className="font-mono font-bold text-ink truncate">
-                    {createdBooking.bookingCode} {phone}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
-              <Button
-                type="button"
-                variant="secondary"
-                size="md"
-                onClick={() => setIsSuccessModalOpen(false)}
-                className="w-full sm:flex-1 justify-center"
-              >
-                Đóng
-              </Button>
-              <Button
-                type="button"
-                variant="primary"
-                size="md"
-                onClick={() => {
-                  router.push(`/booking/success/${createdBooking.bookingCode}`);
-                }}
-                className="w-full sm:flex-1 justify-center gap-1.5"
-              >
-                <span>Xem hóa đơn chi tiết</span>
-                <ExternalLink className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Success Modal (Extracted reusable component) */}
+      <BookingSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        booking={createdBooking}
+        productName={productName}
+        pillar={activePillar}
+      />
 
       {/* Size Guide Modal */}
       <SizeGuideModal

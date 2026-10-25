@@ -143,7 +143,9 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await expect(page.getByText("Đặt Thuê Máy Ảnh & Thiết Bị")).toBeVisible();
     await expect(page.getByText(/Phiên bản \/ Bộ Combo:/i)).toBeVisible();
 
-    // Điền thông tin đặt thuê
+    // Điền thông tin đặt thuê và chọn ngày khả dụng trong tương lai
+    await page.getByRole("textbox", { name: "Đến ngày" }).fill("2027-02-16");
+    await page.getByRole("textbox", { name: "Từ ngày" }).fill("2027-02-15");
     await page.getByPlaceholder("Ví dụ: Nguyễn Quỳnh Anh").fill("Lê Hoàng Nam");
     await page.getByPlaceholder("Ví dụ: 0912 345 678").fill("0981234567");
 
@@ -224,10 +226,21 @@ test.describe("Client Products and Booking E2E Tests", () => {
     // Hiển thị mã đơn hàng
     await expect(page.getByText("BK20261025-DEMO", { exact: true })).toBeVisible();
 
-    // Hướng dẫn chuyển khoản ngân hàng
+    // Hướng dẫn chuyển khoản ngân hàng & mã QR
     await expect(page.getByText("Hướng Dẫn Chuyển Khoản Cọc")).toBeVisible();
+    await expect(
+      page.getByAltText("Mã QR chuyển khoản cọc VietQR Chickie Studio")
+    ).toBeVisible();
     await expect(page.getByText("9999 8888 6666")).toBeVisible();
     await expect(page.getByText("CHICKIE STUDIO - LE THI PHUONG ANH")).toBeVisible();
+
+    // Mở modal phóng to mã QR
+    const zoomBtn = page.getByRole("button", { name: /phóng to/i });
+    await expect(zoomBtn).toBeVisible();
+    await zoomBtn.click();
+    await expect(page.getByRole("dialog", { name: "Mã QR chuyển khoản cọc phóng to" })).toBeVisible();
+    await page.getByRole("button", { name: "Đóng", exact: true }).click();
+    await expect(page.getByRole("dialog", { name: "Mã QR chuyển khoản cọc phóng to" })).not.toBeVisible();
 
     // Nút quay lại xem đồ
     const continueBtn = page.getByRole("button", { name: "Tiếp tục xem đồ" });
