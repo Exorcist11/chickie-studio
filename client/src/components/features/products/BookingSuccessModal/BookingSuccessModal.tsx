@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Check, CheckCircle2, Copy, ExternalLink, QrCode, X } from "lucide-react";
+import { Check, CheckCircle2, Copy, ExternalLink, Mail, QrCode, X } from "lucide-react";
 import { Button } from "@/components/ui";
 import { BookingResponse } from "@/types/booking";
 import { BusinessPillar, PILLAR_CONFIGS } from "../product-pillar.config";
@@ -163,6 +163,14 @@ export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({
               {displayCustomer}
             </span>
           </div>
+          {booking.customerEmail && (
+            <div className="flex justify-between items-center py-0.5 border-b border-line/40">
+              <span className="text-ink-muted">Email nhận vé:</span>
+              <span className="font-medium text-ink truncate max-w-[260px]">
+                {booking.customerEmail}
+              </span>
+            </div>
+          )}
           <div className="flex justify-between items-center py-0.5 border-b border-line/40">
             <span className="text-ink-muted">Thời gian:</span>
             <span className="font-medium text-ink">
@@ -283,6 +291,19 @@ export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Email Notification Notice Banner */}
+        {booking.customerEmail && (
+          <div className="p-2.5 rounded-xl bg-ivory/90 border border-gold/40 flex items-start gap-2.5 text-xs text-ink-muted">
+            <Mail className="w-4 h-4 text-burgundy shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="font-semibold text-ink block">Hóa đơn điện tử & mã VietQR đã được gửi tự động</span>
+              <span>
+                Vui lòng kiểm tra email <strong className="text-burgundy font-medium">{booking.customerEmail}</strong> để xem chi tiết vé thuê và hướng dẫn cọc.
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Actions: 2 buttons có cùng chiều dài và icon cùng 1 hàng */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 w-full">

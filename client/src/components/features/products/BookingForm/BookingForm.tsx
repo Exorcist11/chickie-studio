@@ -9,6 +9,7 @@ import {
   Building2,
   Calendar,
   Clock,
+  Mail,
   MapPin,
   Phone,
   Ruler,
@@ -125,6 +126,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       rentalEndDate: defaultEndStr,
       fullName: "",
       phone: "",
+      email: "",
       deliveryMethod: "PICKUP_STORE",
       address: "",
       note: "",
@@ -150,6 +152,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     deliveryMethod,
     fullName,
     phone,
+    email,
   ] = watch([
     "size",
     "color",
@@ -158,6 +161,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     "deliveryMethod",
     "fullName",
     "phone",
+    "email",
   ]);
 
   // Sync selectedSize if availableSizes changes
@@ -203,6 +207,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       setErrorMsg("Vui lòng nhập đầy đủ họ và tên người thuê.");
     } else if (fieldErrors.phone) {
       setErrorMsg("Số điện thoại không đúng định dạng Việt Nam.");
+    } else if (fieldErrors.email) {
+      setErrorMsg("Vui lòng nhập địa chỉ email hợp lệ để nhận thông báo và mã VietQR.");
     } else if (fieldErrors.rentalStartDate || fieldErrors.rentalEndDate) {
       setErrorMsg("Vui lòng chọn khoảng thời gian thuê hợp lệ.");
     } else if (fieldErrors.address) {
@@ -219,6 +225,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       const response = await createBooking({
         customerName: data.fullName.trim(),
         customerPhone: cleanPhone,
+        customerEmail: data.email.trim(),
         deliveryMethod: data.deliveryMethod,
         deliveryAddress:
           data.deliveryMethod === "SHIP_TO_ADDRESS"
@@ -515,6 +522,48 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   </FormItem>
                 )}
               />
+
+              <div className="sm:col-span-2">
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <FormLabel htmlFor="booking-email">
+                          Email nhận thông báo & mã VietQR <span className="text-danger">*</span>
+                        </FormLabel>
+                        <span className="text-[11px] text-ink-muted hidden sm:inline">
+                          Hóa đơn điện tử & link tra cứu
+                        </span>
+                      </div>
+                      <div className="relative flex items-center">
+                        <Mail className="absolute left-3 w-4 h-4 text-ink-muted pointer-events-none" />
+                        <FormControl>
+                          <input
+                            id="booking-email"
+                            type="email"
+                            required
+                            placeholder="Ví dụ: quynhanh@gmail.com"
+                            {...field}
+                            className={cn(
+                              "w-full min-h-[42px] pl-9 pr-3 py-2 rounded-btn bg-white text-sm border text-ink transition-colors",
+                              errors.email
+                                ? "border-danger focus:ring-danger/20"
+                                : "border-line focus:border-burgundy focus:ring-burgundy/20"
+                            )}
+                          />
+                        </FormControl>
+                      </div>
+                      <p className="text-[11.5px] text-ink-muted flex items-center gap-1.5 mt-1">
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-burgundy/70 shrink-0" />
+                        <span>Hệ thống tự động gửi vé xác nhận và mã VietQR thanh toán cọc về hòm thư này ngay khi bạn đặt</span>
+                      </p>
+                      <FormMessage id="email-error" />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             {/* Delivery Method Selector */}

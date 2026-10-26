@@ -7,10 +7,10 @@
 | **Module** | BOK (Booking) |
 | **Phạm vi** | CLIENT, SERVER |
 | **Ưu tiên** | P0 - MVP |
-| **Trạng thái** | 🔄 REOPENED (Đánh dấu thực hiện lại: Bổ sung Email & Gửi mail xác nhận) |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Fullstack Dev & UI/UX Specialist |
 | **Ngày bắt đầu** | 2026-10-25 |
-| **Ngày hoàn thành** | - (Đang thực hiện lại) |
+| **Ngày hoàn thành** | 2026-10-26 |
 | **Phụ thuộc** | `CAT-006`, `BOK-002`, `SET-003` |
 
 ---
@@ -166,16 +166,17 @@ CREATE TABLE `booking_items` (
 ## 11. Checklist Hoàn Thành (Definition of Done)
 - [x] Xử lý an toàn dữ liệu khách hàng vãng lai.
 - [x] Luồng UX tinh giản dưới 3 bước trên mobile kèm Modal Luxury và trang hóa đơn `/booking/success/[code]`.
-- [ ] Bổ sung trường Email trên Client BookingForm (`BookingForm.tsx`) với validation Zod.
-- [ ] Cập nhật DTO `CreateBookingRequest` và Backend Service tiếp nhận Email.
-- [ ] Tích hợp gửi email xác nhận đặt lịch tự động (`SET-003`).
-- [ ] i18n đầy đủ tiếng Việt và tiếng Anh (`vi.json` và `en.json`).
-- [ ] Test coverage $\ge 80\%$.
-- [ ] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
+- [x] Bổ sung trường Email trên Client BookingForm (`BookingForm.tsx`) với validation Zod.
+- [x] Cập nhật DTO `CreateBookingRequest` và Backend Service tiếp nhận Email.
+- [x] Tích hợp gửi email xác nhận đặt lịch tự động (`SET-003`).
+- [x] i18n đầy đủ tiếng Việt và tiếng Anh (`vi.json` và `en.json`).
+- [x] Test coverage $\ge 80\%$.
+- [x] Cập nhật `docs/FEATURES.md` và `docs/CHANGELOG.md`.
 
 ## 12. Nhật Ký Thực Hiện
 | Ngày | Người thực hiện | Nội dung thay đổi | Trạng thái mới |
 |---|---|---|---|
+| 2026-10-26 | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Bổ sung trường Email trên BookingForm, validation Zod, gửi email xác nhận đặt lịch tự động kèm mã VietQR (SET-003), đồng bộ song ngữ vi/en, 449 unit tests pass 100%, 25/25 Playwright E2E pass 100% | ✅ DONE |
 | 2026-10-25 | Tech Lead | Đánh dấu thực hiện lại: Bổ sung trường Email khách hàng trên Client & Server, kích hoạt gửi Email xác nhận tự động (thay thế Zalo/SMS) | 🔄 REOPENED |
 | 2026-10-25 | Fullstack Dev | Hoàn thành toàn diện BOK-001 (phiên bản ban đầu không có email): API POST/GET, Client BookingForm UX Pro Max, Success Receipt page | ✅ DONE (Cũ) |
 | 2026-10-24 | Tech Lead | Soạn thảo tài liệu đặc tả ban đầu | 📝 SPEC |

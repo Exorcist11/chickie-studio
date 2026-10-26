@@ -13,6 +13,7 @@ export type BookingStatus =
 export interface CreateBookingRequest {
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
   deliveryMethod: BookingDeliveryMethod;
   deliveryAddress?: string;
   rentalStartDate: string; // YYYY-MM-DD
@@ -55,6 +56,7 @@ export interface BookingResponse {
   bookingCode: string;
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
   deliveryMethod: BookingDeliveryMethod;
   deliveryAddress?: string;
   rentalStartDate: string;

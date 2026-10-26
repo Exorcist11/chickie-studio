@@ -177,6 +177,7 @@ function createMockBookingResponse(
     bookingCode,
     customerName: request.customerName,
     customerPhone: request.customerPhone,
+    customerEmail: request.customerEmail,
     deliveryMethod: request.deliveryMethod,
     deliveryAddress: request.deliveryAddress,
     rentalStartDate: request.rentalStartDate,

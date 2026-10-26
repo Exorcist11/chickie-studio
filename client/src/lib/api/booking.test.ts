@@ -11,6 +11,7 @@ describe("Booking API Client", () => {
   const mockRequest: CreateBookingRequest = {
     customerName: "Nguyễn Quỳnh Anh",
     customerPhone: "0912345678",
+    customerEmail: "quynhanh@gmail.com",
     deliveryMethod: "PICKUP_STORE",
     rentalStartDate: "2026-11-10",
     rentalEndDate: "2026-11-11",
@@ -23,6 +24,7 @@ describe("Booking API Client", () => {
     bookingCode: "BK20261110-8888",
     customerName: "Nguyễn Quỳnh Anh",
     customerPhone: "0912345678",
+    customerEmail: "quynhanh@gmail.com",
     deliveryMethod: "PICKUP_STORE",
     rentalStartDate: "2026-11-10",
     rentalEndDate: "2026-11-11",

@@ -76,7 +76,7 @@ test.describe("Client Home Page UI Test", () => {
     // Click chuyển menu
     await cameraMenuLink.click();
 
-    // URL chuyển sang trang products với type=camera
-    await expect(page).toHaveURL(/products\?type=camera/);
+    // URL chuyển sang trang products với type=camera hoặc semantic route thue-may-anh
+    await expect(page).toHaveURL(/(products\?type=camera|thue-may-anh)/);
   });
 });

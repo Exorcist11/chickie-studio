@@ -22,6 +22,11 @@ export const createBookingSchema = (minStartDate: string) =>
           (val) => VIETNAM_PHONE_REGEX.test(val.replace(/\s+/g, "")),
           "Số điện thoại không hợp lệ (Ví dụ: 0912345678 hoặc +84912345678)"
         ),
+      email: z
+        .string()
+        .trim()
+        .min(1, "Vui lòng nhập địa chỉ email nhận thông báo")
+        .email("Địa chỉ email không đúng định dạng (Ví dụ: name@example.com)"),
       deliveryMethod: z.enum(["PICKUP_STORE", "SHIP_TO_ADDRESS"] as const),
       address: z.string().optional().default(""),
       note: z.string().optional().default(""),

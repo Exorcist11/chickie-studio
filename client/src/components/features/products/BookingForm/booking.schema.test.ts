@@ -12,6 +12,7 @@ describe("createBookingSchema", () => {
     rentalEndDate: "2026-10-29",
     fullName: "Nguyễn Quỳnh Anh",
     phone: "0912345678",
+    email: "quynhanh@gmail.com",
     deliveryMethod: "PICKUP_STORE" as const,
     address: "",
     note: "Ghi chú thử đồ",
@@ -52,6 +53,23 @@ describe("createBookingSchema", () => {
 
     const res2 = schema.safeParse({ ...validData, phone: "0912abcd89" });
     expect(res2.success).toBe(false);
+  });
+
+  it("fails when email is empty or invalid format", () => {
+    const res1 = schema.safeParse({ ...validData, email: "" });
+    expect(res1.success).toBe(false);
+    if (!res1.success) {
+      expect(res1.error.issues[0].message).toContain("Vui lòng nhập địa chỉ email");
+    }
+
+    const res2 = schema.safeParse({ ...validData, email: "not-an-email" });
+    expect(res2.success).toBe(false);
+    if (!res2.success) {
+      expect(res2.error.issues[0].message).toContain("không đúng định dạng");
+    }
+
+    const res3 = schema.safeParse({ ...validData, email: "test@domain" });
+    expect(res3.success).toBe(false);
   });
 
   it("fails when rentalStartDate is in the past", () => {

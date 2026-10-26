@@ -14,6 +14,7 @@ import {
   Copy,
   Download,
   HelpCircle,
+  Mail,
   Maximize2,
   Phone,
   QrCode,
@@ -252,6 +253,18 @@ export default function BookingSuccessPage() {
                       </span>
                     </div>
 
+                    {booking.customerEmail && (
+                      <div className="flex items-start justify-between">
+                        <span className="text-ink-muted flex items-center gap-1.5">
+                          <Mail className="w-3.5 h-3.5 text-burgundy shrink-0" />
+                          Email nhận vé:
+                        </span>
+                        <span className="font-medium text-ink text-right truncate max-w-[210px]">
+                          {booking.customerEmail}
+                        </span>
+                      </div>
+                    )}
+
                     <div className="flex items-start justify-between">
                       <span className="text-ink-muted flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-burgundy shrink-0" />
@@ -287,6 +300,19 @@ export default function BookingSuccessPage() {
                       </div>
                     )}
                   </div>
+
+                  {/* Email Notice Card */}
+                  {booking.customerEmail && (
+                    <div className="p-3 rounded-xl bg-ivory/80 border border-gold/30 flex items-start gap-2.5 text-xs text-ink-muted">
+                      <Mail className="w-4 h-4 text-burgundy shrink-0 mt-0.5" />
+                      <div className="space-y-0.5">
+                        <span className="font-semibold text-ink block">Hóa đơn điện tử đã gửi qua Email</span>
+                        <span>
+                          Biên nhận đặt đơn và mã VietQR thanh toán đã được gửi tới hòm thư <strong className="text-burgundy font-medium">{booking.customerEmail}</strong>.
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Pricing Table pinned at bottom */}

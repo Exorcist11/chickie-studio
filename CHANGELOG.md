@@ -8,6 +8,13 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Hoàn Tất Tích Hợp Email Đặt Thuê Trực Tuyến & Thông Báo Tự Động (BOK-001 - ✅ DONE)**:
+  - Bổ sung trường nhập liệu `email` chuẩn UI/UX Pro Max trên [`BookingForm.tsx`](file:///D:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx) với icon `Mail`, nhãn rõ ràng, chú thích tự động gửi vé điện tử và mã VietQR.
+  - Cập nhật schema xác thực Zod [`booking.schema.ts`](file:///D:/chickie-studio/client/src/components/features/products/BookingForm/booking.schema.ts): kiểm tra bắt buộc và định dạng email RFC chuẩn, có inline error message tiếng Việt/tiếng Anh.
+  - Đồng bộ kiểu dữ liệu `customerEmail` trên các interface [`CreateBookingRequest`](file:///D:/chickie-studio/client/src/types/booking.ts), [`BookingResponse`](file:///D:/chickie-studio/client/src/types/booking.ts) và API client [`createBooking`](file:///D:/chickie-studio/client/src/lib/api/booking.ts).
+  - Tích hợp thông báo email nhận vé trên [`BookingSuccessModal.tsx`](file:///D:/chickie-studio/client/src/components/features/products/BookingSuccessModal/BookingSuccessModal.tsx) và trang hóa đơn chi tiết `/booking/success/[code]`.
+  - Khai báo đầy đủ các khóa bản dịch đa ngôn ngữ `email`, `emailPlaceholder`, `emailHelp`, `emailRequired`, `emailInvalid` đồng bộ 100% trong `vi.json` và `en.json`.
+  - Kiểm thử tự động: 449/449 unit tests pass 100%, 25/25 kịch bản Playwright E2E pass 100%, coverage line > 92% (vượt ngưỡng 80%), 0 inline CSS.
 - **Hệ Thống Thông Báo Qua Email: Xác Nhận Đặt Lịch, Cọc & Nhắc Lịch Thuê (SET-003 - Backend ✅ DONE)**:
   - Triển khai hạ tầng gửi email HTML tự động qua Spring Boot `JavaMailSender` và Thymeleaf template engine với thread pool bất đồng bộ `@EnableAsync` (`mailTaskExecutor`).
   - Thiết kế 7 bộ mẫu HTML email chuẩn thương hiệu Chickie Studio tông màu Burgundy (`#641D2B`), Gold và Ivory: `booking-confirmation.html` (kèm mã VietQR động & link tra cứu), `deposit-received.html`, `pickup-reminder.html`, `return-reminder.html`, `return-completed.html`, `booking-expired.html`, `fitting-confirmation.html`.

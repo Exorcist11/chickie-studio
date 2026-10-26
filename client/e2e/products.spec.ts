@@ -30,11 +30,11 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await page.goto("/products");
 
     // Click vào sản phẩm đầu tiên
-    const firstProductLink = page.locator("a[href^='/products/']").first();
+    const firstProductLink = page.locator("a[href*='/thue-trang-phuc/'], a[href*='/products/']").first();
     await firstProductLink.click();
 
     // Kiểm tra URL và tiêu đề chi tiết
-    await expect(page).toHaveURL(/\/products\/.+/);
+    await expect(page).toHaveURL(/\/(thue-trang-phuc|products)\/.+/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
     // Kiểm tra Lookbook Gallery
@@ -60,9 +60,11 @@ test.describe("Client Products and Booking E2E Tests", () => {
     // Điền thông tin khách hàng
     const nameInput = page.getByPlaceholder("Ví dụ: Nguyễn Quỳnh Anh");
     const phoneInput = page.getByPlaceholder("Ví dụ: 0912 345 678");
+    const emailInput = page.getByPlaceholder("Ví dụ: quynhanh@gmail.com");
 
     await nameInput.fill("Hoàng Thu Nga");
     await phoneInput.fill("0977112233");
+    await emailInput.fill("thunga@gmail.com");
 
     // Submit form
     const submitBtn = page.getByRole("button", { name: "Xác Nhận Đặt Thuê Ngay" });
@@ -91,8 +93,8 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await expect(cameraNavLink).toBeVisible();
     await cameraNavLink.click();
 
-    // Xác nhận đã chuyển hướng đến /products?type=camera
-    await expect(page).toHaveURL(/.*\/products\?type=camera.*/);
+    // Xác nhận đã chuyển hướng đến semantic route hoặc query params
+    await expect(page).toHaveURL(/.*(\/thue-may-anh|\/products\?type=camera).*/);
     await expect(page.getByText("Tiện ích thuê máy ảnh").first()).toBeVisible();
 
     // Kiểm tra danh sách hiển thị máy ảnh và badge tương ứng
@@ -105,8 +107,8 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await expect(photoNavLink).toBeVisible();
     await photoNavLink.click();
 
-    // Xác nhận đã chuyển hướng đến /products?type=photography
-    await expect(page).toHaveURL(/.*\/products\?type=photography.*/);
+    // Xác nhận đã chuyển hướng đến semantic route hoặc query params
+    await expect(page).toHaveURL(/.*(\/dich-vu-chup|\/products\?type=photography).*/);
     await expect(page.getByText("Ưu đãi gói chụp").first()).toBeVisible();
     await expect(page.getByText("Gói Chụp Ngoại Cảnh Nàng Thơ")).toBeVisible();
     await expect(page.getByText("Gói dịch vụ chụp").first()).toBeVisible();
@@ -116,8 +118,8 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await expect(costumeNavLink).toBeVisible();
     await costumeNavLink.click();
 
-    // Xác nhận đã chuyển hướng đến /products?type=costume
-    await expect(page).toHaveURL(/.*\/products\?type=costume.*/);
+    // Xác nhận đã chuyển hướng đến semantic route hoặc query params
+    await expect(page).toHaveURL(/.*(\/thue-trang-phuc|\/products\?type=costume).*/);
     await expect(page.getByText("Kích cỡ (Size)")).toBeVisible();
     await expect(page.getByText("Trang phục thiết kế").first()).toBeVisible();
   });
@@ -152,6 +154,7 @@ test.describe("Client Products and Booking E2E Tests", () => {
     await page.getByRole("textbox", { name: "Đến ngày" }).fill(endDate);
     await page.getByPlaceholder("Ví dụ: Nguyễn Quỳnh Anh").fill("Lê Hoàng Nam");
     await page.getByPlaceholder("Ví dụ: 0912 345 678").fill("0981234567");
+    await page.getByPlaceholder("Ví dụ: quynhanh@gmail.com").fill("hoangnam@gmail.com");
 
     // Submit form
     const submitBtn = page.getByRole("button", { name: "Xác Nhận Thuê Thiết Bị" });

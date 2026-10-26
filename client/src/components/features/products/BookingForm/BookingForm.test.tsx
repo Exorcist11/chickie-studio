@@ -64,6 +64,35 @@ describe("BookingForm component", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows error when email is missing or invalid", async () => {
+    const user = userEvent.setup();
+    render(
+      <BookingForm
+        productId={1}
+        productName="Váy Dạ Hội Sparkle"
+        rentalPrice={200000}
+        depositPrice={500000}
+      />
+    );
+
+    const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
+    const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    const emailInput = screen.getByPlaceholderText("Ví dụ: quynhanh@gmail.com");
+
+    await user.type(nameInput, "Nguyễn Mai Anh");
+    await user.type(phoneInput, "0912345678");
+    await user.type(emailInput, "invalid-email");
+
+    const submitBtn = screen.getByRole("button", {
+      name: "Xác Nhận Đặt Thuê Ngay",
+    });
+    await user.click(submitBtn);
+
+    expect(
+      screen.getByText("Vui lòng nhập địa chỉ email hợp lệ để nhận thông báo và mã VietQR.")
+    ).toBeInTheDocument();
+  });
+
   it("submits successfully and opens modal when all info is provided", async () => {
     const user = userEvent.setup();
     vi.spyOn(bookingApi, "createBooking").mockResolvedValueOnce({
@@ -95,9 +124,11 @@ describe("BookingForm component", () => {
 
     const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
     const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    const emailInput = screen.getByPlaceholderText("Ví dụ: quynhanh@gmail.com");
 
     await user.type(nameInput, "Trần Hà My");
     await user.type(phoneInput, "0988776655");
+    await user.type(emailInput, "tranhamy@gmail.com");
 
     const submitBtn = screen.getByRole("button", {
       name: "Xác Nhận Đặt Thuê Ngay",
@@ -150,8 +181,10 @@ describe("BookingForm component", () => {
     // Fill customer info without address
     const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
     const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    const emailInput = screen.getByPlaceholderText("Ví dụ: quynhanh@gmail.com");
     await user.type(nameInput, "Nguyễn Văn A");
     await user.type(phoneInput, "0912345678");
+    await user.type(emailInput, "nguyenvana@gmail.com");
 
     const submitBtn = screen.getByRole("button", {
       name: "Xác Nhận Đặt Thuê Ngay",
@@ -181,9 +214,11 @@ describe("BookingForm component", () => {
 
     const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
     const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    const emailInput = screen.getByPlaceholderText("Ví dụ: quynhanh@gmail.com");
 
     await user.type(nameInput, "Lê Thị B");
     await user.type(phoneInput, "0987654321");
+    await user.type(emailInput, "lethib@gmail.com");
 
     const submitBtn = screen.getByRole("button", {
       name: "Xác Nhận Đặt Thuê Ngay",
@@ -228,9 +263,11 @@ describe("BookingForm component", () => {
 
     const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
     const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    const emailInput = screen.getByPlaceholderText("Ví dụ: quynhanh@gmail.com");
 
     await user.type(nameInput, "Trần Hà My");
     await user.type(phoneInput, "0988776655");
+    await user.type(emailInput, "tranhamy@gmail.com");
 
     const submitBtn = screen.getByRole("button", {
       name: "Xác Nhận Đặt Thuê Ngay",
@@ -431,8 +468,10 @@ describe("BookingForm component", () => {
 
     const nameInput = screen.getByPlaceholderText("Ví dụ: Nguyễn Quỳnh Anh");
     const phoneInput = screen.getByPlaceholderText("Ví dụ: 0912 345 678");
+    const emailInput = screen.getByPlaceholderText("Ví dụ: quynhanh@gmail.com");
     await user.type(nameInput, "Trần Hà My");
     await user.type(phoneInput, "0988776655");
+    await user.type(emailInput, "tranhamy@gmail.com");
 
     const submitBtn = screen.getByRole("button", {
       name: "Xác Nhận Đặt Thuê Ngay",

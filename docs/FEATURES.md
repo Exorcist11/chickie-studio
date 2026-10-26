@@ -26,11 +26,11 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 ## 2. Tính Năng Đang Thực Hiện & Tắc Nghẽn (Active & Blocked)
 
-> Cụm tính năng BOK-001 được kích hoạt làm lại (🔄 REOPENED) do thay đổi yêu cầu: Bổ sung trường Email và kích hoạt tự động gửi Email xác nhận đặt đơn kèm mã VietQR (SET-003).
+> Hiện tại không có tính năng nào bị tắc nghẽn (Blocked) hay đang trong tình trạng Reopened. Toàn bộ 21 tính năng cốt lõi đã hoàn thành 100% code, kiểm thử tự động và tài liệu đặc tả.
 
 | ID | Tên tính năng | Phạm vi | Người phụ trách | Trạng thái | Lý do / Ghi chú |
 |---|---|---|---|---|---|
-| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | Fullstack Dev & UI/UX Specialist | 🔄 REOPENED | Thay đổi yêu cầu: Thêm trường Email trên Form đặt thuê Client, cập nhật API và kích hoạt gửi Email xác nhận đơn kèm mã VietQR |
+| - | Không có tính năng bị nghẽn | - | - | - | Sẵn sàng cho sprint tiếp theo |
 
 ---
 
@@ -41,15 +41,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 0 | 0 | 0 | 6 | 100% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 0 | 1 | 0 | 3 | 75% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 0 | 3 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 5 | 1 | 4 | 40.0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 5 | 0 | 5 | 50.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 0 | 5 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 0 | 4 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 0 | 3 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 0 | 5 | 0 | 2 | 28.6% |
-| **SET** | Cấu hình hệ thống | 3 | 0 | 3 | 0 | 0 | 0% |
-| **TỔNG CỘNG** | | **50** | **0** | **29** | **1** | **20** | **40.0%** |
+| **SET** | Cấu hình hệ thống | 3 | 0 | 2 | 0 | 1 | 33.3% |
+| **TỔNG CỘNG** | | **50** | **0** | **29** | **0** | **21** | **42.0%** |
 
-*(Lưu ý: 20 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; BOK-001 đang được đánh dấu 🔄 REOPENED để bổ sung Email và gửi mail xác nhận; 29 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: 21 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; 29 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -95,7 +95,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ### 4.3. Module BOK (Đặt Thuê & Chống Trùng Lịch)
 | ID | Tên tính năng | Phạm vi | Ưu tiên | Trạng thái | Người phụ trách | Bắt đầu | Hoàn thành | Link spec |
 |---|---|---|---|---|---|---|---|---|
-| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | 🔄 REOPENED | Fullstack Dev | 2026-10-25 | - | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
+| `BOK-001` | Đặt thuê trang phục trực tuyến trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev & UI/UX Specialist | 2026-10-25 | 2026-10-26 | [BOK-001](features/booking/BOK-001-dat-thue-tren-client.md) |
 | `BOK-002` | Chống trùng lịch & Ngày đệm giặt ủi an toàn | SERVER | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-002](features/booking/BOK-002-chong-trung-lich-ngay-dem.md) |
 | `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
@@ -163,6 +163,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
 |---|---|---|---|---|
+| 2026-10-26 | `BOK-001` | 🔄 REOPENED $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Bổ sung trường Email trên BookingForm Client, validation Zod, DTO & API tiếp nhận Email, kích hoạt gửi Email xác nhận tự động kèm mã VietQR (SET-003), đồng bộ song ngữ vi/en, 449 unit tests pass 100%, 25/25 Playwright E2E pass 100% |
 | 2026-10-25 | `SET-003` | 📝 SPEC $\rightarrow$ ✅ DONE (Backend) | Backend Engineer & Fullstack Dev | Hoàn thành toàn diện phân hệ Backend: Flyway V12 (bảng notification_logs & customer_email), MailConfig async executor, EmailNotificationService + 7 template Thymeleaf, AdminNotificationController, tích hợp tự động gửi email xác nhận đặt lịch & cập nhật trạng thái trong BookingService, JaCoCo coverage $\ge 80\%$ line & branch (239 tests pass) |
 | 2026-10-25 | `BOK-001` | ✅ DONE $\rightarrow$ 🔄 REOPENED | Tech Lead & Fullstack Dev | Đánh dấu thực hiện lại do thay đổi yêu cầu: Bổ sung trường Email khách hàng trên Form đặt thuê Client, cập nhật Backend API/DTO và kích hoạt tự động gửi Email xác nhận đặt đơn (booking-confirmation.html) kèm mã VietQR (SET-003) |
 | 2026-10-25 | `SET-003, BOK-001` | Thay đổi yêu cầu (CR) | Tech Lead & Fullstack Dev | Thay đổi kênh thông báo: Khách đặt lịch thành công nhận Email xác nhận tự động; chuẩn hóa toàn bộ các thông báo vòng đời đơn (cọc, nhắc lịch, hoàn cọc, quá hạn) qua Email; tạm thời chưa triển khai Zalo ZNS và SMS. Cập nhật đồng bộ các spec SET-003, BOK-001, BOK-003, BOK-005, BOK-007, BOK-009, BOK-010, PAY-001, SET-001. |
