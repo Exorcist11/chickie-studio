@@ -35,6 +35,9 @@ services:
       SPRING_DATASOURCE_USERNAME: chickie_user
       SPRING_DATASOURCE_PASSWORD: chickie_pass_2026
       JWT_SECRET: 4c6869636b696553747564696f5365637265744b657932303236466f724a575441757468656e7469636174696f6e546f6b656e
+      CHICKIE_UPLOAD_DIR: /app/uploads
+    volumes:
+      - chickie_uploads_data:/app/uploads
     ports:
       - "8180:8080"
     networks:
@@ -70,6 +73,7 @@ services:
 
 volumes:
   chickie_mysql_data:
+  chickie_uploads_data:
 
 networks:
   chickie-network:

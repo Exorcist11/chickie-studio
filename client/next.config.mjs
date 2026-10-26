@@ -21,6 +21,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "img.vietqr.io",
       },
+      {
+        protocol: "https",
+        hostname: "chickie-studio-api.donglytravel.io.vn",
+      },
     ],
   },
 };

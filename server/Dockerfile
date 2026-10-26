@@ -15,10 +15,11 @@ WORKDIR /app
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV JAVA_OPTS="-Xms256m -Xmx768m"
 
-RUN addgroup -S chickie && adduser -S chickie -G chickie
-USER chickie:chickie
-
 COPY --from=builder /app/target/*.jar app.jar
+
+RUN mkdir -p /app/uploads && chown -R chickie:chickie /app
+
+USER chickie:chickie
 
 EXPOSE 8080
 

@@ -61,3 +61,5 @@ chickie:
     from-email: ${MAIL_FROM:dngngx2077@gmail.com}
     from-name: ${MAIL_FROM_NAME:Chickie Studio}
     enabled: ${MAIL_ENABLED:true}
+  upload:
+    dir: ${CHICKIE_UPLOAD_DIR:uploads}
