@@ -63,4 +63,23 @@ describe("Chickie Studio CRM - Design Tokens & Typography (P1)", () => {
       expect(colors.ink.DEFAULT).toContain("--color-ink-rgb");
     });
   });
+
+  describe("Semantic Status Feedback Tokens (P2)", () => {
+    it("standardizes danger and destructive tokens in Tailwind configuration", () => {
+      const colors = tailwindConfig.theme?.extend?.colors as Record<string, any>;
+      expect(colors.danger).toBeDefined();
+      expect(colors.danger.DEFAULT).toBe("var(--color-danger, #D9383A)");
+      expect(colors.danger.foreground).toBe("#FFFFFF");
+
+      expect(colors.destructive).toBeDefined();
+      expect(colors.destructive.DEFAULT).toBe("var(--color-danger, #D9383A)");
+      expect(colors.destructive.foreground).toBe("#FFFFFF");
+    });
+
+    it("verifies --color-danger and --color-destructive presence in scss tokens", () => {
+      expect(scssTokens).toContain("--color-danger: #D9383A;");
+      expect(shadcnTheme).toContain("--color-danger: #D9383A;");
+      expect(shadcnTheme).toContain("--color-destructive: #D9383A;");
+    });
+  });
 });

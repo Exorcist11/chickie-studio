@@ -29,11 +29,11 @@ const config: Config = {
         success: "var(--color-success)",
         warning: "var(--color-warning)",
         danger: {
-          DEFAULT: "#D9383A",
+          DEFAULT: "var(--color-danger, #D9383A)",
           foreground: "#FFFFFF",
         },
         destructive: {
-          DEFAULT: "#D9383A",
+          DEFAULT: "var(--color-danger, #D9383A)",
           foreground: "#FFFFFF",
         },
         info: "var(--color-info)",

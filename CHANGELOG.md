@@ -8,6 +8,11 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Chuẩn Hóa Design System Giai Đoạn P2: Hợp Nhất Button Variants/Sizes & Token destructive/danger (UI-P2 - ✅ DONE)**:
+  - Mở rộng `buttonVariants` trong `client/src/components/ui/Button/Button.tsx` đồng bộ 100% với CRM: bổ sung `outline`, `ghost`, `destructive` và `default`, `lg`, `icon`.
+  - Chuẩn hóa hai chiều token phản hồi ngữ nghĩa: `danger` và `destructive` đều trỏ `var(--color-danger, #D9383A)` trong cả `client/tailwind.config.ts` và `crm/tailwind.config.ts`.
+  - Bổ sung unit tests: `client/src/styles/tokens.test.ts` (6/6 pass), mở rộng `client/src/components/ui/Button/Button.test.tsx` (8/8 pass) và `crm/src/styles/tokens.test.ts` (10/10 pass).
+
 - **Chuẩn Hóa Design System Giai Đoạn P1: Typography & Cú Pháp Biến RGB (UI-P1 - ✅ DONE)**:
   - Đồng bộ typography toàn hệ thống sang `Lora` (Serif / Heading) và `Be Vietnam Pro` (Sans / Body) cho cả Client và CRM, giữ alias backward compatibility (`playfair`, `inter`).
   - Cập nhật Google Fonts nhúng trong `crm/index.html` sang `Lora` + `Be Vietnam Pro` (subset `vietnamese`).

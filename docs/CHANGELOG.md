@@ -7,6 +7,22 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Chuẩn Hóa Design System Giai Đoạn P2: Hợp Nhất Button Variants/Sizes & Token destructive/danger (UI-P2 - ✅ DONE)**:
+  - **Hợp Nhất Toàn Diện Component `Button` Giữa Client & CRM**:
+    - Mở rộng `buttonVariants` trong `client/src/components/ui/Button/Button.tsx` để đồng bộ 100% với CRM: bổ sung các variants `outline`, `ghost`, `destructive` và các kích cỡ `default`, `lg`, `icon`.
+    - Chuẩn hóa CVA variant vocabulary hẹp theo đúng Design System: `primary | secondary | outline | ghost | destructive | tertiary`.
+    - Chuẩn hóa size vocabulary: `default | md | sm | lg | icon`.
+    - Cập nhật unit test `client/src/components/ui/Button/Button.test.tsx` bao phủ toàn bộ các variants và sizes mới (8/8 tests pass 100%).
+  - **Chuẩn Hóa Token Trạng Thái Phản Hồi (`danger` ⟷ `destructive`)**:
+    - Đồng bộ hóa hai chiều giữa từ vựng Chickie Studio (`danger`) và từ vựng shadcn (`destructive`):
+      - Cả hai `tailwind.config.ts` (Client và CRM) đều cấu hình `destructive` và `danger` trỏ tới `var(--color-danger, #D9383A)`.
+      - Đảm bảo các utility class `bg-danger`, `text-danger`, `bg-destructive`, `text-destructive` đều có giá trị màu đồng nhất `#D9383A`.
+  - **Kiểm Thử & Đảm Bảo Chất Lượng**:
+    - Bổ sung unit test `client/src/styles/tokens.test.ts` (6/6 tests pass 100%).
+    - Mở rộng unit test `crm/src/styles/tokens.test.ts` (10/10 tests pass 100%).
+    - Vượt qua 100% test suites: CRM 77/77 files (313 tests), Client 91/91 files (455 tests), 0 typecheck errors, 0 lint warnings.
+
+
 - **Chuẩn Hóa Design System Giai Đoạn P1: Typography & Cú Pháp Biến RGB (UI-P1 - ✅ DONE)**:
   - **Đồng Bộ Typography Sang Lora & Be Vietnam Pro Toàn Hệ Sinh Thái**:
     - Chuẩn hóa font Heading sang `Lora` (Serif mềm mại, thanh lịch, tôn vinh phong cách thời trang boutique, tương thích tối ưu hệ thống dấu tiếng Việt).

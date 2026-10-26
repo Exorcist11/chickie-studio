@@ -13,17 +13,35 @@ describe("Button component", () => {
     expect(btn).toHaveClass("min-h-[44px]");
   });
 
-  it("renders secondary and tertiary variants", () => {
+  it("renders secondary, outline, ghost, destructive, and tertiary variants", () => {
     const { rerender } = render(<Button variant="secondary">Nút phụ</Button>);
     expect(screen.getByRole("button", { name: /nút phụ/i })).toHaveClass("border-burgundy");
+
+    rerender(<Button variant="outline">Đường viền</Button>);
+    expect(screen.getByRole("button", { name: /đường viền/i })).toHaveClass("border-burgundy");
+
+    rerender(<Button variant="ghost">Nút mờ</Button>);
+    expect(screen.getByRole("button", { name: /nút mờ/i })).toHaveClass("text-ink");
+
+    rerender(<Button variant="destructive">Xóa bỏ</Button>);
+    expect(screen.getByRole("button", { name: /xóa bỏ/i })).toHaveClass("bg-destructive");
 
     rerender(<Button variant="tertiary">Liên kết chữ</Button>);
     expect(screen.getByRole("button", { name: /liên kết chữ/i })).toHaveClass("text-burgundy");
   });
 
-  it("renders size sm correctly", () => {
-    render(<Button size="sm">Nút nhỏ</Button>);
+  it("renders sizes default, sm, lg, and icon correctly", () => {
+    const { rerender } = render(<Button size="sm">Nút nhỏ</Button>);
     expect(screen.getByRole("button", { name: /nút nhỏ/i })).toHaveClass("min-h-[36px]");
+
+    rerender(<Button size="lg">Nút lớn</Button>);
+    expect(screen.getByRole("button", { name: /nút lớn/i })).toHaveClass("min-h-[48px]");
+
+    rerender(<Button size="icon" aria-label="Icon button">🔍</Button>);
+    expect(screen.getByRole("button", { name: /icon button/i })).toHaveClass("h-10", "w-10");
+
+    rerender(<Button size="default">Mặc định</Button>);
+    expect(screen.getByRole("button", { name: /mặc định/i })).toHaveClass("min-h-[44px]");
   });
 
   it("handles click events", async () => {

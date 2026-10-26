@@ -29,7 +29,14 @@ const config: Config = {
         line: "var(--color-line)",
         success: "var(--color-success)",
         warning: "var(--color-warning)",
-        danger: "var(--color-danger)",
+        danger: {
+          DEFAULT: "var(--color-danger, #D9383A)",
+          foreground: "#FFFFFF",
+        },
+        destructive: {
+          DEFAULT: "var(--color-danger, #D9383A)",
+          foreground: "#FFFFFF",
+        },
         info: "var(--color-info)",
       },
       fontFamily: {

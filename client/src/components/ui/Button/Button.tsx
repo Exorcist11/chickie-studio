@@ -12,12 +12,21 @@ export const buttonVariants = cva(
           "bg-burgundy text-warm-white hover:bg-burgundy-light active:bg-burgundy-dark shadow-sm",
         secondary:
           "border border-burgundy text-burgundy bg-transparent hover:bg-ivory active:bg-rose/20",
+        outline:
+          "border border-burgundy text-burgundy bg-transparent hover:bg-ivory active:bg-rose/20",
+        ghost:
+          "text-ink bg-transparent hover:bg-ivory active:bg-line/40",
+        destructive:
+          "bg-destructive text-white hover:bg-destructive/90 active:bg-destructive/80 shadow-sm focus-visible:ring-destructive",
         tertiary:
           "text-burgundy bg-transparent hover:underline underline-offset-4 p-0 h-auto",
       },
       size: {
+        default: "min-h-[44px] px-6 py-2.5 text-base",
         md: "min-h-[44px] px-6 py-2.5 text-base",
         sm: "min-h-[36px] px-4 py-1.5 text-sm",
+        lg: "min-h-[48px] px-8 py-3 text-base",
+        icon: "h-10 w-10 p-0",
       },
     },
     defaultVariants: {
