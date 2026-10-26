@@ -2,13 +2,15 @@ import { ApiEnvelope, TokenResponseData } from "../types/auth";
 
 class ApiClient {
   private token: string | null =
-    typeof window !== "undefined" ? localStorage.getItem("chickie_crm_token") : null;
+    typeof window !== "undefined" && typeof localStorage !== "undefined"
+      ? localStorage.getItem("chickie_crm_token")
+      : null;
   private isRefreshing = false;
   private refreshSubscribers: Array<(token: string) => void> = [];
 
   public setToken(token: string | null): void {
     this.token = token;
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
       if (token) {
         localStorage.setItem("chickie_crm_token", token);
       } else {
@@ -18,7 +20,7 @@ class ApiClient {
   }
 
   public getToken(): string | null {
-    if (!this.token && typeof window !== "undefined") {
+    if (!this.token && typeof window !== "undefined" && typeof localStorage !== "undefined") {
       this.token = localStorage.getItem("chickie_crm_token");
     }
     return this.token;
