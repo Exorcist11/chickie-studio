@@ -39,14 +39,14 @@
 
 ### Typography
 
-- **Heading Font:** Playfair Display (Serif, Elegant, Luxury Boutique)
-- **Body Font:** Inter (Sans-serif, Clean, High Legibility)
+- **Heading Font:** Lora (Serif, Elegant, Luxury Boutique, Perfect Vietnamese Diacritics, Alias: Playfair Display)
+- **Body Font:** Be Vietnam Pro (Sans-serif, Clean, High Legibility, Optimized for Vietnamese, Alias: Inter)
 - **Mood:** luxury, boutique, elegant, high-end, clean, accessible
-- **Google Fonts:** [Playfair Display + Inter](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap)
+- **Google Fonts:** [Lora + Be Vietnam Pro](https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&subset=vietnamese&display=swap)
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&subset=vietnamese&display=swap');
 ```
 
 ### Spacing Variables

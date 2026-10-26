@@ -35,19 +35,19 @@ Tương phản: burgundy và ink trên warm-white đạt chuẩn AA. Vàng (#B89
 ## 3. Typography
 | Vai trò | Font | Ghi chú |
 |---|---|---|
-| Heading, tagline, tên thương hiệu | Playfair Display | Bản italic cho tagline và câu nhấn |
-| Body, UI, form, bảng | Inter | Đã bật subset `vietnamese` |
+| Heading, tagline, tên thương hiệu | Lora (Serif) | Nét vẽ thanh lịch, lãng mạn, tối ưu dấu tiếng Việt. Alias: Playfair Display |
+| Body, UI, form, bảng | Be Vietnam Pro (Sans) | Thiết kế chuyên biệt cho tiếng Việt, cân bằng nét hoàn hảo. Alias: Inter |
 
 | Cấp | Kích thước (desktop / mobile) | Font | Weight | Line-height |
 |---|---|---|---|---|
-| Display (hero) | 56 / 36 | Playfair | 500 | 1.1 |
-| H1 | 40 / 30 | Playfair | 500 | 1.2 |
-| H2 | 30 / 24 | Playfair | 500 | 1.25 |
-| H3 | 22 / 20 | Playfair | 500 | 1.3 |
-| Body L | 18 | Inter | 400 | 1.6 |
-| Body | 16 | Inter | 400 | 1.6 |
-| Small | 14 | Inter | 400 | 1.5 |
-| Caption | 12 | Inter | 500 | 1.4 |
+| Display (hero) | 56 / 36 | Lora | 500 | 1.1 |
+| H1 | 40 / 30 | Lora | 500 | 1.2 |
+| H2 | 30 / 24 | Lora | 500 | 1.25 |
+| H3 | 22 / 20 | Lora | 500 | 1.3 |
+| Body L | 18 | Be Vietnam Pro | 400 | 1.6 |
+| Body | 16 | Be Vietnam Pro | 400 | 1.6 |
+| Small | 14 | Be Vietnam Pro | 400 | 1.5 |
+| Caption | 12 | Be Vietnam Pro | 500 | 1.4 |
 
 Độ dài dòng tối đa khoảng 70 ký tự cho đoạn văn. Dùng sentence case, không viết hoa toàn bộ.
 

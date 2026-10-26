@@ -9,16 +9,20 @@ const config: Config = {
     extend: {
       colors: {
         burgundy: {
-          DEFAULT: "var(--color-burgundy)",
+          DEFAULT: "rgb(var(--color-burgundy-rgb, 100 29 43) / <alpha-value>)",
           light: "var(--color-burgundy-light)",
           dark: "var(--color-burgundy-dark)",
+          50: "#FDF8F8",
+          100: "#F8ECEE",
+          200: "#F0D5D9",
+          300: "#E3B3BB",
         },
         gold: "var(--color-gold)",
         rose: "var(--color-rose)",
         ivory: "var(--color-ivory)",
         "warm-white": "var(--color-warm-white)",
         ink: {
-          DEFAULT: "var(--color-ink)",
+          DEFAULT: "rgb(var(--color-ink-rgb, 48 37 40) / <alpha-value>)",
           muted: "var(--color-ink-muted)",
         },
         line: "var(--color-line)",
@@ -35,8 +39,12 @@ const config: Config = {
         info: "var(--color-info)",
       },
       fontFamily: {
-        playfair: ["'Playfair Display'", "Georgia", "serif"],
-        inter: ["Inter", "system-ui", "sans-serif"],
+        serif: ["'Lora'", "Georgia", "serif"],
+        sans: ["'Be Vietnam Pro'", "system-ui", "sans-serif"],
+        lora: ["'Lora'", "Georgia", "serif"],
+        "be-vietnam": ["'Be Vietnam Pro'", "system-ui", "sans-serif"],
+        playfair: ["'Lora'", "Georgia", "serif"],
+        inter: ["'Be Vietnam Pro'", "system-ui", "sans-serif"],
       },
       borderRadius: {
         tag: "var(--radius-tag)",

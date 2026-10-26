@@ -8,6 +8,14 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Chuẩn Hóa Design System Giai Đoạn P1: Typography & Cú Pháp Biến RGB (UI-P1 - ✅ DONE)**:
+  - Đồng bộ typography toàn hệ thống sang `Lora` (Serif / Heading) và `Be Vietnam Pro` (Sans / Body) cho cả Client và CRM, giữ alias backward compatibility (`playfair`, `inter`).
+  - Cập nhật Google Fonts nhúng trong `crm/index.html` sang `Lora` + `Be Vietnam Pro` (subset `vietnamese`).
+  - Thêm biến RGB kênh số `--color-burgundy-rgb: 100 29 43;` và `--color-ink-rgb: 48 37 40;` vào tokens CRM.
+  - Cập nhật `crm/tailwind.config.ts` hỗ trợ cú pháp `<alpha-value>` cho `burgundy` và `ink`.
+  - Cập nhật các tài liệu chuẩn: `docs/DESIGN_SYSTEM.md`, `docs/UI_UX_ENGINEERING_RULES.md`, `design-system/chickie-studio/MASTER.md`.
+  - Thêm unit test kiểm tra tự động `crm/src/styles/tokens.test.ts` (8/8 pass 100%, 0 lint warnings, 0 typecheck errors).
+
 - **Hoàn Tất Tích Hợp Email Đặt Thuê Trực Tuyến & Thông Báo Tự Động (BOK-001 - ✅ DONE)**:
   - Bổ sung trường nhập liệu `email` chuẩn UI/UX Pro Max trên [`BookingForm.tsx`](file:///D:/chickie-studio/client/src/components/features/products/BookingForm/BookingForm.tsx) với icon `Mail`, nhãn rõ ràng, chú thích tự động gửi vé điện tử và mã VietQR.
   - Cập nhật schema xác thực Zod [`booking.schema.ts`](file:///D:/chickie-studio/client/src/components/features/products/BookingForm/booking.schema.ts): kiểm tra bắt buộc và định dạng email RFC chuẩn, có inline error message tiếng Việt/tiếng Anh.

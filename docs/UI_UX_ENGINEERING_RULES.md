@@ -69,8 +69,8 @@ Chỉ cho phép inline style khi giá trị phụ thuộc vào **tính toán to�
 | `--color-sidebar-dark` | `#302528` | Nền Sidebar CRM Dark Ink cao cấp | Độ tương phản cao với chữ trắng |
 
 ### 2.2. Typography (Quy Chuẩn Font Chữ)
-- **Display & Heading**: Font Serif thanh lịch `Playfair Display`, font-weight 600, 700. Áp dụng cho: Tiêu đề trang (H1, H2), Tên sản phẩm, Chỉ số số liệu lớn trên KPI Dashboard, Tagline.
-- **Body & UI**: Font Sans-serif hiện đại `Inter`, font-weight 400 (regular), 500 (medium), 600 (semibold). Áp dụng cho: Nút bấm, Nhãn form, Văn bản mô tả, Bảng dữ liệu, Tooltip, Menu.
+- **Display & Heading**: Font Serif thanh lịch `Lora` (kèm alias `Playfair Display`), font-weight 500, 600, 700. Áp dụng cho: Tiêu đề trang (H1, H2), Tên sản phẩm, Chỉ số số liệu lớn trên KPI Dashboard, Tagline.
+- **Body & UI**: Font Sans-serif hiện đại `Be Vietnam Pro` (kèm alias `Inter`), font-weight 400 (regular), 500 (medium), 600 (semibold). Áp dụng cho: Nút bấm, Nhãn form, Văn bản mô tả, Bảng dữ liệu, Tooltip, Menu.
 - **Thang kích thước & Line Height**:
   - `H1`: 32px / 40px (Desktop), 26px / 34px (Mobile).
   - `H2`: 24px / 32px (Desktop), 20px / 28px (Mobile).

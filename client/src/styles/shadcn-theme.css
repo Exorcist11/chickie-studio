@@ -63,4 +63,6 @@
   /* Typography */
   --font-serif: var(--font-lora), 'Lora', Georgia, serif;
   --font-sans: var(--font-vietnam), 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: var(--font-serif);
+  --font-body: var(--font-sans);
 }

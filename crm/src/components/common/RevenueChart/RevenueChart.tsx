@@ -124,7 +124,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
                   textAnchor="middle"
                   fill="#6B5D60"
                   fontSize="12"
-                  fontFamily="Inter, sans-serif"
+                  fontFamily="var(--font-body, 'Be Vietnam Pro', sans-serif)"
                 >
                   {p.label}
                 </text>

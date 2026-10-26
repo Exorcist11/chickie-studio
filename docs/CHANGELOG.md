@@ -7,6 +7,24 @@ Tất cả những thay đổi quan trọng của dự án **Chickie Studio** s�
 
 ## [Unreleased]
 
+- **Chuẩn Hóa Design System Giai Đoạn P1: Typography & Cú Pháp Biến RGB (UI-P1 - ✅ DONE)**:
+  - **Đồng Bộ Typography Sang Lora & Be Vietnam Pro Toàn Hệ Sinh Thái**:
+    - Chuẩn hóa font Heading sang `Lora` (Serif mềm mại, thanh lịch, tôn vinh phong cách thời trang boutique, tương thích tối ưu hệ thống dấu tiếng Việt).
+    - Chuẩn hóa font Body sang `Be Vietnam Pro` (Sans-serif được thiết kế chuyên biệt cho tiếng Việt, cân bằng nét và độ dễ đọc cao nhất trên cả mobile và desktop).
+    - Cập nhật Google Fonts nhúng trong `crm/index.html` sang `Lora` và `Be Vietnam Pro` (subset `vietnamese`).
+    - Cập nhật biến CSS `:root` trong `crm/src/styles/_tokens.scss`, `crm/src/styles/shadcn-theme.css`, `client/src/styles/_tokens.scss`, `client/src/styles/shadcn-theme.css`.
+    - Cấu hình backward-compatibility aliases trong `tailwind.config.ts` của cả hai app: `playfair -> Lora`, `inter -> Be Vietnam Pro`.
+  - **Đồng Bộ Cú Pháp Biến RGB Cho Tailwind Tokens (CRM)**:
+    - Bổ sung biến kênh số `--color-burgundy-rgb: 100 29 43;` và `--color-ink-rgb: 48 37 40;` vào CRM tokens.
+    - Cập nhật `crm/tailwind.config.ts` hỗ trợ kênh `<alpha-value>` (`rgb(var(--color-burgundy-rgb) / <alpha-value>)`).
+    - Cho phép CRM sử dụng các utility class điều chỉnh độ trong suốt động (`bg-burgundy/10`, `border-burgundy/20`, `text-ink/60`) đồng bộ với Client.
+  - **Cập Nhật Tài Liệu Kỹ Thuật**:
+    - Đồng bộ `docs/DESIGN_SYSTEM.md`, `docs/UI_UX_ENGINEERING_RULES.md` và `design-system/chickie-studio/MASTER.md`.
+  - **Kiểm Thử & Đảm Bảo Chất Lượng**:
+    - Bổ sung bộ kiểm thử tự động `crm/src/styles/tokens.test.ts` (8/8 tests pass 100%).
+    - Toàn bộ 77 test suites (311 tests) CRM pass 100%, 0 lint warnings, 0 typecheck errors.
+
+
 - **Triển Khai Hạ Tầng Đa Ngôn Ngữ Song Ngữ Tiếng Việt / Tiếng Anh Cho Client (CNT-007 - ✅ DONE)**:
   - **Tích Hợp `next-intl` App Router**:
     - Phân tầng định tuyến theo locale: `src/app/[locale]/` hỗ trợ `vi` (mặc định) và `en`.
