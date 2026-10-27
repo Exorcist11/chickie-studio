@@ -39,7 +39,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | Phân hệ / Module | Tên Module | Tổng số | TODO | SPEC | IN_PROGRESS | DONE | % Hoàn thành |
 |---|---|---|---|---|---|---|---|
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 0 | 0 | 0 | 6 | 100% |
-| **AUTH** | Xác thực & Phân quyền | 4 | 0 | 1 | 0 | 3 | 75% |
+| **AUTH** | Xác thực & Phân quyền | 4 | 0 | 0 | 0 | 4 | 100% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 0 | 3 | 0 | 5 | 62.5% |
 | **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 5 | 0 | 5 | 50.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 0 | 5 | 0 | 0 | 0% |
@@ -47,9 +47,9 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **RPT** | Dashboard & Báo cáo | 3 | 0 | 3 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 0 | 5 | 0 | 2 | 28.6% |
 | **SET** | Cấu hình hệ thống | 3 | 0 | 2 | 0 | 1 | 33.3% |
-| **TỔNG CỘNG** | | **50** | **0** | **29** | **0** | **21** | **42.0%** |
+| **TỔNG CỘNG** | | **50** | **0** | **28** | **0** | **22** | **44.0%** |
 
-*(Lưu ý: 21 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; 29 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: 22 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; 28 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -73,7 +73,8 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|---|
 | `AUTH-001` | Đăng nhập hệ thống quản trị CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [AUTH-001](features/auth/AUTH-001-dang-nhap-crm.md) |
 | `AUTH-002` | Phân quyền vai trò Admin và Nhân viên | CRM, SERVER | P0 | ✅ DONE | Tech Lead | 2026-10-24 | 2026-10-24 | [AUTH-002](features/auth/AUTH-002-phan-quyen-admin-nhan-vien.md) |
-| `AUTH-004` | Quản lý danh sách tài khoản nhân viên | CRM, SERVER | P1 | ✅ DONE (Backend) | Fullstack Dev & Tech Lead | 2026-10-27 | 2026-10-27 | [AUTH-004](features/auth/AUTH-004-quan-ly-tai-khoan-nhan-vien.md) |
+| `AUTH-003` | Refresh Token & Quản lý phiên làm việc | CRM, SERVER | P0 | ✅ DONE | Tech Lead | 2026-10-24 | 2026-10-24 | [AUTH-003](features/auth/AUTH-003-refresh-token-quan-ly-phien.md) |
+| `AUTH-004` | Quản lý danh sách tài khoản nhân viên | CRM, SERVER | P1 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-27 | 2026-10-27 | [AUTH-004](features/auth/AUTH-004-quan-ly-tai-khoan-nhan-vien.md) |
 
 ---
 
@@ -161,7 +162,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ## 5. Lịch Sử Cập Nhật Trạng Thái
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
-| 2026-10-27 | `AUTH-004` | 📝 SPEC $\rightarrow$ ✅ DONE (Backend) | Backend Engineer & Tech Lead | Hoàn thành toàn diện phân hệ Backend: UserSpecification dynamic criteria filter, UserRepository mở rộng JpaSpecificationExecutor, UserService & UserServiceImpl thực hiện toàn bộ nghiệp vụ BR-01..BR-05 (ngắt phiên refresh token tức thì khi khóa tài khoản & reset password, chống tự khóa, bảo vệ root admin và đảm bảo tối thiểu 1 admin active), AdminUserController 6 endpoints RESTful /api/admin/users/**, JaCoCo coverage 96.3% stmts / 80% branch, 269/269 tests pass 100% |
+| 2026-10-27 | `AUTH-004` | 📝 SPEC $\rightarrow$ ✅ DONE | Fullstack Dev & Tech Lead | Hoàn thành toàn diện cả Backend & CRM UI: 6 REST APIs quản lý user, BCrypt, BR-01..BR-05 thu hồi token tức thì khi khóa/đổi mật khẩu, chặn tự khóa/khóa Admin duy nhất (269/269 backend tests pass); Giao diện CRM đầy đủ 3 StatCards, DataTable, Filter bar, Switch toggle status với ConfirmModal, modals Tạo/Sửa/Reset password với Zod validation & tự sinh mật khẩu ngẫu nhiên, RoleGuard ROLE_ADMIN, 24/24 Vitest tests pass 100%, 0 inline CSS |
 | 2026-10-26 | `BOK-001` | 🔄 REOPENED $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Bổ sung trường Email trên BookingForm Client, validation Zod, DTO & API tiếp nhận Email, kích hoạt gửi Email xác nhận tự động kèm mã VietQR (SET-003), đồng bộ song ngữ vi/en, 449 unit tests pass 100%, 25/25 Playwright E2E pass 100% |
 | 2026-10-25 | `SET-003` | 📝 SPEC $\rightarrow$ ✅ DONE (Backend) | Backend Engineer & Fullstack Dev | Hoàn thành toàn diện phân hệ Backend: Flyway V12 (bảng notification_logs & customer_email), MailConfig async executor, EmailNotificationService + 7 template Thymeleaf, AdminNotificationController, tích hợp tự động gửi email xác nhận đặt lịch & cập nhật trạng thái trong BookingService, JaCoCo coverage $\ge 80\%$ line & branch (239 tests pass) |
 | 2026-10-25 | `BOK-001` | ✅ DONE $\rightarrow$ 🔄 REOPENED | Tech Lead & Fullstack Dev | Đánh dấu thực hiện lại do thay đổi yêu cầu: Bổ sung trường Email khách hàng trên Form đặt thuê Client, cập nhật Backend API/DTO và kích hoạt tự động gửi Email xác nhận đặt đơn (booking-confirmation.html) kèm mã VietQR (SET-003) |

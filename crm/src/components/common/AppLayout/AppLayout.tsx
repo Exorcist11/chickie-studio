@@ -11,6 +11,7 @@ import {
   PanelLeftOpen,
   LogOut,
   User,
+  UserCog,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Card } from "../../ui";
@@ -46,6 +47,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     { key: "orders", icon: ShoppingBag, label: t("menu.orders") },
     { key: "categories", icon: Layers, label: t("menu.categories") },
     { key: "products", icon: Shirt, label: t("menu.products") },
+    { key: "staffs", icon: UserCog, label: t("menu.staffs") },
     { key: "customers", icon: Users, label: t("menu.customers") },
     { key: "reports", icon: BarChart3, label: t("menu.reports") },
     { key: "settings", icon: Settings, label: t("menu.settings") },

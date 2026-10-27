@@ -7,9 +7,29 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 
 ## [Unreleased]
 
+### Fixed
+- **Sửa lỗi hiển thị UI công tắc trạng thái và đồng bộ Design Tokens (CRM & Client)**:
+  - Khắc phục lỗi thanh trượt `Switch` bị mất nền track (trong suốt) bằng cách bổ sung ánh xạ đầy đủ các token shadcn tiêu chuẩn (`primary`, `input`, `background`, `border`, `ring`, v.v.) vào `tailwind.config.ts`.
+  - Khắc phục lỗi khối nền chữ nhật vuông thừa (background box) sau nút `Switch` bằng cách chuẩn hóa `Switch.tsx`: chỉ bọc `div` khi có `label`/`hint`/`error`, truyền trực tiếp `className` vào `SwitchPrimitive`.
+  - Nâng cấp cột trạng thái trong trang Quản lý nhân viên (`/staffs`) với công tắc Switch sắc sảo và Status Pill Badge mềm mại bo tròn có chấm tròn trạng thái sinh động.
+
 ### Added
-- **Quản Lý Danh Sách Tài Khoản Nhân Viên CRM (AUTH-004 - Backend ✅ DONE)**:
-  - Triển khai phân hệ quản lý người dùng & nhân sự dành riêng cho Quản trị viên (`ROLE_ADMIN`):
+- **Quản Lý Danh Sách Tài Khoản Nhân Viên CRM (AUTH-004 - ✅ DONE)**:
+  - **Frontend CRM**:
+    - Xây dựng giao diện trang `/staffs` tại `crm/src/pages/staffs/StaffsPage.tsx` đạt chuẩn UI/UX Pro Max và Design System Chickie Studio:
+      - 3 thẻ thống kê `StatCard` sắc sảo (Tổng nhân viên, Đang hoạt động, Đang bị khóa) phản hồi dữ liệu theo thời gian thực.
+      - Thanh công cụ tìm kiếm và lọc tức thì theo từ khóa, chức vụ (`ROLE_ADMIN`, `ROLE_STAFF`) và trạng thái hoạt động (`ACTIVE`, `LOCKED`).
+      - Bảng dữ liệu `DataTable` phân trang 10 dòng/trang, cột hiển thị avatar chữ cái đầu, tên đăng nhập, thông tin liên hệ (Email, SĐT), huy hiệu chức vụ `StatusBadge`, ngày tạo tài khoản.
+      - Cột thao tác với công tắc `Switch` chuyển đổi trạng thái `ACTIVE` / `LOCKED` tích hợp hộp thoại xác nhận `ConfirmModal` phòng ngừa thao tác nhầm; các nút hành động chỉnh sửa thông tin và đặt lại mật khẩu với icon WAI-ARIA.
+    - Xây dựng bộ ba modal nghiệp vụ chuẩn accessibility:
+      - `CreateStaffModal`: Biểu mẫu thêm nhân viên mới với Zod validation, kiểm tra mật khẩu mạnh (tối thiểu 8 ký tự, chữ hoa, chữ thường, chữ số) và nút tạo nhanh mật khẩu ngẫu nhiên an toàn (`generateRandomPassword`).
+      - `EditStaffModal`: Biểu mẫu cập nhật họ tên, email, số điện thoại và vai trò tài khoản nhân viên.
+      - `ResetPasswordModal`: Biểu mẫu cấp lại mật khẩu mới cho nhân viên kèm tính năng tự sinh mật khẩu ngẫu nhiên một chạm.
+    - Định tuyến và bảo vệ truy cập: Bổ sung mục "Nhân viên" trên thanh điều hướng bên (Sidebar Navigation) và thanh Mobile Nav; bảo vệ route `/staffs` bằng `RoleGuard allowedRoles={["ROLE_ADMIN"]}` ngăn chặn nhân viên truy cập trái phép.
+    - Đa ngôn ngữ (i18n): Bổ sung đầy đủ toàn bộ từ khóa song ngữ tiếng Việt (`vi.json`) và tiếng Anh (`en.json`) cho phân hệ nhân sự.
+    - Không sử dụng inline CSS, 100% tuân thủ CSS Modules (`StaffsPage.module.scss`, `CreateStaffModal.module.scss`) và tiện ích Tailwind.
+    - Bộ kiểm thử tự động: 24 Vitest tests pass 100% (`StaffsPage.test.tsx`, `CreateStaffModal.test.tsx`, `EditStaffModal.test.tsx`, `ResetPasswordModal.test.tsx`, `staff.service.test.ts`, `staffKeys.test.ts`, `password.test.ts`) và Playwright E2E route protection test (`staffs.spec.ts`).
+  - **Backend Server**:
     - DTOs: `CreateUserRequest`, `UpdateUserRequest`, `UpdateUserStatusRequest`, `ResetPasswordRequest`, cập nhật `UserResponse` bổ sung `createdAt`.
     - `UserSpecification`: Tiêu chí lọc động an toàn theo từ khóa tìm kiếm (`username`, `fullName`, `email`, `phone`), vai trò (`ROLE_ADMIN`, `ROLE_STAFF`) và trạng thái (`ACTIVE`, `LOCKED`).
     - `UserRepository`: Mở rộng `JpaSpecificationExecutor<User>`, bổ sung các truy vấn kiểm tra trùng lặp email/username ngoại trừ chính mình và đếm số lượng admin đang hoạt động.
@@ -26,7 +46,7 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
       - `PUT /api/admin/users/{id}`: Cập nhật thông tin và vai trò.
       - `PATCH /api/admin/users/{id}/status`: Khóa hoặc kích hoạt tài khoản.
       - `POST /api/admin/users/{id}/reset-password`: Đặt lại mật khẩu.
-  - Bộ kiểm thử tự động toàn diện: 31 tests mới (`UserServiceTest`, `AdminUserControllerTest`, `UserSpecificationTest`) pass 100%, JaCoCo coverage: 96.3% stmts / 80% branch cho service, 100% cho controller; toàn bộ test suite server (269/269 tests) pass 100%, `mvn verify` PASS.
+    - Bộ kiểm thử tự động toàn diện: 31 tests mới (`UserServiceTest`, `AdminUserControllerTest`, `UserSpecificationTest`) pass 100%, JaCoCo coverage: 96.3% stmts / 80% branch cho service, 100% cho controller; toàn bộ test suite server (269/269 tests) pass 100%, `mvn verify` PASS.
 
 - **Chuẩn Hóa Design System Giai Đoạn P2: Hợp Nhất Button Variants/Sizes & Token destructive/danger (UI-P2 - ✅ DONE)**:
   - Mở rộng `buttonVariants` trong `client/src/components/ui/Button/Button.tsx` đồng bộ 100% với CRM: bổ sung `outline`, `ghost`, `destructive` và `default`, `lg`, `icon`.

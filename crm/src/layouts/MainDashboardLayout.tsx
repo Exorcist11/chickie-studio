@@ -13,6 +13,7 @@ export const MainDashboardLayout: React.FC = () => {
     if (path.includes("/orders") || path.includes("/bookings")) return "orders";
     if (path.includes("/categories")) return "categories";
     if (path.includes("/products")) return "products";
+    if (path.includes("/staffs")) return "staffs";
     if (path.includes("/customers")) return "customers";
     if (path.includes("/reports")) return "reports";
     if (path.includes("/settings")) return "settings";

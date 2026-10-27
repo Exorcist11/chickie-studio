@@ -7,7 +7,7 @@
 | **Module** | AUTH (Xác Thực & Phân Quyền) |
 | **Phạm vi** | CRM, SERVER |
 | **Ưu tiên** | P1 - Vận hành cốt lõi |
-| **Trạng thái** | ✅ DONE (Backend) |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Fullstack Dev & Tech Lead |
 | **Ngày bắt đầu** | 2026-10-25 |
 | **Ngày hoàn thành** | 2026-10-27 |
@@ -309,9 +309,9 @@ sequenceDiagram
 ---
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Soạn thảo và phê duyệt tài liệu đặc tả `AUTH-004` (đã xong).
-- [ ] Cập nhật bảng theo dõi trong [docs/FEATURES.md](../../FEATURES.md).
-- [ ] Tái sử dụng các UI components chuẩn: `DataTable`, `Modal`, `StatusBadge`, `StatCard`, `FilterBar`.
-- [ ] Không sử dụng inline CSS, 100% tuân thủ CSS Modules / SCSS / Tailwind.
-- [ ] Kiểm thử tự động đạt độ bao phủ $\ge 80\%$.
-- [ ] Ghi nhận thay đổi vào `CHANGELOG.md`.
+- [x] Soạn thảo và phê duyệt tài liệu đặc tả `AUTH-004` (đã xong).
+- [x] Cập nhật bảng theo dõi trong [docs/FEATURES.md](../../FEATURES.md).
+- [x] Tái sử dụng các UI components chuẩn: `DataTable`, `Modal`, `StatusBadge`, `StatCard`, `FilterBar`.
+- [x] Không sử dụng inline CSS, 100% tuân thủ CSS Modules / SCSS / Tailwind.
+- [x] Kiểm thử tự động đạt độ bao phủ $\ge 80\%$.
+- [x] Ghi nhận thay đổi vào `CHANGELOG.md`.
