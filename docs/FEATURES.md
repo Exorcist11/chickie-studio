@@ -73,8 +73,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 |---|---|---|---|---|---|---|---|---|
 | `AUTH-001` | Đăng nhập hệ thống quản trị CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [AUTH-001](features/auth/AUTH-001-dang-nhap-crm.md) |
 | `AUTH-002` | Phân quyền vai trò Admin và Nhân viên | CRM, SERVER | P0 | ✅ DONE | Tech Lead | 2026-10-24 | 2026-10-24 | [AUTH-002](features/auth/AUTH-002-phan-quyen-admin-nhan-vien.md) |
-| `AUTH-003` | Refresh Token & Quản lý phiên làm việc | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-24 | 2026-10-24 | [AUTH-003](features/auth/AUTH-003-refresh-token-quan-ly-phien.md) |
-| `AUTH-004` | Quản lý danh sách tài khoản nhân viên | CRM, SERVER | P1 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [AUTH-004](features/auth/AUTH-004-quan-ly-tai-khoan-nhan-vien.md) |
+| `AUTH-004` | Quản lý danh sách tài khoản nhân viên | CRM, SERVER | P1 | ✅ DONE (Backend) | Fullstack Dev & Tech Lead | 2026-10-27 | 2026-10-27 | [AUTH-004](features/auth/AUTH-004-quan-ly-tai-khoan-nhan-vien.md) |
 
 ---
 
@@ -162,7 +161,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 ## 5. Lịch Sử Cập Nhật Trạng Thái
 
 | Ngày | ID | Thay đổi | Người thực hiện | Ghi chú |
-|---|---|---|---|---|
+| 2026-10-27 | `AUTH-004` | 📝 SPEC $\rightarrow$ ✅ DONE (Backend) | Backend Engineer & Tech Lead | Hoàn thành toàn diện phân hệ Backend: UserSpecification dynamic criteria filter, UserRepository mở rộng JpaSpecificationExecutor, UserService & UserServiceImpl thực hiện toàn bộ nghiệp vụ BR-01..BR-05 (ngắt phiên refresh token tức thì khi khóa tài khoản & reset password, chống tự khóa, bảo vệ root admin và đảm bảo tối thiểu 1 admin active), AdminUserController 6 endpoints RESTful /api/admin/users/**, JaCoCo coverage 96.3% stmts / 80% branch, 269/269 tests pass 100% |
 | 2026-10-26 | `BOK-001` | 🔄 REOPENED $\rightarrow$ ✅ DONE | Fullstack Dev & UI/UX Specialist | Hoàn thành toàn diện: Bổ sung trường Email trên BookingForm Client, validation Zod, DTO & API tiếp nhận Email, kích hoạt gửi Email xác nhận tự động kèm mã VietQR (SET-003), đồng bộ song ngữ vi/en, 449 unit tests pass 100%, 25/25 Playwright E2E pass 100% |
 | 2026-10-25 | `SET-003` | 📝 SPEC $\rightarrow$ ✅ DONE (Backend) | Backend Engineer & Fullstack Dev | Hoàn thành toàn diện phân hệ Backend: Flyway V12 (bảng notification_logs & customer_email), MailConfig async executor, EmailNotificationService + 7 template Thymeleaf, AdminNotificationController, tích hợp tự động gửi email xác nhận đặt lịch & cập nhật trạng thái trong BookingService, JaCoCo coverage $\ge 80\%$ line & branch (239 tests pass) |
 | 2026-10-25 | `BOK-001` | ✅ DONE $\rightarrow$ 🔄 REOPENED | Tech Lead & Fullstack Dev | Đánh dấu thực hiện lại do thay đổi yêu cầu: Bổ sung trường Email khách hàng trên Form đặt thuê Client, cập nhật Backend API/DTO và kích hoạt tự động gửi Email xác nhận đặt đơn (booking-confirmation.html) kèm mã VietQR (SET-003) |

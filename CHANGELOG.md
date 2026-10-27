@@ -8,6 +8,26 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
 ## [Unreleased]
 
 ### Added
+- **Quản Lý Danh Sách Tài Khoản Nhân Viên CRM (AUTH-004 - Backend ✅ DONE)**:
+  - Triển khai phân hệ quản lý người dùng & nhân sự dành riêng cho Quản trị viên (`ROLE_ADMIN`):
+    - DTOs: `CreateUserRequest`, `UpdateUserRequest`, `UpdateUserStatusRequest`, `ResetPasswordRequest`, cập nhật `UserResponse` bổ sung `createdAt`.
+    - `UserSpecification`: Tiêu chí lọc động an toàn theo từ khóa tìm kiếm (`username`, `fullName`, `email`, `phone`), vai trò (`ROLE_ADMIN`, `ROLE_STAFF`) và trạng thái (`ACTIVE`, `LOCKED`).
+    - `UserRepository`: Mở rộng `JpaSpecificationExecutor<User>`, bổ sung các truy vấn kiểm tra trùng lặp email/username ngoại trừ chính mình và đếm số lượng admin đang hoạt động.
+    - `UserService` & `UserServiceImpl`: Triển khai đầy đủ các quy tắc nghiệp vụ BR-01..BR-05:
+      - Mã hóa mật khẩu bằng `BCryptPasswordEncoder` ($strength = 10$).
+      - Thu hồi tức thì toàn bộ Refresh Token (`refreshTokenRepository.revokeAllByUser`) khi khóa tài khoản hoặc đặt lại mật khẩu.
+      - Chặn tuyệt đối hành vi Admin tự khóa tài khoản của chính mình hoặc tự giáng quyền.
+      - Bảo vệ bất biến tài khoản Root Admin (`admin`).
+      - Đảm bảo hệ thống luôn duy trì ít nhất 1 tài khoản `ROLE_ADMIN` ở trạng thái `ACTIVE`.
+    - `AdminUserController`: 6 RESTful endpoints bảo vệ bởi `@PreAuthorize("hasRole('ADMIN')")`:
+      - `GET /api/admin/users`: Lấy danh sách có phân trang, tìm kiếm và bộ lọc.
+      - `GET /api/admin/users/{id}`: Xem chi tiết nhân viên.
+      - `POST /api/admin/users`: Tạo mới tài khoản (201 Created).
+      - `PUT /api/admin/users/{id}`: Cập nhật thông tin và vai trò.
+      - `PATCH /api/admin/users/{id}/status`: Khóa hoặc kích hoạt tài khoản.
+      - `POST /api/admin/users/{id}/reset-password`: Đặt lại mật khẩu.
+  - Bộ kiểm thử tự động toàn diện: 31 tests mới (`UserServiceTest`, `AdminUserControllerTest`, `UserSpecificationTest`) pass 100%, JaCoCo coverage: 96.3% stmts / 80% branch cho service, 100% cho controller; toàn bộ test suite server (269/269 tests) pass 100%, `mvn verify` PASS.
+
 - **Chuẩn Hóa Design System Giai Đoạn P2: Hợp Nhất Button Variants/Sizes & Token destructive/danger (UI-P2 - ✅ DONE)**:
   - Mở rộng `buttonVariants` trong `client/src/components/ui/Button/Button.tsx` đồng bộ 100% với CRM: bổ sung `outline`, `ghost`, `destructive` và `default`, `lg`, `icon`.
   - Chuẩn hóa hai chiều token phản hồi ngữ nghĩa: `danger` và `destructive` đều trỏ `var(--color-danger, #D9383A)` trong cả `client/tailwind.config.ts` và `crm/tailwind.config.ts`.

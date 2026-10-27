@@ -7,10 +7,10 @@
 | **Module** | AUTH (Xác Thực & Phân Quyền) |
 | **Phạm vi** | CRM, SERVER |
 | **Ưu tiên** | P1 - Vận hành cốt lõi |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE (Backend) |
 | **Người phụ trách** | Fullstack Dev & Tech Lead |
 | **Ngày bắt đầu** | 2026-10-25 |
-| **Ngày hoàn thành** | 2026-10-25 |
+| **Ngày hoàn thành** | 2026-10-27 |
 | **Phụ thuộc** | `AUTH-001`, `AUTH-002`, `AUTH-003` |
 
 ---
