@@ -1,11 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "../../../components/common/Modal";
-import { StatusBadge } from "../../../components/common/StatusBadge";
-import { Button } from "../../../components/ui/Button";
-import { CalendarBookingDto, CalendarItemDto } from "../../../types/dispatch";
-import { formatCurrencyVND } from "../../../components/ui/CurrencyField/CurrencyField.utils";
+import { Modal } from "../../../../components/common/Modal";
+import { StatusBadge } from "../../../../components/common/StatusBadge";
+import { Button } from "../../../../components/ui/Button";
+import { CalendarBookingDto, CalendarItemDto } from "../../../../types/dispatch";
+import { formatCurrencyVND } from "../../../../components/ui/CurrencyField/CurrencyField.utils";
 import styles from "./BookingDetailModal.module.scss";
 
 export interface BookingDetailModalProps {

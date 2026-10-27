@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { BookingDetailModal } from "./BookingDetailModal";
-import { CalendarBookingDto } from "../../../types/dispatch";
-import "../../../i18n";
+import { CalendarBookingDto } from "../../../../types/dispatch";
+import "../../../../i18n";
 
 const mockBooking: CalendarBookingDto = {
   id: 10,

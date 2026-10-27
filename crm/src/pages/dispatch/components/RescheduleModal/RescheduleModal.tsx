@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "../../../components/common/Modal";
-import { Button } from "../../../components/ui/Button";
-import { Spinner } from "../../../components/ui/Spinner";
-import { notify } from "../../../components/ui/Notify";
-import { useRescheduleBookingMutation } from "../../../hooks/queries/useDispatch";
+import { Modal } from "../../../../components/common/Modal";
+import { Button } from "../../../../components/ui/Button";
+import { Spinner } from "../../../../components/ui/Spinner";
+import { notify } from "../../../../components/ui/Notify";
+import { useRescheduleBookingMutation } from "../../../../hooks/queries/useDispatch";
 import styles from "./RescheduleModal.module.scss";
 
 export interface RescheduleModalProps {

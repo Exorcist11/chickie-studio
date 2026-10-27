@@ -20,11 +20,13 @@ import {
   useTimelineDataQuery,
 } from "../../hooks/queries/useDispatch";
 import { Button } from "../../components/ui/Button";
-import { BookingCalendarView } from "./components/BookingCalendarView";
-import { ItemTimelineView } from "./components/ItemTimelineView";
-import { BookingDetailModal } from "./components/BookingDetailModal";
-import { ReassignItemModal } from "./components/ReassignItemModal";
-import { RescheduleModal } from "./components/RescheduleModal";
+import {
+  BookingCalendarView,
+  ItemTimelineView,
+  BookingDetailModal,
+  ReassignItemModal,
+  RescheduleModal,
+} from "./components";
 import styles from "./CalendarPage.module.scss";
 
 export const CalendarPage: React.FC = () => {

@@ -1,8 +1,8 @@
 import React from "react";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { CalendarBookingDto } from "../../../types/dispatch";
-import { Spinner } from "../../../components/ui/Spinner";
+import { CalendarBookingDto } from "../../../../types/dispatch";
+import { Spinner } from "../../../../components/ui/Spinner";
 import styles from "./BookingCalendarView.module.scss";
 
 export interface BookingCalendarViewProps {

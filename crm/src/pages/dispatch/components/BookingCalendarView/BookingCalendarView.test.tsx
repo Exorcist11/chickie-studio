@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import dayjs from "dayjs";
 import { BookingCalendarView } from "./BookingCalendarView";
-import { CalendarBookingDto } from "../../../types/dispatch";
-import "../../../i18n";
+import { CalendarBookingDto } from "../../../../types/dispatch";
+import "../../../../i18n";
 
 const mockBookings: CalendarBookingDto[] = [
   {

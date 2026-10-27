@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { TimelineEventDto, TimelineResourceDto } from "../../../types/dispatch";
-import { Spinner } from "../../../components/ui/Spinner";
-import { StatusBadge, ItemStatus } from "../../../components/common/StatusBadge";
+import { TimelineEventDto, TimelineResourceDto } from "../../../../types/dispatch";
+import { Spinner } from "../../../../components/ui/Spinner";
+import { StatusBadge, ItemStatus } from "../../../../components/common/StatusBadge";
 import styles from "./ItemTimelineView.module.scss";
 
 export interface ItemTimelineViewProps {

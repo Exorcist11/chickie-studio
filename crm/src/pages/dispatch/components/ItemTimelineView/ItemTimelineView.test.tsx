@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import dayjs from "dayjs";
 import { ItemTimelineView } from "./ItemTimelineView";
-import { TimelineResourceDto } from "../../../types/dispatch";
-import "../../../i18n";
+import { TimelineResourceDto } from "../../../../types/dispatch";
+import "../../../../i18n";
 
 const mockResources: TimelineResourceDto[] = [
   {

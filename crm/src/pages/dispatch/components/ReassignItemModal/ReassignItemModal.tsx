@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "../../../components/common/Modal";
-import { Button } from "../../../components/ui/Button";
-import { Spinner } from "../../../components/ui/Spinner";
-import { notify } from "../../../components/ui/Notify";
+import { Modal } from "../../../../components/common/Modal";
+import { Button } from "../../../../components/ui/Button";
+import { Spinner } from "../../../../components/ui/Spinner";
+import { notify } from "../../../../components/ui/Notify";
 import {
   useAvailableReplacementsQuery,
   useReassignItemMutation,
-} from "../../../hooks/queries/useDispatch";
+} from "../../../../hooks/queries/useDispatch";
 import styles from "./ReassignItemModal.module.scss";
 
 export interface ReassignItemModalProps {

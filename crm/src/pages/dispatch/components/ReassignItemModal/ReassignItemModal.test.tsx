@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReassignItemModal } from "./ReassignItemModal";
-import { dispatchService } from "../../../services/dispatch.service";
-import "../../../i18n";
+import { dispatchService } from "../../../../services/dispatch.service";
+import "../../../../i18n";
 
-vi.mock("../../../services/dispatch.service", () => ({
+vi.mock("../../../../services/dispatch.service", () => ({
   dispatchService: {
     getAvailableReplacements: vi.fn(),
     reassignItem: vi.fn(),
