@@ -15,6 +15,9 @@ WORKDIR /app
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV JAVA_OPTS="-Xms256m -Xmx768m"
 
+# Tạo group và user non-root cho container
+RUN addgroup -S chickie && adduser -S chickie -G chickie
+
 COPY --from=builder /app/target/*.jar app.jar
 
 RUN mkdir -p /app/uploads && chown -R chickie:chickie /app
