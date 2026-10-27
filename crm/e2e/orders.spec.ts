@@ -2,6 +2,14 @@ import { test, expect } from "@playwright/test";
 
 test.describe("CRM Orders & Bookings Management (BOK-004)", () => {
   test("chuyển hướng về login khi chưa xác thực", async ({ page }) => {
+    await page.route("**/api/public/auth/refresh", async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ success: false, message: "Unauthorized" }),
+      });
+    });
+
     await page.goto("/orders");
     await expect(page).toHaveURL(/\/login/);
   });

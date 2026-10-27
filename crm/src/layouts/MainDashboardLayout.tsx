@@ -11,6 +11,7 @@ export const MainDashboardLayout: React.FC = () => {
   const getSelectedKey = () => {
     const path = location.pathname;
     if (path.includes("/orders") || path.includes("/bookings")) return "orders";
+    if (path.includes("/calendar") || path.includes("/dispatch")) return "calendar";
     if (path.includes("/categories")) return "categories";
     if (path.includes("/products")) return "products";
     if (path.includes("/staffs")) return "staffs";

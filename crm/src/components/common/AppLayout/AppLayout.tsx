@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   LayoutDashboard,
   ShoppingBag,
+  Calendar,
   Shirt,
   Layers,
   Users,
@@ -45,6 +46,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const menuItems = [
     { key: "dashboard", icon: LayoutDashboard, label: t("menu.dashboard") },
     { key: "orders", icon: ShoppingBag, label: t("menu.orders") },
+    { key: "calendar", icon: Calendar, label: t("menu.calendar") },
     { key: "categories", icon: Layers, label: t("menu.categories") },
     { key: "products", icon: Shirt, label: t("menu.products") },
     { key: "staffs", icon: UserCog, label: t("menu.staffs") },

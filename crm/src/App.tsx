@@ -11,6 +11,7 @@ import { CategoriesPage } from "./pages/categories/CategoriesPage";
 import { StaffsPage } from "./pages/staffs/StaffsPage";
 import { ProductsPage } from "./pages/products/ProductsPage";
 import { OrdersPage } from "./pages/orders/OrdersPage";
+import { CalendarPage } from "./pages/dispatch/CalendarPage";
 import { MainDashboardLayout } from "./layouts/MainDashboardLayout";
 import { DevComponentsPage } from "./pages/DevComponentsPage";
 import { Toaster } from "./components/ui/Notify";
@@ -35,6 +36,8 @@ export const App: React.FC = () => {
               <Route path="/" element={<DashboardHome />} />
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/bookings" element={<OrdersPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/dispatch" element={<Navigate to="/calendar" replace />} />
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/customers" element={<DashboardHome />} />
 

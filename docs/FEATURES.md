@@ -41,15 +41,15 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | **UI** | Kiến trúc Component & Package @chickie/ui | 6 | 0 | 0 | 0 | 6 | 100% |
 | **AUTH** | Xác thực & Phân quyền | 4 | 0 | 0 | 0 | 4 | 100% |
 | **CAT** | Danh mục & Sản phẩm | 8 | 0 | 3 | 0 | 5 | 62.5% |
-| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 5 | 0 | 5 | 50.0% |
+| **BOK** | Đặt thuê & Chống trùng lịch | 10 | 0 | 4 | 0 | 6 | 60.0% |
 | **PAY** | Thanh toán & Cọc | 5 | 0 | 5 | 0 | 0 | 0% |
 | **CUS** | Khách hàng & Lịch sử | 4 | 0 | 4 | 0 | 0 | 0% |
 | **RPT** | Dashboard & Báo cáo | 3 | 0 | 3 | 0 | 0 | 0% |
 | **CNT** | Nội dung & SEO | 7 | 0 | 5 | 0 | 2 | 28.6% |
 | **SET** | Cấu hình hệ thống | 3 | 0 | 2 | 0 | 1 | 33.3% |
-| **TỔNG CỘNG** | | **50** | **0** | **28** | **0** | **22** | **44.0%** |
+| **TỔNG CỘNG** | | **50** | **0** | **27** | **0** | **23** | **46.0%** |
 
-*(Lưu ý: 22 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; 28 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
+*(Lưu ý: 23 tính năng đã hoàn thành ✅ DONE 100% code, test tự động coverage > 85%, Playwright E2E pass 100%, docs đầy đủ; 27 tính năng còn lại đã hoàn thành 100% hồ sơ tài liệu 📝 SPEC).*
 
 ---
 
@@ -100,7 +100,7 @@ Tài liệu quản lý và theo dõi tiến độ toàn bộ tính năng của d
 | `BOK-003` | State Machine luồng trạng thái đơn thuê | SERVER, CRM, CLIENT | P0 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-25 | 2026-10-25 | [BOK-003](features/booking/BOK-003-luong-trang-thai-don-thue.md) |
 | `BOK-004` | Quản lý đơn thuê tập trung trên CRM | CRM, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-004](features/booking/BOK-004-quan-ly-don-thue-crm.md) |
 | `BOK-005` | Tra cứu đơn bằng mã đơn và SĐT trên Client | CLIENT, SERVER | P0 | ✅ DONE | Fullstack Dev | 2026-10-25 | 2026-10-25 | [BOK-005](features/booking/BOK-005-tra-cuu-don-ma-sdt-client.md) |
-| `BOK-006` | Lịch thuê dạng Calendar trực quan trên CRM | CRM, SERVER | P1 | 🚧 IN_PROGRESS (Backend ✅) | Fullstack Dev & Tech Lead | 2026-10-27 | - | [BOK-006](features/booking/BOK-006-lich-thue-dieu-phoi-calendar-crm.md) |
+| `BOK-006` | Lịch thuê dạng Calendar trực quan trên CRM | CRM, SERVER | P1 | ✅ DONE | Fullstack Dev & Tech Lead | 2026-10-27 | 2026-10-27 | [BOK-006](features/booking/BOK-006-lich-thue-dieu-phoi-calendar-crm.md) |
 | `BOK-007` | Giữ chỗ tạm thời tự nhả khi quá hạn cọc | SERVER, CRM, CLIENT | P1 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [BOK-007](features/booking/BOK-007-tu-dong-nha-slot-qua-han-coc.md) |
 | `BOK-008` | Hỗ trợ đơn thuê nhóm kỷ yếu số lượng lớn | CRM, SERVER | P2 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [BOK-008](features/booking/BOK-008-don-thue-nhom-ky-yeu-so-luong-lon.md) |
 | `BOK-009` | Biên bản bàn giao đồ có chụp ảnh hiện trạng | CRM | P2 | 📝 SPEC | Fullstack Dev & Tech Lead | - | - | [BOK-009](features/booking/BOK-009-bien-ban-ban-giao-do-chup-anh.md) |

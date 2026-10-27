@@ -14,7 +14,30 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
   - Nâng cấp cột trạng thái trong trang Quản lý nhân viên (`/staffs`) với công tắc Switch sắc sảo và Status Pill Badge mềm mại bo tròn có chấm tròn trạng thái sinh động.
 
 ### Added
-- **Lịch Thuê Calendar & Điều Phối Lịch Kho Đồ Trên CRM (BOK-006 - Backend ✅ DONE)**:
+- **Lịch Thuê Calendar & Điều Phối Lịch Kho Đồ Trên CRM (BOK-006 - ✅ DONE)**:
+  - **Frontend CRM (React Vite + TanStack Query + SCSS Modules)**:
+    - **Kiến trúc Dual-View UI/UX Pro Max**:
+      - `CalendarPage.tsx`: Màn hình điều phối trung tâm với View Switcher mượt mà giữa Lịch Đơn Thuê (`calendar`) và Timeline Kho Đồ (`timeline`), bộ điều hướng tháng thông minh (`Tháng trước`, `Hôm nay`, `Tháng sau`), bộ lọc trạng thái đơn và thanh tìm kiếm tức thì.
+      - `BookingCalendarView.tsx`: Chế độ xem lịch tháng lưới 7 cột (Thứ 2 → Chủ nhật), hiển thị badge ngày hôm nay, các chip đơn thuê tương tác cao theo mã màu trạng thái đơn (`PENDING`, `CONFIRMED`, `DEPOSITED`, `DELIVERED`, `RETURNED`, `COMPLETED`, `CANCELLED`, `OVERDUE`), gom nhóm `+N đơn khác`.
+      - `ItemTimelineView.tsx`: Chế độ xem Gantt Timeline theo dõi đồ vật lý (Barcode, Biến thể, Phân loại, Trạng thái), cột sticky bên trái và bảng thời gian dải ngày trong tháng. Trực quan hóa block sự kiện thuê và block đệm giặt sấy (`bufferDays = 1` cho trang phục) với họa tiết diagonal hatching.
+      - `BookingDetailModal.tsx`: Hộp thoại xem chi tiết thông tin khách hàng, số điện thoại, thời gian thuê, tổng tiền thuê/cọc và danh sách hiện vật trong đơn kèm nút thao tác đổi món đồ và dời ngày.
+      - `ReassignItemModal.tsx`: Hộp thoại điều phối đổi món đồ vật lý cùng biến thể, tự động kiểm tra đồ trống trong kho, lý do đổi đồ và cập nhật tức thì.
+      - `RescheduleModal.tsx`: Hộp thoại dời ngày thuê với xác thực ngày bắt đầu/kết thúc hợp lệ, lý do dời lịch và cảnh báo xung đột nếu trùng lịch.
+    - **Tuân thủ Tuyệt đối Quy định UI & Zero Inline CSS**:
+      - 100% style viết qua SCSS Modules (`.module.scss`) và Tailwind CSS utilities, TUYỆT ĐỐI không sử dụng `style={{ ... }}`.
+      - Tái sử dụng đồng bộ các component chuẩn hóa: `Modal`, `Button`, `Spinner`, `StatusBadge`, `Card`, `Notify`.
+      - Thiết kế thẩm mỹ Chickie Studio: tông màu đỏ rượu burgundy (`#641d2b`), typography tiêu đề Lora serif sang trọng, tương tác micro-animations mượt mà.
+    - **State Management & Services**:
+      - `dispatch.service.ts`: Kết nối 5 RESTful endpoints của Dispatch API qua `apiClient`.
+      - `dispatchKeys.ts`: Quản lý query key phân cấp cho cache TanStack Query.
+      - `useDispatch.ts`: Custom query & mutation hooks tự động làm mới cache khi điều phối hoàn tất.
+      - `vi.json` & `en.json`: Bổ sung toàn bộ từ điển song ngữ Việt - Anh cho module dispatch.
+      - Tích hợp điều hướng `/calendar` và chuyển hướng tự động `/dispatch` vào hệ thống route bảo vệ bởi `RoleGuard` (`AppLayout` & `MainDashboardLayout`).
+    - **Kiểm thử Tự động & Chất lượng Code**:
+      - 24/24 Vitest unit/integration tests cho module dispatch (`dispatch.service.test.ts`, `dispatchKeys.test.ts`, `BookingCalendarView.test.tsx`, `ItemTimelineView.test.tsx`, `BookingDetailModal.test.tsx`, `ReassignItemModal.test.tsx`, `RescheduleModal.test.tsx`, `CalendarPage.test.tsx`) pass 100%.
+      - Toàn bộ suite CRM: 92/92 test files pass (363/363 tests), line & branch coverage đạt ngưỡng $\ge 80\%$.
+      - Playwright E2E UI tests (`e2e/dispatch.spec.ts`) pass 100% kiểm tra trọn vẹn luồng xác thực, mở lịch, xem modal chi tiết, chuyển đổi Gantt timeline và quan sát đệm giặt sấy.
+      - Lint (`npm run lint`), Typecheck (`npm run typecheck`), và Production Build (`npm run build`) pass 100% không lỗi/cảnh báo.
   - **Database Migration (Flyway V13)**:
     - Bổ sung trường `action` (`VARCHAR(50) DEFAULT 'STATUS_CHANGE'`) vào bảng `booking_status_histories` phục vụ ghi vết phân loại hành vi điều phối (`REASSIGN_ITEM`, `RESCHEDULE_DATES`).
     - Đánh composite index `idx_booking_items_timeline_lookup` trên `booking_items (product_item_id, rental_start_date, rental_end_date)` tối ưu hóa truy vấn dòng thời gian Timeline.

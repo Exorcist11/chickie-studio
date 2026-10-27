@@ -7,10 +7,10 @@
 | **Module** | BOK (Booking & Dispatch) |
 | **Phạm vi** | CRM, SERVER |
 | **Ưu tiên** | P1 - Vận hành cốt lõi |
-| **Trạng thái** | 📝 SPEC |
+| **Trạng thái** | ✅ DONE |
 | **Người phụ trách** | Fullstack Dev & Tech Lead |
-| **Ngày bắt đầu** | 2026-10-25 |
-| **Ngày hoàn thành** | 2026-10-25 |
+| **Ngày bắt đầu** | 2026-10-27 |
+| **Ngày hoàn thành** | 2026-10-27 |
 | **Phụ thuộc** | `BOK-002`, `BOK-003`, `BOK-004`, `CAT-003` |
 
 ---
@@ -319,9 +319,9 @@ ON `booking_items` (`product_item_id`, `rental_start_date`, `rental_end_date`);
 ---
 
 ## 11. Checklist Hoàn Thành (Definition of Done)
-- [ ] Soạn thảo và phê duyệt tài liệu đặc tả `BOK-006` (đã xong).
-- [ ] Cập nhật bảng theo dõi trong [docs/FEATURES.md](../../FEATURES.md).
-- [ ] Không sử dụng inline CSS, 100% tuân thủ CSS Modules / SCSS / Tailwind.
-- [ ] Kiểm thử tự động đạt độ bao phủ $\ge 80\%$.
-- [ ] Test E2E Playwright pass 100%.
-- [ ] Ghi nhận thay đổi vào `CHANGELOG.md`.
+- [x] Soạn thảo và phê duyệt tài liệu đặc tả `BOK-006` (đã xong).
+- [x] Cập nhật bảng theo dõi trong [docs/FEATURES.md](../../FEATURES.md).
+- [x] Không sử dụng inline CSS, 100% tuân thủ CSS Modules / SCSS / Tailwind.
+- [x] Kiểm thử tự động đạt độ bao phủ $\ge 80\%$.
+- [x] Test E2E Playwright pass 100%.
+- [x] Ghi nhận thay đổi vào `CHANGELOG.md`.
