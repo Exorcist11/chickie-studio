@@ -47,4 +47,41 @@ public interface BookingItemRepository extends JpaRepository<BookingItem, Long> 
             @Param("rangeEnd") LocalDate rangeEnd,
             @Param("excludeStatus") BookingStatus excludeStatus
     );
+
+    /**
+     * Lấy các booking items cho dòng thời gian Timeline trong khoảng ngày [rangeStart, rangeEnd],
+     * ngoại trừ các đơn có trạng thái CANCELLED (BOK-006).
+     */
+    @Query("SELECT bi FROM BookingItem bi " +
+           "JOIN FETCH bi.booking b " +
+           "JOIN FETCH bi.productItem pi " +
+           "JOIN FETCH bi.variant pv " +
+           "JOIN FETCH pv.product p " +
+           "LEFT JOIN FETCH p.category c " +
+           "WHERE b.status != :excludeStatus " +
+           "AND bi.rentalStartDate <= :rangeEnd " +
+           "AND bi.rentalEndDate >= :rangeStart " +
+           "ORDER BY bi.rentalStartDate ASC")
+    List<BookingItem> findTimelineEvents(
+            @Param("rangeStart") LocalDate rangeStart,
+            @Param("rangeEnd") LocalDate rangeEnd,
+            @Param("excludeStatus") BookingStatus excludeStatus
+    );
+
+    /**
+     * Tìm tất cả booking items thuộc về một món đồ cụ thể (product_item_id)
+     * giao thoa với khoảng ngày [rangeStart, rangeEnd], ngoại trừ các đơn CANCELLED.
+     */
+    @Query("SELECT bi FROM BookingItem bi " +
+           "JOIN FETCH bi.booking b " +
+           "WHERE bi.productItem.id = :productItemId " +
+           "AND b.status != :excludeStatus " +
+           "AND bi.rentalStartDate <= :rangeEnd " +
+           "AND bi.rentalEndDate >= :rangeStart")
+    List<BookingItem> findOverlappingItemsByProductItem(
+            @Param("productItemId") Long productItemId,
+            @Param("rangeStart") LocalDate rangeStart,
+            @Param("rangeEnd") LocalDate rangeEnd,
+            @Param("excludeStatus") BookingStatus excludeStatus
+    );
 }

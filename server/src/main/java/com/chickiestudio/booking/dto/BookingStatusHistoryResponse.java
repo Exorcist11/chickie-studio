@@ -19,6 +19,7 @@ public class BookingStatusHistoryResponse {
     private Long id;
     private BookingStatus fromStatus;
     private BookingStatus toStatus;
+    private String action;
     private String changedBy;
     private String note;
     private LocalDateTime createdAt;

@@ -44,6 +44,10 @@ public class BookingStatusHistory {
     @Column(name = "to_status", nullable = false, length = 30)
     private BookingStatus toStatus;
 
+    @Column(name = "action", nullable = false, length = 50)
+    @Builder.Default
+    private String action = "STATUS_CHANGE";
+
     @Column(name = "changed_by", length = 100)
     private String changedBy;
 

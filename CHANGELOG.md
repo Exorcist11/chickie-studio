@@ -14,6 +14,30 @@ Mọi thay đổi đáng chú ý của dự án **Chickie Studio** sẽ được
   - Nâng cấp cột trạng thái trong trang Quản lý nhân viên (`/staffs`) với công tắc Switch sắc sảo và Status Pill Badge mềm mại bo tròn có chấm tròn trạng thái sinh động.
 
 ### Added
+- **Lịch Thuê Calendar & Điều Phối Lịch Kho Đồ Trên CRM (BOK-006 - Backend ✅ DONE)**:
+  - **Database Migration (Flyway V13)**:
+    - Bổ sung trường `action` (`VARCHAR(50) DEFAULT 'STATUS_CHANGE'`) vào bảng `booking_status_histories` phục vụ ghi vết phân loại hành vi điều phối (`REASSIGN_ITEM`, `RESCHEDULE_DATES`).
+    - Đánh composite index `idx_booking_items_timeline_lookup` trên `booking_items (product_item_id, rental_start_date, rental_end_date)` tối ưu hóa truy vấn dòng thời gian Timeline.
+  - **Backend Spring Boot 3**:
+    - **DTOs**: `CalendarDispatchResponse`, `CalendarBookingDto`, `CalendarItemDto`, `TimelineDispatchResponse`, `TimelineResourceDto`, `TimelineEventDto`, `AvailableReplacementDto`, `ReassignItemRequest`, `ReassignItemResponse`, `RescheduleBookingRequest`, `RescheduleBookingResponse`.
+    - **Repository Layer**:
+      - `BookingRepository.findCalendarBookings`: Truy vấn đơn hàng theo dải ngày, trạng thái và từ khóa tìm kiếm.
+      - `BookingItemRepository.findTimelineEvents`: Truy vấn các booking items cho dòng thời gian kèm dải ngày đệm giặt ủi `bufferDays`.
+      - `BookingItemRepository.findOverlappingItemsByProductItem`: Kiểm tra giao thoa thời gian của từng món đồ vật lý.
+      - `ProductItemRepository.findTimelineResources`: Lấy danh sách tài nguyên món đồ vật lý gom nhóm theo danh mục và từ khóa.
+    - **DispatchService**: Triển khai đầy đủ các quy tắc nghiệp vụ BR-01..BR-03:
+      - `getCalendarData`: Lấy dữ liệu dạng Calendar lưới ngày kèm tổng tiền và danh sách item.
+      - `getTimelineData`: Trích xuất tài nguyên và các block sự kiện kèm ngày đệm giặt ủi `bufferDays`.
+      - `getAvailableReplacements`: Tìm kiếm các món đồ thay thế cùng biến thể (BR-02) không bị trùng lịch.
+      - `reassignItem`: Đổi món đồ vật lý an toàn, kiểm tra trùng lịch (BR-01), cập nhật `booking_items` và ghi log vết Audit Trail `booking_status_histories` (BR-03: `action = REASSIGN_ITEM`).
+      - `rescheduleBooking`: Dời ngày thuê, kiểm tra xung đột từng món đồ trong đơn, tự động tính lại tổng tiền thuê theo số ngày mới và ghi log Audit Trail (BR-03: `action = RESCHEDULE_DATES`).
+    - **AdminDispatchController**: 5 RESTful endpoints phân quyền `@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")`:
+      - `GET /api/admin/dispatch/calendar`
+      - `GET /api/admin/dispatch/timeline`
+      - `GET /api/admin/dispatch/available-replacements`
+      - `POST /api/admin/dispatch/reassign-item`
+      - `POST /api/admin/dispatch/reschedule`
+    - **Bộ Kiểm Thử Tự Động**: 34 unit & integration tests (`DispatchServiceTest`, `AdminDispatchControllerTest`) pass 100%, JaCoCo coverage line và branch đều đạt $\ge 80\%$, toàn bộ test suite server (304/304 tests) pass 100%, `mvn verify` PASS.
 - **Quản Lý Danh Sách Tài Khoản Nhân Viên CRM (AUTH-004 - ✅ DONE)**:
   - **Frontend CRM**:
     - Xây dựng giao diện trang `/staffs` tại `crm/src/pages/staffs/StaffsPage.tsx` đạt chuẩn UI/UX Pro Max và Design System Chickie Studio:

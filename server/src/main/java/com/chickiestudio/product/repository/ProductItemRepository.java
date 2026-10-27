@@ -44,4 +44,20 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Long> 
 
     @Query("SELECT COUNT(i) FROM ProductItem i WHERE i.variant.product.id = :productId AND i.status = :status")
     long countByProductIdAndStatus(@Param("productId") Long productId, @Param("status") ProductItemStatus status);
+
+    /**
+     * Lấy danh sách tài nguyên món đồ vật lý hiển thị trên dòng thời gian Timeline (BOK-006).
+     */
+    @Query("SELECT DISTINCT pi FROM ProductItem pi " +
+           "JOIN FETCH pi.variant pv " +
+           "JOIN FETCH pv.product p " +
+           "JOIN FETCH p.category c " +
+           "WHERE (:categoryId IS NULL OR c.id = :categoryId) " +
+           "AND (:search IS NULL OR LOWER(pi.itemCode) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "     OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+           "ORDER BY p.name ASC, pv.size ASC, pi.itemCode ASC")
+    List<ProductItem> findTimelineResources(
+            @Param("categoryId") Long categoryId,
+            @Param("search") String search
+    );
 }

@@ -29,4 +29,28 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             @Param("status") BookingStatus status,
             @Param("currentDate") LocalDate currentDate
     );
+
+    /**
+     * Lấy danh sách đơn thuê cho giao diện Calendar trong khoảng ngày [startDate, endDate] (BOK-006).
+     */
+    @Query("SELECT DISTINCT b FROM Booking b " +
+           "LEFT JOIN FETCH b.items bi " +
+           "LEFT JOIN FETCH bi.productItem pi " +
+           "LEFT JOIN FETCH bi.variant pv " +
+           "LEFT JOIN FETCH pv.product p " +
+           "WHERE (:status IS NULL OR b.status = :status) " +
+           "AND b.status != :excludeStatus " +
+           "AND b.rentalStartDate <= :endDate " +
+           "AND b.rentalEndDate >= :startDate " +
+           "AND (:search IS NULL OR LOWER(b.bookingCode) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "     OR LOWER(b.customerName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "     OR LOWER(b.customerPhone) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+           "ORDER BY b.rentalStartDate ASC, b.id ASC")
+    List<Booking> findCalendarBookings(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("status") BookingStatus status,
+            @Param("search") String search,
+            @Param("excludeStatus") BookingStatus excludeStatus
+    );
 }

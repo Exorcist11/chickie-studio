@@ -457,6 +457,7 @@ public class BookingService {
                             .id(h.getId())
                             .fromStatus(h.getFromStatus())
                             .toStatus(h.getToStatus())
+                            .action(h.getAction())
                             .changedBy(h.getChangedBy())
                             .note(h.getNote())
                             .createdAt(h.getCreatedAt())
