@@ -201,6 +201,7 @@ export const ProductsPage: React.FC = () => {
       title: t("product.name"),
       dataIndex: "name",
       key: "name",
+      width: "320px",
       render: (val, record) => (
         <div className={styles.productsPage__productInfo}>
           <span className={styles.productsPage__productName}>{val}</span>
@@ -281,6 +282,7 @@ export const ProductsPage: React.FC = () => {
       title: t("common.actions"),
       key: "actions",
       width: "110px",
+      fixed: "right",
       render: (_, record) => (
         <div className={styles.productsPage__actions}>
           <button
