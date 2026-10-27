@@ -147,8 +147,12 @@ describe("ProductsPage", () => {
     expect(screen.getByText("Thêm sản phẩm")).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText("Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
-      expect(screen.getByText("PRD-LUA-01")).toBeInTheDocument();
+      const table = screen.getByRole("table");
+      expect(within(table).getByText("Váy Lụa Trắng Cổ Yếm")).toBeInTheDocument();
+      expect(within(table).getByText("PRD-LUA-01")).toBeInTheDocument();
+      expect(within(table).getByText("Váy Dạ Hội")).toHaveClass("whitespace-nowrap");
+      expect(within(table).getByText("1 biến thể")).toHaveClass("whitespace-nowrap");
+      expect(within(table).getByText("Đang hoạt động")).toHaveClass("whitespace-nowrap");
     });
   });
 

@@ -99,7 +99,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-tag text-xs font-medium border select-none",
+        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-tag text-xs font-medium border select-none whitespace-nowrap shrink-0",
         status && badgeVariants({ status }),
         variant && variantStyles[variant],
         className

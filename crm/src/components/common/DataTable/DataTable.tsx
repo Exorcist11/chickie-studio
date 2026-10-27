@@ -126,8 +126,8 @@ export function DataTable<T extends Record<string, unknown>>({
                       : undefined
                   }
                   className={cn(
-                    "p-3.5 font-medium text-ink text-xs uppercase tracking-wider",
-                    col.width && "w-[var(--col-width)]"
+                    "p-3.5 font-medium text-ink text-xs uppercase tracking-wider whitespace-nowrap",
+                    col.width && "w-[var(--col-width)] min-w-[var(--col-width)]"
                   )}
                 >
                   {col.title}
@@ -184,7 +184,23 @@ export function DataTable<T extends Record<string, unknown>>({
                     {columns.map((col) => {
                       const val = col.dataIndex ? (record as any)[col.dataIndex] : undefined;
                       return (
-                        <td key={col.key} className="p-3.5 text-ink">
+                        <td
+                          key={col.key}
+                          style={
+                            col.width
+                              ? ({
+                                  "--col-width":
+                                    typeof col.width === "number"
+                                      ? `${col.width}px`
+                                      : col.width,
+                                } as React.CSSProperties)
+                              : undefined
+                          }
+                          className={cn(
+                            "p-3.5 text-ink",
+                            col.width && "w-[var(--col-width)] min-w-[var(--col-width)]"
+                          )}
+                        >
                           {col.render ? col.render(val, record, index) : (val as React.ReactNode)}
                         </td>
                       );

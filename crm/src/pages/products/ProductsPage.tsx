@@ -212,6 +212,7 @@ export const ProductsPage: React.FC = () => {
       title: t("product.category"),
       dataIndex: "categoryName",
       key: "categoryName",
+      width: "190px",
       render: (val) => (
         <Badge variant="outline" className={styles.productsPage__categoryBadge}>
           {val}
@@ -222,6 +223,7 @@ export const ProductsPage: React.FC = () => {
       title: t("product.rentalPrice"),
       dataIndex: "rentalPrice",
       key: "rentalPrice",
+      width: "140px",
       render: (val) => (
         <span className={styles.productsPage__price}>
           {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
@@ -234,6 +236,7 @@ export const ProductsPage: React.FC = () => {
       title: t("product.depositPrice"),
       dataIndex: "depositPrice",
       key: "depositPrice",
+      width: "130px",
       render: (val) => (
         <span className={styles.productsPage__deposit}>
           {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
@@ -246,8 +249,9 @@ export const ProductsPage: React.FC = () => {
       title: t("product.variantCount"),
       dataIndex: "variantCount",
       key: "variantCount",
+      width: "130px",
       render: (val) => (
-        <Badge variant="secondary">
+        <Badge variant="secondary" className={styles.productsPage__variantBadge}>
           {val} {t("product.variants").toLowerCase()}
         </Badge>
       ),
@@ -256,6 +260,7 @@ export const ProductsPage: React.FC = () => {
       title: t("product.status"),
       dataIndex: "status",
       key: "status",
+      width: "150px",
       render: (val: ProductStatus) => {
         const variant =
           val === "ACTIVE" ? "success" : val === "INACTIVE" ? "warning" : "secondary";
@@ -265,12 +270,17 @@ export const ProductsPage: React.FC = () => {
             : val === "INACTIVE"
             ? t("product.inactive")
             : t("product.archived");
-        return <Badge variant={variant}>{label}</Badge>;
+        return (
+          <Badge variant={variant} className={styles.productsPage__statusBadge}>
+            {label}
+          </Badge>
+        );
       },
     },
     {
       title: t("common.actions"),
       key: "actions",
+      width: "110px",
       render: (_, record) => (
         <div className={styles.productsPage__actions}>
           <button
