@@ -12,6 +12,8 @@ export interface SwitchProps extends SwitchPrimitiveProps {
   error?: string;
   /** Vị trí hiển thị nhãn: trái (left) hoặc phải (right) */
   labelPosition?: "left" | "right";
+  /** Class tùy chỉnh cho khung bọc ngoài (khi có nhãn, gợi ý hoặc thông báo lỗi) */
+  wrapperClassName?: string;
 }
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
@@ -23,6 +25,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
       error,
       disabled,
       className,
+      wrapperClassName,
       labelPosition = "right",
       checked,
       defaultChecked,
@@ -40,6 +43,25 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
         ? `${switchId}-hint`
         : undefined;
 
+    const switchControl = (
+      <SwitchPrimitive
+        ref={ref}
+        id={switchId}
+        checked={checked}
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        onCheckedChange={onCheckedChange}
+        aria-invalid={hasError}
+        aria-describedby={describedBy}
+        className={cn(hasError && "border-destructive", className)}
+        {...rest}
+      />
+    );
+
+    if (!label && !hint && !error) {
+      return switchControl;
+    }
+
     const labelNode = label && (
       <PrimitiveLabel
         htmlFor={switchId}
@@ -53,23 +75,10 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
     );
 
     return (
-      <div className={cn("flex flex-col gap-1 text-left", className)}>
+      <div className={cn("flex flex-col gap-1 text-left", wrapperClassName)}>
         <div className="flex items-center gap-3">
           {labelPosition === "left" && labelNode}
-
-          <SwitchPrimitive
-            ref={ref}
-            id={switchId}
-            checked={checked}
-            defaultChecked={defaultChecked}
-            disabled={disabled}
-            onCheckedChange={onCheckedChange}
-            aria-invalid={hasError}
-            aria-describedby={describedBy}
-            className={cn(hasError && "border-destructive")}
-            {...rest}
-          />
-
+          {switchControl}
           {labelPosition === "right" && labelNode}
         </div>
 
