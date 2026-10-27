@@ -76,4 +76,21 @@ describe("DataTable component (CRM)", () => {
     render(<DataTable columns={dummyColumns} loading={true} />);
     expect(screen.getByText("Đang tải dữ liệu...")).toBeInTheDocument();
   });
+
+  it("renders fixed column with sticky classes", () => {
+    const fixedColumns = [
+      { title: "Mã", dataIndex: "code", key: "code", width: 100, fixed: "left" as const },
+      { title: "Khách hàng", dataIndex: "customer", key: "customer" },
+      { title: "Thao tác", key: "actions", width: 80, fixed: "right" as const },
+    ];
+    render(<DataTable columns={fixedColumns} dataSource={dummyData} />);
+
+    const leftHeader = screen.getByText("Mã").closest("th");
+    expect(leftHeader).toHaveClass("sticky");
+    expect(leftHeader).toHaveClass("left-0");
+
+    const rightHeader = screen.getByText("Thao tác").closest("th");
+    expect(rightHeader).toHaveClass("sticky");
+    expect(rightHeader).toHaveClass("right-0");
+  });
 });

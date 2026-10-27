@@ -8,6 +8,7 @@ export interface ColumnType<T> {
   dataIndex?: keyof T | string;
   key: string;
   width?: number | string;
+  fixed?: "left" | "right";
   render?: (value: any, record: T, index: number) => React.ReactNode;
 }
 
@@ -98,11 +99,11 @@ export function DataTable<T extends Record<string, unknown>>({
       )}
     >
       <div className="overflow-x-auto w-full">
-        <table className="w-full text-left text-sm border-collapse">
+        <table className="w-full text-left text-sm border-separate border-spacing-0">
           <thead>
             <tr className="bg-ivory/60 border-b border-line text-ink font-medium">
               {onSelectionChange && (
-                <th className="p-3.5 w-10 text-center">
+                <th className="p-3.5 w-10 text-center border-b border-line">
                   <input
                     type="checkbox"
                     checked={isAllSelected}
@@ -126,8 +127,12 @@ export function DataTable<T extends Record<string, unknown>>({
                       : undefined
                   }
                   className={cn(
-                    "p-3.5 font-medium text-ink text-xs uppercase tracking-wider whitespace-nowrap",
-                    col.width && "w-[var(--col-width)] min-w-[var(--col-width)]"
+                    "p-3.5 font-medium text-ink text-xs uppercase tracking-wider whitespace-nowrap border-b border-line",
+                    col.width && "w-[var(--col-width)] min-w-[var(--col-width)]",
+                    col.fixed === "right" &&
+                      "sticky right-0 z-20 bg-ivory shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.08)] border-l border-line/60",
+                    col.fixed === "left" &&
+                      "sticky left-0 z-20 bg-ivory shadow-[4px_0_8px_-2px_rgba(0,0,0,0.08)] border-r border-line/60"
                   )}
                 >
                   {col.title}
@@ -166,12 +171,12 @@ export function DataTable<T extends Record<string, unknown>>({
                   <tr
                     key={key}
                     className={cn(
-                      "hover:bg-warm-white/70 transition-colors",
+                      "hover:bg-warm-white/70 transition-colors group",
                       isSelected && "bg-rose/10"
                     )}
                   >
                     {onSelectionChange && (
-                      <td className="p-3.5 text-center">
+                      <td className="p-3.5 text-center border-b border-line/60">
                         <input
                           type="checkbox"
                           checked={isSelected}
@@ -197,8 +202,13 @@ export function DataTable<T extends Record<string, unknown>>({
                               : undefined
                           }
                           className={cn(
-                            "p-3.5 text-ink",
-                            col.width && "w-[var(--col-width)] min-w-[var(--col-width)]"
+                            "p-3.5 text-ink border-b border-line/60",
+                            col.width && "w-[var(--col-width)] min-w-[var(--col-width)]",
+                            col.fixed === "right" &&
+                              "sticky right-0 z-10 bg-white group-hover:bg-[#faf4ee] transition-colors shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.08)] border-l border-line/60",
+                            col.fixed === "left" &&
+                              "sticky left-0 z-10 bg-white group-hover:bg-[#faf4ee] transition-colors shadow-[4px_0_8px_-2px_rgba(0,0,0,0.08)] border-r border-line/60",
+                            isSelected && (col.fixed === "right" || col.fixed === "left") && "bg-[#fdf2f4]"
                           )}
                         >
                           {col.render ? col.render(val, record, index) : (val as React.ReactNode)}
